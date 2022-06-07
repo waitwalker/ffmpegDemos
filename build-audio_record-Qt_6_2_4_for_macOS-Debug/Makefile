@@ -622,6 +622,41 @@ moc_audiorecordthread.cpp: ../audio_record/audiorecordthread.h \
 moc_mainwindow.cpp: ../audio_record/mainwindow.h \
 		/Users/walkerwait/Qt/6.2.4/macos/lib/QtWidgets.framework/Headers/QMainWindow \
 		/Users/walkerwait/Qt/6.2.4/macos/lib/QtWidgets.framework/Headers/qmainwindow.h \
+		../audio_record/audiorecordthread.h \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/QObject \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/qobject.h \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/QThread \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/qthread.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavdevice/avdevice.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavdevice/version.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/version.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/macros.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/avconfig.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/log.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/avutil.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/common.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/attributes.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/mem.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/error.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/rational.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/mathematics.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/intfloat.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/pixfmt.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/opt.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/dict.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/samplefmt.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavformat/avformat.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavcodec/codec.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/hwcontext.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/buffer.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/frame.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavcodec/codec_id.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavcodec/version.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavcodec/codec_par.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavcodec/defs.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavcodec/packet.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavformat/avio.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavformat/version.h \
 		/Users/walkerwait/Qt/6.2.4/macos/libexec/moc
 	/Users/walkerwait/Qt/6.2.4/macos/libexec/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -D__cplusplus=199711L -D__APPLE_CC__=6000 -D__clang__ -D__clang_major__=13 -D__clang_minor__=1 -D__clang_patchlevel__=6 -D__GNUC__=4 -D__GNUC_MINOR__=2 -D__GNUC_PATCHLEVEL__=1 -I/Users/walkerwait/Qt/6.2.4/macos/mkspecs/macx-clang -I/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/audio_record -I/opt/homebrew/Cellar/ffmpeg/5.0/include -I/Users/walkerwait/Qt/6.2.4/macos/lib/QtWidgets.framework/Headers -I/Users/walkerwait/Qt/6.2.4/macos/lib/QtGui.framework/Headers -I/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers -I. -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1 -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.1.6/include -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -F/Users/walkerwait/Qt/6.2.4/macos/lib ../audio_record/mainwindow.h -o moc_mainwindow.cpp
 
@@ -682,14 +717,23 @@ audiorecordthread.o: ../audio_record/audiorecordthread.cpp ../audio_record/audio
 		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavcodec/defs.h \
 		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavcodec/packet.h \
 		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavformat/avio.h \
-		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavformat/version.h
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavformat/version.h \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/QDebug \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/qdebug.h \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/QFile \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/qfile.h \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/QDateTime \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/qdatetime.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o audiorecordthread.o ../audio_record/audiorecordthread.cpp
 
 main.o: ../audio_record/main.cpp ../audio_record/mainwindow.h \
 		/Users/walkerwait/Qt/6.2.4/macos/lib/QtWidgets.framework/Headers/QMainWindow \
 		/Users/walkerwait/Qt/6.2.4/macos/lib/QtWidgets.framework/Headers/qmainwindow.h \
-		/Users/walkerwait/Qt/6.2.4/macos/lib/QtWidgets.framework/Headers/QApplication \
-		/Users/walkerwait/Qt/6.2.4/macos/lib/QtWidgets.framework/Headers/qapplication.h \
+		../audio_record/audiorecordthread.h \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/QObject \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/qobject.h \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/QThread \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/qthread.h \
 		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavdevice/avdevice.h \
 		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavdevice/version.h \
 		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/version.h \
@@ -719,12 +763,49 @@ main.o: ../audio_record/main.cpp ../audio_record/mainwindow.h \
 		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavcodec/defs.h \
 		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavcodec/packet.h \
 		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavformat/avio.h \
-		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavformat/version.h
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavformat/version.h \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtWidgets.framework/Headers/QApplication \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtWidgets.framework/Headers/qapplication.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../audio_record/main.cpp
 
 mainwindow.o: ../audio_record/mainwindow.cpp ../audio_record/mainwindow.h \
 		/Users/walkerwait/Qt/6.2.4/macos/lib/QtWidgets.framework/Headers/QMainWindow \
 		/Users/walkerwait/Qt/6.2.4/macos/lib/QtWidgets.framework/Headers/qmainwindow.h \
+		../audio_record/audiorecordthread.h \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/QObject \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/qobject.h \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/QThread \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/qthread.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavdevice/avdevice.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavdevice/version.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/version.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/macros.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/avconfig.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/log.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/avutil.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/common.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/attributes.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/mem.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/error.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/rational.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/mathematics.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/intfloat.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/pixfmt.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/opt.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/dict.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/samplefmt.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavformat/avformat.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavcodec/codec.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/hwcontext.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/buffer.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/frame.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavcodec/codec_id.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavcodec/version.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavcodec/codec_par.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavcodec/defs.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavcodec/packet.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavformat/avio.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavformat/version.h \
 		ui_mainwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../audio_record/mainwindow.cpp
 

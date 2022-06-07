@@ -27,6 +27,7 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 win32 {
     FFMPEG_HOME = F:/Dev/msys64/usr/local/ffmpeg
+    SDL_HOME = F:/Dev/msys64/usr/local/sdl
 }
 
 macx {

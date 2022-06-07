@@ -21,8 +21,9 @@ void MainWindow::on_recordButton_clicked()
         _audioThread->start();
         connect(_audioThread, &AudioRecordThread::finished,[this](){
            _audioThread = nullptr;
-           ui->recordButton->setText("停止录音");
+           ui->recordButton->setText("开始录音");
         });
+        ui->recordButton->setText("停止录音");
     } else {
         _audioThread->requestInterruption();
         _audioThread = nullptr;

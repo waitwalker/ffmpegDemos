@@ -53,10 +53,14 @@ OBJECTS_DIR   = ./
 ####### Files
 
 SOURCES       = ../pcm_play/main.cpp \
-		../pcm_play/mainwindow.cpp moc_mainwindow.cpp
+		../pcm_play/mainwindow.cpp \
+		../pcm_play/playthread.cpp moc_mainwindow.cpp \
+		moc_playthread.cpp
 OBJECTS       = main.o \
 		mainwindow.o \
-		moc_mainwindow.o
+		playthread.o \
+		moc_mainwindow.o \
+		moc_playthread.o
 DIST          = /Users/walkerwait/Qt/6.2.4/macos/mkspecs/features/spec_pre.prf \
 		/Users/walkerwait/Qt/6.2.4/macos/mkspecs/features/device_config.prf \
 		/Users/walkerwait/Qt/6.2.4/macos/mkspecs/common/unix.conf \
@@ -197,8 +201,10 @@ DIST          = /Users/walkerwait/Qt/6.2.4/macos/mkspecs/features/spec_pre.prf \
 		/Users/walkerwait/Qt/6.2.4/macos/mkspecs/features/exceptions.prf \
 		/Users/walkerwait/Qt/6.2.4/macos/mkspecs/features/yacc.prf \
 		/Users/walkerwait/Qt/6.2.4/macos/mkspecs/features/lex.prf \
-		../pcm_play/pcm_play.pro ../pcm_play/mainwindow.h ../pcm_play/main.cpp \
-		../pcm_play/mainwindow.cpp
+		../pcm_play/pcm_play.pro ../pcm_play/mainwindow.h \
+		../pcm_play/playthread.h ../pcm_play/main.cpp \
+		../pcm_play/mainwindow.cpp \
+		../pcm_play/playthread.cpp
 QMAKE_TARGET  = pcm_play
 DESTDIR       = 
 TARGET        = pcm_play.app/Contents/MacOS/pcm_play
@@ -541,8 +547,8 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents ../pcm_play/mainwindow.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../pcm_play/main.cpp ../pcm_play/mainwindow.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../pcm_play/mainwindow.h ../pcm_play/playthread.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../pcm_play/main.cpp ../pcm_play/mainwindow.cpp ../pcm_play/playthread.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../pcm_play/mainwindow.ui $(DISTDIR)/
 
 
@@ -572,14 +578,22 @@ benchmark: first
 
 compiler_rcc_make_all:
 compiler_rcc_clean:
-compiler_moc_header_make_all: moc_mainwindow.cpp
+compiler_moc_header_make_all: moc_mainwindow.cpp moc_playthread.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_mainwindow.cpp
+	-$(DEL_FILE) moc_mainwindow.cpp moc_playthread.cpp
 moc_mainwindow.cpp: ../pcm_play/mainwindow.h \
 		/Users/walkerwait/Qt/6.2.4/macos/lib/QtWidgets.framework/Headers/QMainWindow \
 		/Users/walkerwait/Qt/6.2.4/macos/lib/QtWidgets.framework/Headers/qmainwindow.h \
 		/Users/walkerwait/Qt/6.2.4/macos/libexec/moc
 	/Users/walkerwait/Qt/6.2.4/macos/libexec/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -D__cplusplus=199711L -D__APPLE_CC__=6000 -D__clang__ -D__clang_major__=13 -D__clang_minor__=1 -D__clang_patchlevel__=6 -D__GNUC__=4 -D__GNUC_MINOR__=2 -D__GNUC_PATCHLEVEL__=1 -I/Users/walkerwait/Qt/6.2.4/macos/mkspecs/macx-clang -I/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/pcm_play -I/opt/homebrew/Cellar/sdl2/2.0.20/include -I/Users/walkerwait/Qt/6.2.4/macos/lib/QtWidgets.framework/Headers -I/Users/walkerwait/Qt/6.2.4/macos/lib/QtGui.framework/Headers -I/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers -I. -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1 -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.1.6/include -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -F/Users/walkerwait/Qt/6.2.4/macos/lib ../pcm_play/mainwindow.h -o moc_mainwindow.cpp
+
+moc_playthread.cpp: ../pcm_play/playthread.h \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/QObject \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/qobject.h \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/QThread \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/qthread.h \
+		/Users/walkerwait/Qt/6.2.4/macos/libexec/moc
+	/Users/walkerwait/Qt/6.2.4/macos/libexec/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -D__cplusplus=199711L -D__APPLE_CC__=6000 -D__clang__ -D__clang_major__=13 -D__clang_minor__=1 -D__clang_patchlevel__=6 -D__GNUC__=4 -D__GNUC_MINOR__=2 -D__GNUC_PATCHLEVEL__=1 -I/Users/walkerwait/Qt/6.2.4/macos/mkspecs/macx-clang -I/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/pcm_play -I/opt/homebrew/Cellar/sdl2/2.0.20/include -I/Users/walkerwait/Qt/6.2.4/macos/lib/QtWidgets.framework/Headers -I/Users/walkerwait/Qt/6.2.4/macos/lib/QtGui.framework/Headers -I/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers -I. -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1 -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.1.6/include -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -F/Users/walkerwait/Qt/6.2.4/macos/lib ../pcm_play/playthread.h -o moc_playthread.cpp
 
 compiler_moc_objc_header_make_all:
 compiler_moc_objc_header_clean:
@@ -663,11 +677,25 @@ mainwindow.o: ../pcm_play/mainwindow.cpp ../pcm_play/mainwindow.h \
 		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_timer.h \
 		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_version.h \
 		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_locale.h \
-		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_misc.h
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_misc.h \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/QDebug \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/qdebug.h \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/QFile \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/qfile.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../pcm_play/mainwindow.cpp
+
+playthread.o: ../pcm_play/playthread.cpp ../pcm_play/playthread.h \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/QObject \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/qobject.h \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/QThread \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/qthread.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o playthread.o ../pcm_play/playthread.cpp
 
 moc_mainwindow.o: moc_mainwindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainwindow.o moc_mainwindow.cpp
+
+moc_playthread.o: moc_playthread.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_playthread.o moc_playthread.cpp
 
 ####### Install
 

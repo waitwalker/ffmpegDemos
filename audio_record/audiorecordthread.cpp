@@ -6,11 +6,18 @@
 AudioRecordThread::AudioRecordThread(QObject *parent)
     : QThread{parent}
 {
-
+    connect(this, &AudioRecordThread::finished, this, &AudioRecordThread::deleteLater);
 }
 
 AudioRecordThread::~AudioRecordThread() {
-
+    // 断开所有连接
+    disconnect();
+    // 内存回收之前，正常结束线程
+    requestInterruption();
+    // 安全退出
+    quit();
+    wait();
+    qDebug()<<this<<"析构（内存被回收了）";
 }
 
 void showSpec(AVFormatContext *ctx){

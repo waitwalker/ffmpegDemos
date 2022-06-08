@@ -108,6 +108,7 @@ void PlayThread::run(){
     // 存放从文件中读取的数据 是一个数组
     char data[BUFFER_SIZE];
     while (!isInterruptionRequested()) {
+        if (bufferLen > 0) continue;
         // 真实大小，虽然传的是BUFFER_SIZE但是真实读出来的不是这个大小
         bufferLen = file.read(data, BUFFER_SIZE);
         if (bufferLen <= 0 ) {
@@ -115,12 +116,6 @@ void PlayThread::run(){
         }
         // 读取到了文件数据
         bufferdata = data;
-        // 等待音频数据填充完毕
-        // 只要音频数据还没有填充完毕，就Delay（sleep）
-        while (bufferLen > 0) {
-            // 类似于sleep
-            SDL_Delay(1);
-        }
     }
 
     // 关闭文件

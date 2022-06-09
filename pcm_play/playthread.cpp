@@ -4,7 +4,7 @@
 #include <QDebug>
 #include <QFile>
 
-#define SMAPLE_RATE 44100
+#define SAMPLE_RATE 44100
 #define SMAPLE_SIZE 16
 #define CHANNELS 2
 #define FILE_NAME "/Users/walkerwait/Desktop/06_07_11_35_05.pcm"
@@ -12,6 +12,14 @@
 #define SAMPLES 1024
 #define BYTES_PER_SAMPLE ((SMAPLE_SIZE * CHANNELS)/8)
 #define BUFFER_SIZE (SAMPLES * BYTES_PER_SAMPLE)
+// 字节率
+#define d 1
+
+typedef struct {
+    char *data = nullptr;
+    int len = 0;
+    int pulllen = 0;
+} AudioBuffer;
 
 PlayThread::PlayThread(QObject *parent)
     : QThread{parent}
@@ -28,11 +36,6 @@ PlayThread::~PlayThread() {
     qDebug()<<this<<"析构（释放内存）";
 }
 
-// 从文件中每次读取的真实大小
-int bufferLen;
-// 指向
-char *bufferdata;
-
 // 等待音频设备回调（会回调很多次）在子线程，默认会创建一个线程
 void pull_audio_data(void *userData,
                      // 需要往stream中填充pcm数据
@@ -45,18 +48,20 @@ void pull_audio_data(void *userData,
     // 清空stream
     SDL_memset(stream, 0, len);
 
+    AudioBuffer *buffer = (AudioBuffer *)userData;
+
     // 文件还没准备好
-    if(bufferLen <=0 ) {
+    if(buffer->len <=0 ) {
         return;
     }
 
     // 取len,bufferLen大的最小值
-    len = (len > bufferLen) ? bufferLen : len;
+    buffer->pulllen = (len > buffer->len) ? buffer->len : len;
 
     // 填充数据 到 stream去
-    SDL_MixAudio(stream, (Uint8 *)bufferdata, len, SDL_MIX_MAXVOLUME);
-    bufferdata += len;
-    bufferLen -= len;
+    SDL_MixAudio(stream, (Uint8 *)buffer->data, buffer->pulllen, SDL_MIX_MAXVOLUME);
+    buffer->pulllen += buffer->pulllen;
+    buffer->len -= buffer->pulllen;
 
 }
 
@@ -75,7 +80,7 @@ void PlayThread::run(){
     // 打开设备
     SDL_AudioSpec spec;
     // 采样率
-    spec.freq = SMAPLE_RATE;
+    spec.freq = SAMPLE_RATE;
     // 声道
     spec.channels = CHANNELS;
     // 设置采样格式
@@ -83,6 +88,10 @@ void PlayThread::run(){
     spec.callback = pull_audio_data;
     // 音频缓冲区样本的数量（这个值必须是2的幂）
     spec.samples = SAMPLES;
+    // 传递给回调的自定义参数
+    AudioBuffer buffer;
+    // 要求传一个地址
+    spec.userdata = &buffer;
 
     if (SDL_OpenAudio(&spec,nullptr) < 0) {
         qDebug()<<"SDL_OpenAudio error"<<SDL_GetError();
@@ -108,14 +117,27 @@ void PlayThread::run(){
     // 存放从文件中读取的数据 是一个数组
     char data[BUFFER_SIZE];
     while (!isInterruptionRequested()) {
-        if (bufferLen > 0) continue;
+        // 只要从文件中读取的音频数据，还没有填充完毕就跳过
+        if (buffer.len > 0) continue;
         // 真实大小，虽然传的是BUFFER_SIZE但是真实读出来的不是这个大小
-        bufferLen = file.read(data, BUFFER_SIZE);
-        if (bufferLen <= 0 ) {
+        buffer.len = file.read(data, BUFFER_SIZE);
+        // 文件数据已经读取完毕
+        if (buffer.len <= 0 ) {
+            // 剩余的样本数量
+            int samples = buffer.pulllen / BYTES_PER_SAMPLE;
+            int ms = samples * 1000 / SAMPLE_RATE;
+            SDL_Delay(ms);
+            qDebug()<<ms;
             break;
         }
         // 读取到了文件数据
-        bufferdata = data;
+        buffer.data = data;
+        // 采样率（每秒采样的次数）
+        // freq
+        // 每个样本的大小
+        // size
+        // 字节率 = freq * size
+        // 2000/字节率 = 时间
     }
 
     // 关闭文件

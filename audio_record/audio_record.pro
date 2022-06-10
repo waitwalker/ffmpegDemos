@@ -10,11 +10,13 @@ CONFIG += c++17
 
 SOURCES += \
     audiorecordthread.cpp \
+    ffmpegs.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
     audiorecordthread.h \
+    ffmpegs.h \
     mainwindow.h
 
 FORMS += \

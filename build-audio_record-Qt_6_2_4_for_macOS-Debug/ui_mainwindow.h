@@ -11,7 +11,6 @@
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
-#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
@@ -25,7 +24,6 @@ class Ui_MainWindow
 public:
     QWidget *centralwidget;
     QPushButton *recordButton;
-    QLineEdit *lineEdit;
     QMenuBar *menubar;
     QStatusBar *statusbar;
 
@@ -39,9 +37,6 @@ public:
         recordButton = new QPushButton(centralwidget);
         recordButton->setObjectName(QString::fromUtf8("recordButton"));
         recordButton->setGeometry(QRect(90, 100, 100, 32));
-        lineEdit = new QLineEdit(centralwidget);
-        lineEdit->setObjectName(QString::fromUtf8("lineEdit"));
-        lineEdit->setGeometry(QRect(90, 170, 113, 21));
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName(QString::fromUtf8("menubar"));

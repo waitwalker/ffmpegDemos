@@ -33,7 +33,7 @@ void showSpec(AVFormatContext *ctx){
     // 采样率
     qDebug()<<"采样率："<<params->sample_rate;
 
-    // 采样格式
+    // 采样格式 16 * 2
     qDebug()<<"采样格式："<<params->format;
 
     // 每一个样本的一个声道占用多少个字节

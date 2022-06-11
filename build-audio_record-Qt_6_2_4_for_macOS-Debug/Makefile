@@ -53,10 +53,12 @@ OBJECTS_DIR   = ./
 ####### Files
 
 SOURCES       = ../audio_record/audiorecordthread.cpp \
+		../audio_record/ffmpegs.cpp \
 		../audio_record/main.cpp \
 		../audio_record/mainwindow.cpp moc_audiorecordthread.cpp \
 		moc_mainwindow.cpp
 OBJECTS       = audiorecordthread.o \
+		ffmpegs.o \
 		main.o \
 		mainwindow.o \
 		moc_audiorecordthread.o \
@@ -202,7 +204,9 @@ DIST          = /Users/walkerwait/Qt/6.2.4/macos/mkspecs/features/spec_pre.prf \
 		/Users/walkerwait/Qt/6.2.4/macos/mkspecs/features/yacc.prf \
 		/Users/walkerwait/Qt/6.2.4/macos/mkspecs/features/lex.prf \
 		../audio_record/audio_record.pro ../audio_record/audiorecordthread.h \
+		../audio_record/ffmpegs.h \
 		../audio_record/mainwindow.h ../audio_record/audiorecordthread.cpp \
+		../audio_record/ffmpegs.cpp \
 		../audio_record/main.cpp \
 		../audio_record/mainwindow.cpp
 QMAKE_TARGET  = audio_record
@@ -547,8 +551,8 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents ../audio_record/audiorecordthread.h ../audio_record/mainwindow.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../audio_record/audiorecordthread.cpp ../audio_record/main.cpp ../audio_record/mainwindow.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../audio_record/audiorecordthread.h ../audio_record/ffmpegs.h ../audio_record/mainwindow.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../audio_record/audiorecordthread.cpp ../audio_record/ffmpegs.cpp ../audio_record/main.cpp ../audio_record/mainwindow.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../audio_record/mainwindow.ui $(DISTDIR)/
 
 
@@ -726,6 +730,15 @@ audiorecordthread.o: ../audio_record/audiorecordthread.cpp ../audio_record/audio
 		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/qdatetime.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o audiorecordthread.o ../audio_record/audiorecordthread.cpp
 
+ffmpegs.o: ../audio_record/ffmpegs.cpp ../audio_record/ffmpegs.h \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/QObject \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/qobject.h \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/QFile \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/qfile.h \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/QDebug \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/qdebug.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ffmpegs.o ../audio_record/ffmpegs.cpp
+
 main.o: ../audio_record/main.cpp ../audio_record/mainwindow.h \
 		/Users/walkerwait/Qt/6.2.4/macos/lib/QtWidgets.framework/Headers/QMainWindow \
 		/Users/walkerwait/Qt/6.2.4/macos/lib/QtWidgets.framework/Headers/qmainwindow.h \
@@ -765,7 +778,8 @@ main.o: ../audio_record/main.cpp ../audio_record/mainwindow.h \
 		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavformat/avio.h \
 		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavformat/version.h \
 		/Users/walkerwait/Qt/6.2.4/macos/lib/QtWidgets.framework/Headers/QApplication \
-		/Users/walkerwait/Qt/6.2.4/macos/lib/QtWidgets.framework/Headers/qapplication.h
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtWidgets.framework/Headers/qapplication.h \
+		../audio_record/ffmpegs.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../audio_record/main.cpp
 
 mainwindow.o: ../audio_record/mainwindow.cpp ../audio_record/mainwindow.h \

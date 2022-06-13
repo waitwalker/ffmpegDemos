@@ -38,6 +38,13 @@ void showSpec(AVFormatContext *ctx){
 
     // 每一个样本的一个声道占用多少个字节
     qDebug()<<"每一个样本的一个声道占用字节:"<<av_get_bytes_per_sample((AVSampleFormat)params->format);
+
+    // 编码格式（可以看出采样格式）
+    qDebug()<<"编码格式（可以看出采样格式）"<<params->codec_id;
+
+    // 每一个样本的声道占多少位
+    qDebug()<<"每一个样本的声道占多少位"<<av_get_bits_per_sample(params->codec_id);
+
 }
 
 

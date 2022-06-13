@@ -2,6 +2,7 @@
 #include <QDebug>
 #include <QFile>
 #include <QDateTime>
+#include "ffmpegs.h"
 
 AudioRecordThread::AudioRecordThread(QObject *parent)
     : QThread{parent}
@@ -73,8 +74,12 @@ void AudioRecordThread::run() {
 
     // 4.采集数据
     QString fileName = FILE_PATH;
+
     fileName += QDateTime::currentDateTime().toString("MM_dd_HH_mm_ss");
+    QString wavFileName = fileName;
     fileName += ".pcm";
+    wavFileName += ".wav";
+
     QFile file(fileName);
     if (!file.open(QFile::WriteOnly)){
         qDebug()<<"打开文件失败："<<fileName;
@@ -104,6 +109,22 @@ void AudioRecordThread::run() {
     // 5.释放资源
     // 关闭文件
     file.close();
+
+
+    // 获取输入流
+    AVStream *stream = ctx->streams[0];
+
+    // 获取音频参数
+    AVCodecParameters *params = stream->codecpar;
+
+    WAVHeader header;
+    header.sampleRate = params->sample_rate;
+    header.bitsPerSample = av_get_bits_per_sample(params->codec_id);
+    header.numChannels = params->channels;
+    header.audioFormat = params->codec_id >= AV_CODEC_ID_PCM_F32BE ? 3 : 1;
+    FFmpegs::pcm2wav(header,
+                     fileName.toUtf8().data(), /// QString 转成C语言 String
+                     wavFileName.toUtf8().data());
 
     // 释放资源
     av_packet_free(&pkt);

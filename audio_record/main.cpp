@@ -1,4 +1,4 @@
-#include "mainwindow.h"
+ #include "mainwindow.h"
 #include <QApplication>
 #include "ffmpegs.h"
 
@@ -17,10 +17,8 @@ int main(int argc, char *argv[])
     header.riffChunkDataSize = 5556;
     header.sampleRate = 44100;
     header.bitsPerSample = 16;
-    header.numChannels = 2;
-    header.blockAlign = header.bitsPerSample * header.numChannels >> 3;
-    header.byteRate = header.bitsPerSample * header.blockAlign;
-    header.dataChunkDataSize = 1413120;
+    header.numChannels = 1;
+    header.audioFormat = 3;
     FFmpegs::pcm2wav(header,"/Users/walkerwait/Desktop/06_07_14_20_04.pcm","/Users/walkerwait/Desktop/out.wav");
     return a.exec();
 }

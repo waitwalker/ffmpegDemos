@@ -86,8 +86,24 @@ void AudioThread::run() {
                 inChs,
                 inSample,
                 inSampleFmt,
-                1
-                );
+                1);
+
+    // 创建输出缓冲区
+    // 指向缓冲区的指针
+    uint8_t **outData = nullptr;
+    // 缓冲区的大小 最终会显示缓冲区多大
+    int outLineSize = 0;
+    // 声道数量
+    int outChs = av_get_channel_layout_nb_channels(outChLayout);
+    // 缓冲区样本数量
+    int outSample = 1024;
+    av_samples_alloc_array_and_samples(
+                &outData,
+                &outLineSize,
+                outChs,
+                outSample,
+                outSampleFmt,
+                1);
 
     // 释放资源
     // 释放重采样上下文

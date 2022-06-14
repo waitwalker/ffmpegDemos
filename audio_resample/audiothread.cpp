@@ -79,15 +79,20 @@ void AudioThread::run() {
     // 声道数量
     int inChs = av_get_channel_layout_nb_channels(inChLayout);
     // 缓冲区样本数量
-    int inSample = 1024;
-    av_samples_alloc_array_and_samples(
-                &inData,
-                &inLineSize,
+    int inSamples = 1024;
+    ret = av_samples_alloc_array_and_samples(
+                &inData,// inData传进去后，希望调用完这个函数后能指向一块空间，也就是inData
+                &inLineSize,// 指向的缓冲区有多大
                 inChs,
-                inSample,
+                inSamples,
                 inSampleFmt,
                 1);
-
+    if (ret < 0) {
+        ERROR_BUF(ret);
+        qDebug()<<"av_samples_alloc_array_and_samples error:"<<errbuf;
+        swr_free(&ctx);
+        return;
+    }
     // 创建输出缓冲区
     // 指向缓冲区的指针
     uint8_t **outData = nullptr;
@@ -96,14 +101,24 @@ void AudioThread::run() {
     // 声道数量
     int outChs = av_get_channel_layout_nb_channels(outChLayout);
     // 缓冲区样本数量
-    int outSample = 1024;
-    av_samples_alloc_array_and_samples(
+    int outSamples = 1024;
+    ret = av_samples_alloc_array_and_samples(
                 &outData,
                 &outLineSize,
                 outChs,
-                outSample,
+                outSamples,
                 outSampleFmt,
                 1);
+    if (ret < 0) {
+        ERROR_BUF(ret);
+        qDebug()<<"av_samples_alloc_array_and_samples error:"<<errbuf;
+
+        // 释放输入缓冲区
+        av_freep(&inData);
+        // 释放上下文
+        swr_free(&ctx);
+        return;
+    }
 
     // 释放资源
     // 释放重采样上下文

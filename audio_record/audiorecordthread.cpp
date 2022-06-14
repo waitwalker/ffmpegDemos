@@ -3,6 +3,10 @@
 #include <QFile>
 #include <QDateTime>
 #include "ffmpegs.h"
+extern "C" {
+#include <libswresample/swresample.h>
+#include <libavutil/avutil.h>
+}
 
 AudioRecordThread::AudioRecordThread(QObject *parent)
     : QThread{parent}

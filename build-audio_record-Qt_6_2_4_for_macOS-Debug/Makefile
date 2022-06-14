@@ -40,7 +40,7 @@ DISTNAME      = audio_record1.0.0
 DISTDIR = /Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/build-audio_record-Qt_6_2_4_for_macOS-Debug/.tmp/audio_record1.0.0
 LINK          = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++
 LFLAGS        = -stdlib=libc++ -headerpad_max_install_names $(EXPORT_ARCH_ARGS) -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk -mmacosx-version-min=10.14 -Wl,-rpath,@executable_path/../Frameworks -Wl,-rpath,/Users/walkerwait/Qt/6.2.4/macos/lib
-LIBS          = $(SUBLIBS) -F/Users/walkerwait/Qt/6.2.4/macos/lib -L /opt/homebrew/Cellar/ffmpeg/5.0/lib -lavdevice -lavformat -lavcodec -lavutil -framework QtWidgets -framework QtGui -framework AppKit -framework ImageIO -framework Metal -framework QtCore -framework DiskArbitration -framework IOKit -framework AGL -framework OpenGL   
+LIBS          = $(SUBLIBS) -F/Users/walkerwait/Qt/6.2.4/macos/lib -L /opt/homebrew/Cellar/ffmpeg/5.0/lib -lavdevice -lswresample -lavformat -lavcodec -lavutil -framework QtWidgets -framework QtGui -framework AppKit -framework ImageIO -framework Metal -framework QtCore -framework DiskArbitration -framework IOKit -framework AGL -framework OpenGL   
 AR            = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar cq
 RANLIB        = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib -s
 SED           = sed
@@ -727,7 +727,8 @@ audiorecordthread.o: ../audio_record/audiorecordthread.cpp ../audio_record/audio
 		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/QFile \
 		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/qfile.h \
 		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/QDateTime \
-		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/qdatetime.h
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/qdatetime.h \
+		../audio_record/ffmpegs.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o audiorecordthread.o ../audio_record/audiorecordthread.cpp
 
 ffmpegs.o: ../audio_record/ffmpegs.cpp ../audio_record/ffmpegs.h \

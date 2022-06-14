@@ -123,7 +123,7 @@ void AudioRecordThread::run() {
     header.bitsPerSample = av_get_bits_per_sample(params->codec_id);
     header.numChannels = params->channels;
     if (params->codec_id >= AV_CODEC_ID_PCM_F32BE) {
-        header.audioFormat = 3;
+        header.audioFormat = AUDIO_FORMAT_FLOAT;
     }
     header.blockAlign = header.bitsPerSample * header.numChannels >> 3;
     header.byteRate = header.sampleRate * header.blockAlign;

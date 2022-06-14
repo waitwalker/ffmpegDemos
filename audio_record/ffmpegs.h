@@ -1,6 +1,7 @@
 #ifndef FFMPEGS_H
 #define FFMPEGS_H
 #include <QObject>
+#define AUDIO_FORMAT_FLOAT 3
 // WAV 文件头（44个字节）riff id; dataSize; format
 typedef struct {
     // RIFF chunk的id

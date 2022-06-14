@@ -119,9 +119,14 @@ void AudioRecordThread::run() {
 
     WAVHeader header;
     header.sampleRate = params->sample_rate;
+    // 2
     header.bitsPerSample = av_get_bits_per_sample(params->codec_id);
     header.numChannels = params->channels;
-    header.audioFormat = params->codec_id >= AV_CODEC_ID_PCM_F32BE ? 3 : 1;
+    if (params->codec_id >= AV_CODEC_ID_PCM_F32BE) {
+        header.audioFormat = 3;
+    }
+    header.blockAlign = header.bitsPerSample * header.numChannels >> 3;
+    header.byteRate = header.sampleRate * header.blockAlign;
     FFmpegs::pcm2wav(header,
                      fileName.toUtf8().data(), /// QString 转成C语言 String
                      wavFileName.toUtf8().data());

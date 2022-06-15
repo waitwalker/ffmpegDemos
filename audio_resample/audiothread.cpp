@@ -73,8 +73,10 @@ void AudioThread::run() {
     int outLineSize = 0;
     // 声道数量
     int outChs = av_get_channel_layout_nb_channels(outChLayout);
+    // 一个样本的大小
+    int outBytesPerSample = outChs * av_get_bytes_per_sample(outSampleFmt);
     // 缓冲区样本数量
-    int outSamples = 1024;
+    int outSamples = outSampleRate * inSamples / inSampleRate;
     // 返回值
     int ret;
     // 读取文件的大小
@@ -146,7 +148,7 @@ void AudioThread::run() {
     }
 
     // 读取文件数据
-    while ((len = inFile.read((char *)inData[0], inLineSize))) {
+    while ((len = inFile.read((char *)inData[0], inLineSize)) > 0) {
         // 读取的样本数量
         inSamples = len / inBytesPerSample;
         // 重采样(返回值是转换后的样本数据)
@@ -156,6 +158,13 @@ void AudioThread::run() {
                     (const uint8_t **)inData,
                     inSamples
                     );
+        if(ret < 0) {
+            ERROR_BUF(ret);
+            qDebug()<<"swr_convert error";
+            goto end;
+        }
+        // 将转换后的数据写入到输出文件中
+        outFile.write((char *)outData[0], ret * outBytesPerSample);
     }
 
 end:

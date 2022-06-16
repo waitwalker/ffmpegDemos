@@ -53,10 +53,12 @@ OBJECTS_DIR   = ./
 ####### Files
 
 SOURCES       = ../audio_resample/audiothread.cpp \
+		../audio_resample/ffmpegs.cpp \
 		../audio_resample/main.cpp \
 		../audio_resample/mainwindow.cpp moc_audiothread.cpp \
 		moc_mainwindow.cpp
 OBJECTS       = audiothread.o \
+		ffmpegs.o \
 		main.o \
 		mainwindow.o \
 		moc_audiothread.o \
@@ -172,6 +174,7 @@ DIST          = /Users/walkerwait/Qt/6.2.4/macos/mkspecs/features/spec_pre.prf \
 		/Users/walkerwait/Qt/6.2.4/macos/mkspecs/features/qt_config.prf \
 		/Users/walkerwait/Qt/6.2.4/macos/mkspecs/macx-clang/qmake.conf \
 		/Users/walkerwait/Qt/6.2.4/macos/mkspecs/features/spec_post.prf \
+		../audio_resample/.qmake.stash \
 		/Users/walkerwait/Qt/6.2.4/macos/mkspecs/features/exclusive_builds.prf \
 		/Users/walkerwait/Qt/6.2.4/macos/mkspecs/features/mac/sdk.prf \
 		/Users/walkerwait/Qt/6.2.4/macos/mkspecs/features/toolchain.prf \
@@ -201,7 +204,9 @@ DIST          = /Users/walkerwait/Qt/6.2.4/macos/mkspecs/features/spec_pre.prf \
 		/Users/walkerwait/Qt/6.2.4/macos/mkspecs/features/yacc.prf \
 		/Users/walkerwait/Qt/6.2.4/macos/mkspecs/features/lex.prf \
 		../audio_resample/audio_resample.pro ../audio_resample/audiothread.h \
+		../audio_resample/ffmpegs.h \
 		../audio_resample/mainwindow.h ../audio_resample/audiothread.cpp \
+		../audio_resample/ffmpegs.cpp \
 		../audio_resample/main.cpp \
 		../audio_resample/mainwindow.cpp
 QMAKE_TARGET  = audio_resample
@@ -212,7 +217,7 @@ TARGET        = audio_resample.app/Contents/MacOS/audio_resample
 EXPORT_QMAKE_MAC_SDK = macosx
 EXPORT_QMAKE_MAC_SDK_VERSION = 12.3
 EXPORT_QMAKE_XCODE_DEVELOPER_PATH = /Applications/Xcode.app/Contents/Developer
-EXPORT__QMAKE_STASH_ = 
+EXPORT__QMAKE_STASH_ = /Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/build-audio_resample-Qt_6_2_4_for_macOS-Debug/.qmake.stash
 EXPORT_VALID_ARCHS = x86_64 arm64
 EXPORT_DEFAULT_ARCHS = arm64
 EXPORT_ARCHS = $(filter $(EXPORT_VALID_ARCHS), $(if $(ARCHS), $(ARCHS), $(if $(EXPORT_DEFAULT_ARCHS), $(EXPORT_DEFAULT_ARCHS), $(EXPORT_VALID_ARCHS))))
@@ -339,6 +344,7 @@ Makefile: ../audio_resample/audio_resample.pro /Users/walkerwait/Qt/6.2.4/macos/
 		/Users/walkerwait/Qt/6.2.4/macos/mkspecs/features/qt_config.prf \
 		/Users/walkerwait/Qt/6.2.4/macos/mkspecs/macx-clang/qmake.conf \
 		/Users/walkerwait/Qt/6.2.4/macos/mkspecs/features/spec_post.prf \
+		.qmake.stash \
 		/Users/walkerwait/Qt/6.2.4/macos/mkspecs/features/exclusive_builds.prf \
 		/Users/walkerwait/Qt/6.2.4/macos/mkspecs/features/mac/sdk.prf \
 		/Users/walkerwait/Qt/6.2.4/macos/mkspecs/features/toolchain.prf \
@@ -483,6 +489,7 @@ Makefile: ../audio_resample/audio_resample.pro /Users/walkerwait/Qt/6.2.4/macos/
 /Users/walkerwait/Qt/6.2.4/macos/mkspecs/features/qt_config.prf:
 /Users/walkerwait/Qt/6.2.4/macos/mkspecs/macx-clang/qmake.conf:
 /Users/walkerwait/Qt/6.2.4/macos/mkspecs/features/spec_post.prf:
+.qmake.stash:
 /Users/walkerwait/Qt/6.2.4/macos/mkspecs/features/exclusive_builds.prf:
 /Users/walkerwait/Qt/6.2.4/macos/mkspecs/features/mac/sdk.prf:
 /Users/walkerwait/Qt/6.2.4/macos/mkspecs/features/toolchain.prf:
@@ -544,8 +551,8 @@ dist: distdir FORCE
 distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
-	$(COPY_FILE) --parents ../audio_resample/audiothread.h ../audio_resample/mainwindow.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../audio_resample/audiothread.cpp ../audio_resample/main.cpp ../audio_resample/mainwindow.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../audio_resample/audiothread.h ../audio_resample/ffmpegs.h ../audio_resample/mainwindow.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../audio_resample/audiothread.cpp ../audio_resample/ffmpegs.cpp ../audio_resample/main.cpp ../audio_resample/mainwindow.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../audio_resample/mainwindow.ui $(DISTDIR)/
 
 
@@ -556,6 +563,7 @@ clean: compiler_clean
 
 distclean: clean 
 	-$(DEL_FILE) -r audio_resample.app
+	-$(DEL_FILE) .qmake.stash
 	-$(DEL_FILE) Makefile
 
 
@@ -588,6 +596,11 @@ moc_audiothread.cpp: ../audio_resample/audiothread.h \
 moc_mainwindow.cpp: ../audio_resample/mainwindow.h \
 		/Users/walkerwait/Qt/6.2.4/macos/lib/QtWidgets.framework/Headers/QMainWindow \
 		/Users/walkerwait/Qt/6.2.4/macos/lib/QtWidgets.framework/Headers/qmainwindow.h \
+		../audio_resample/audiothread.h \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/QObject \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/qobject.h \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/QThread \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/qthread.h \
 		/Users/walkerwait/Qt/6.2.4/macos/libexec/moc
 	/Users/walkerwait/Qt/6.2.4/macos/libexec/moc $(DEFINES) -D__APPLE__ -D__GNUC__=4 -D__APPLE_CC__ -D__cplusplus=199711L -D__APPLE_CC__=6000 -D__clang__ -D__clang_major__=13 -D__clang_minor__=1 -D__clang_patchlevel__=6 -D__GNUC__=4 -D__GNUC_MINOR__=2 -D__GNUC_PATCHLEVEL__=1 -I/Users/walkerwait/Qt/6.2.4/macos/mkspecs/macx-clang -I/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/audio_resample -I/opt/homebrew/Cellar/ffmpeg/5.0/include -I/Users/walkerwait/Qt/6.2.4/macos/lib/QtWidgets.framework/Headers -I/Users/walkerwait/Qt/6.2.4/macos/lib/QtGui.framework/Headers -I/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers -I. -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1 -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.1.6/include -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -F/Users/walkerwait/Qt/6.2.4/macos/lib ../audio_resample/mainwindow.h -o moc_mainwindow.cpp
 
@@ -621,6 +634,8 @@ audiothread.o: ../audio_resample/audiothread.cpp ../audio_resample/audiothread.h
 		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/qthread.h \
 		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/QDebug \
 		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/qdebug.h \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/QFile \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/qfile.h \
 		/opt/homebrew/Cellar/ffmpeg/5.0/include/libswresample/swresample.h \
 		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/channel_layout.h \
 		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/frame.h \
@@ -643,9 +658,50 @@ audiothread.o: ../audio_resample/audiothread.cpp ../audio_resample/audiothread.h
 		/opt/homebrew/Cellar/ffmpeg/5.0/include/libswresample/version.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o audiothread.o ../audio_resample/audiothread.cpp
 
+ffmpegs.o: ../audio_resample/ffmpegs.cpp ../audio_resample/ffmpegs.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavformat/avformat.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavcodec/codec.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/avutil.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/common.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/attributes.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/macros.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/avconfig.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/version.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/mem.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/error.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/rational.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/mathematics.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/intfloat.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/log.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/pixfmt.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/hwcontext.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/buffer.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/frame.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/dict.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavutil/samplefmt.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavcodec/codec_id.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavcodec/version.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavcodec/codec_par.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavcodec/defs.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavcodec/packet.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavformat/avio.h \
+		/opt/homebrew/Cellar/ffmpeg/5.0/include/libavformat/version.h \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/QDebug \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/qdebug.h \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/QObject \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/qobject.h \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/QFile \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/qfile.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ffmpegs.o ../audio_resample/ffmpegs.cpp
+
 main.o: ../audio_resample/main.cpp ../audio_resample/mainwindow.h \
 		/Users/walkerwait/Qt/6.2.4/macos/lib/QtWidgets.framework/Headers/QMainWindow \
 		/Users/walkerwait/Qt/6.2.4/macos/lib/QtWidgets.framework/Headers/qmainwindow.h \
+		../audio_resample/audiothread.h \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/QObject \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/qobject.h \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/QThread \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/qthread.h \
 		/Users/walkerwait/Qt/6.2.4/macos/lib/QtWidgets.framework/Headers/QApplication \
 		/Users/walkerwait/Qt/6.2.4/macos/lib/QtWidgets.framework/Headers/qapplication.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../audio_resample/main.cpp
@@ -653,6 +709,11 @@ main.o: ../audio_resample/main.cpp ../audio_resample/mainwindow.h \
 mainwindow.o: ../audio_resample/mainwindow.cpp ../audio_resample/mainwindow.h \
 		/Users/walkerwait/Qt/6.2.4/macos/lib/QtWidgets.framework/Headers/QMainWindow \
 		/Users/walkerwait/Qt/6.2.4/macos/lib/QtWidgets.framework/Headers/qmainwindow.h \
+		../audio_resample/audiothread.h \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/QObject \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/qobject.h \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/QThread \
+		/Users/walkerwait/Qt/6.2.4/macos/lib/QtCore.framework/Headers/qthread.h \
 		ui_mainwindow.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../audio_resample/mainwindow.cpp
 

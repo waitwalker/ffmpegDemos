@@ -38,9 +38,9 @@ AudioThread::~AudioThread() {
 void AudioThread::run() {
     // 文件已经准备好了
     // 文件名
-    const char *inFilename = "4800_f32le.pcm";
+    const char *inFilename = "/Users/walkerwait/Desktop/4800_f32le.pcm";
     QFile inFile(inFilename);
-    const char *outFilename = "44100_s16le.pcm";
+    const char *outFilename = "/Users/walkerwait/Desktop/44100_s16le.pcm";
     QFile outFile(outFilename);
 
     // 输入的一些参数
@@ -75,7 +75,7 @@ void AudioThread::run() {
     int outChs = av_get_channel_layout_nb_channels(outChLayout);
     // 一个样本的大小
     int outBytesPerSample = outChs * av_get_bytes_per_sample(outSampleFmt);
-    // 缓冲区样本数量
+    // 缓冲区样本数量 根据输入缓冲区计算出来 为了保持单位时间处理样本的数量，好比之前8分钟，处理完不能让人家播放10分钟
     int outSamples = av_rescale_rnd(outSampleRate, inSamples, inSampleRate, AV_ROUND_UP);//向上取整
     // 返回值
     int ret;
@@ -149,7 +149,7 @@ void AudioThread::run() {
 
     // 读取文件数据
     while ((len = inFile.read((char *)inData[0], inLineSize)) > 0) {
-        // 读取的样本数量
+        // 读取的样本数量 读的大小除以每个样本的大小
         inSamples = len / inBytesPerSample;
         // 重采样(返回值是转换后的样本数据)
         ret = swr_convert(ctx,
@@ -164,6 +164,15 @@ void AudioThread::run() {
             goto end;
         }
         // 将转换后的数据写入到输出文件中
+        outFile.write((char *)outData[0], ret * outBytesPerSample);
+    }
+
+    // 检测一下缓冲区是否还有残留的样本
+    while ((ret = swr_convert(ctx,
+                              outData,
+                              outSamples,
+                              nullptr,
+                              0)) > 0) {
         outFile.write((char *)outData[0], ret * outBytesPerSample);
     }
 

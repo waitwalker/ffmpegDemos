@@ -31,23 +31,34 @@ AudioThread::~AudioThread() {
 }
 
 void AudioThread::run() {
-    // 文件已经准备好了
-    ResampleAudioSpec in;
-    in.filename = "/Users/walkerwait/Desktop/4800_f32le.pcm";
-    // 输入的一些参数
-    in.sampleFmt = AV_SAMPLE_FMT_FLT;
-    in.sampleRate = 48000;
-    // 声道布局
-    in.chLayout = AV_CH_LAYOUT_MONO;// 单声道
+    // 这里就可以多重转换
 
-    ResampleAudioSpec out;
-    out.filename = "/Users/walkerwait/Desktop/44100_s16le.pcm";
-    out.sampleFmt = AV_SAMPLE_FMT_S16;
-    out.sampleRate = 44100;
+    // 文件已经准备好了
+    ResampleAudioSpec res1;
+    res1.filename = "/Users/walkerwait/Desktop/4800_f32le.pcm";
+    // 输入的一些参数
+    res1.sampleFmt = AV_SAMPLE_FMT_FLT;
+    res1.sampleRate = 48000;
     // 声道布局
-    out.chLayout = AV_CH_LAYOUT_STEREO;// 双声道，立体声
-    FFmpegs::resampleAuido(in,
-                           out);
+    res1.chLayout = AV_CH_LAYOUT_MONO;// 单声道
+
+    ResampleAudioSpec res2;
+    res2.filename = "/Users/walkerwait/Desktop/44100_s16le.pcm";
+    res2.sampleFmt = AV_SAMPLE_FMT_S16;
+    res2.sampleRate = 44100;
+    // 声道布局
+    res2.chLayout = AV_CH_LAYOUT_STEREO;// 双声道，立体声
+
+
+    ResampleAudioSpec res3;
+    res3.filename = "/Users/walkerwait/Desktop/48000_s32le_1.pcm";
+    res3.sampleFmt = AV_SAMPLE_FMT_S32;
+    res3.sampleRate = 48000;
+    // 声道布局
+    res3.chLayout = AV_CH_LAYOUT_STEREO;// 双声道，立体声
+
+    FFmpegs::resampleAuido(res2,
+                           res3);
 
 //    // 文件名
 //    const char *inFilename = "/Users/walkerwait/Desktop/4800_f32le.pcm";

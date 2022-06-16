@@ -76,7 +76,7 @@ void AudioThread::run() {
     // 一个样本的大小
     int outBytesPerSample = outChs * av_get_bytes_per_sample(outSampleFmt);
     // 缓冲区样本数量
-    int outSamples = outSampleRate * inSamples / inSampleRate;
+    int outSamples = av_rescale_rnd(outSampleRate, inSamples, inSampleRate, AV_ROUND_UP);//向上取整
     // 返回值
     int ret;
     // 读取文件的大小

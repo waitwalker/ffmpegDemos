@@ -4,16 +4,8 @@
 #include <QDebug>
 #include <QFile>
 
-#define SAMPLE_RATE 44100
-#define SMAPLE_SIZE 16
-#define CHANNELS 2
-#define FILE_NAME "/Users/walkerwait/Desktop/06_07_11_35_05.pcm"
-// 音频缓冲区样本数量
-#define SAMPLES 1024
-#define BYTES_PER_SAMPLE ((SMAPLE_SIZE * CHANNELS)/8)
-#define BUFFER_SIZE (SAMPLES * BYTES_PER_SAMPLE)
-// 字节率
-#define d 1
+#define FILE_NAME "/Users/walkerwait/Desktop/in.wav"
+
 
 typedef struct {
     char *data = nullptr;
@@ -77,21 +69,22 @@ void PlayThread::run(){
         return;
     }
 
-    // 打开设备
+    // 加载wav文件
     SDL_AudioSpec spec;
-    // 采样率
-    spec.freq = SAMPLE_RATE;
-    // 声道
-    spec.channels = CHANNELS;
-    // 设置采样格式
-    spec.format = AUDIO_S16MSB;
-    spec.callback = pull_audio_data;
-    // 音频缓冲区样本的数量（这个值必须是2的幂）
-    spec.samples = SAMPLES;
-    // 传递给回调的自定义参数
-    AudioBuffer buffer;
-    // 要求传一个地址
-    spec.userdata = &buffer;
+    // 指向pcm数据
+    Uint8 *data = nullptr;
+    // pcm数据的长度
+    Uint32 len;
+    SDL_LoadWAV(FILE_NAME, &spec, &data, &len);
+    if (!SDL_LoadWAV(FILE_NAME, &spec, &data, &len)) {
+        SDL_Quit();
+        qDebug()<<"SDL_LoadWAV error"<<SDL_GetError();
+        return;
+    }
+
+    qDebug()<<spec.freq<<spec.channels;
+    qDebug()<<*data;
+    qDebug()<<len;
 
     if (SDL_OpenAudio(&spec,nullptr) < 0) {
         qDebug()<<"SDL_OpenAudio error"<<SDL_GetError();
@@ -114,31 +107,31 @@ void PlayThread::run(){
 
     // 开始播放 (0是取消暂停)
     SDL_PauseAudio(0);
-    // 存放从文件中读取的数据 是一个数组
-    char data[BUFFER_SIZE];
-    while (!isInterruptionRequested()) {
-        // 只要从文件中读取的音频数据，还没有填充完毕就跳过
-        if (buffer.len > 0) continue;
-        // 真实大小，虽然传的是BUFFER_SIZE但是真实读出来的不是这个大小
-        buffer.len = file.read(data, BUFFER_SIZE);
-        // 文件数据已经读取完毕
-        if (buffer.len <= 0 ) {
-            // 剩余的样本数量
-            int samples = buffer.pulllen / BYTES_PER_SAMPLE;
-            int ms = samples * 1000 / SAMPLE_RATE;
-            SDL_Delay(ms);
-            qDebug()<<ms;
-            break;
-        }
-        // 读取到了文件数据
-        buffer.data = data;
-        // 采样率（每秒采样的次数）
-        // freq
-        // 每个样本的大小
-        // size
-        // 字节率 = freq * size
-        // 2000/字节率 = 时间
-    }
+//    // 存放从文件中读取的数据 是一个数组
+//    char data[BUFFER_SIZE];
+//    while (!isInterruptionRequested()) {
+//        // 只要从文件中读取的音频数据，还没有填充完毕就跳过
+//        if (buffer.len > 0) continue;
+//        // 真实大小，虽然传的是BUFFER_SIZE但是真实读出来的不是这个大小
+//        buffer.len = file.read(data, BUFFER_SIZE);
+//        // 文件数据已经读取完毕
+//        if (buffer.len <= 0 ) {
+//            // 剩余的样本数量
+//            int samples = buffer.pulllen / BYTES_PER_SAMPLE;
+//            int ms = samples * 1000 / SAMPLE_RATE;
+//            SDL_Delay(ms);
+//            qDebug()<<ms;
+//            break;
+//        }
+//        // 读取到了文件数据
+//        buffer.data = data;
+//        // 采样率（每秒采样的次数）
+//        // freq
+//        // 每个样本的大小
+//        // size
+//        // 字节率 = freq * size
+//        // 2000/字节率 = 时间
+//    }
 
     // 关闭文件
     file.close();

@@ -109,7 +109,6 @@ void AudioRecordThread::run() {
 
     header.blockAlign = header.bitsPerSample * header.numChannels >> 3;
     header.byteRate = header.sampleRate * header.blockAlign;
-    header.dataChunkDataSize = 0;
     file.write((char *)&header, sizeof(WAVHeader));
 
     // 数据包
@@ -121,7 +120,6 @@ void AudioRecordThread::run() {
         if (ret == 0) {
 
             file.write((const char *)pkt->data, pkt->size);
-            header.dataChunkDataSize +=  pkt->size;
         } else if (ret == AVERROR(EAGAIN)) {
             continue;
         } else {
@@ -136,12 +134,12 @@ void AudioRecordThread::run() {
     // 写入dataChunkDataSize
     // 计算dataChunkDataSize
     // 计算偏移量
+    header.dataChunkDataSize = file.size() - sizeof(WAVHeader);// 整个文件的大小 - WAV文件头的大小
     file.seek(sizeof(WAVHeader) - sizeof(header.dataChunkDataSize));
     file.write((char *)&header.dataChunkDataSize, sizeof(header.dataChunkDataSize));
 
     // 写入fiffChunkDataSize
-    header.riffChunkDataSize = header.dataChunkDataSize
-            + sizeof (WAVHeader)
+    header.riffChunkDataSize = file.size()
             - sizeof (header.riffChunkId)
             - sizeof (header.riffChunkDataSize);
     file.seek(sizeof(header.riffChunkId));

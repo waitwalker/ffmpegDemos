@@ -18,6 +18,7 @@ public:
 
 private slots:
     void on_recordButton_clicked();
+    void onTimeChanged(unsigned long long ms);
 
 private:
     Ui::MainWindow *ui;

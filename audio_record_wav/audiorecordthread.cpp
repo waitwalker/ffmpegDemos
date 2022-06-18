@@ -53,6 +53,8 @@ void showSpec(AVFormatContext *ctx){
 }
 
 
+
+
 void AudioRecordThread::run() {
 
     // 2.获取输入格式对象
@@ -109,7 +111,7 @@ void AudioRecordThread::run() {
 
     header.blockAlign = header.bitsPerSample * header.numChannels >> 3;
     header.byteRate = header.sampleRate * header.blockAlign;
-    header.dataChunkDataSize = 0;
+//    header.dataChunkDataSize = 0;
     file.write((char *)&header, sizeof(WAVHeader));
     // 数据包
     AVPacket *pkt = av_packet_alloc();
@@ -123,6 +125,7 @@ void AudioRecordThread::run() {
             // 计算录音时长
             header.dataChunkDataSize += pkt->size;
             unsigned long long ms = 1000.0 * header.dataChunkDataSize / header.byteRate;
+            qDebug()<<"录音时长："<<ms;
             emit timeChanged(ms);
         } else if (ret == AVERROR(EAGAIN)) {
             continue;

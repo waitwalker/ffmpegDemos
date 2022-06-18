@@ -8,7 +8,7 @@
 
 
 typedef struct {
-    char *data = nullptr;
+    Uint8 *data = nullptr;
     int len = 0;
     int pulllen = 0;
 } AudioBuffer;
@@ -75,15 +75,25 @@ void PlayThread::run(){
     Uint8 *data = nullptr;
     // pcm数据的长度
     Uint32 len;
+
     SDL_LoadWAV(FILE_NAME, &spec, &data, &len);
     if (!SDL_LoadWAV(FILE_NAME, &spec, &data, &len)) {
         SDL_Quit();
         qDebug()<<"SDL_LoadWAV error"<<SDL_GetError();
         return;
     }
+    // 音频缓冲区的样本数量
+    spec.samples = 1024;
+    // 加载完设置回调
+    spec.callback = pull_audio_data;
+
+    // 设置userData
+    AudioBuffer buffer;
+    buffer.data = data;
+    buffer.len = len;
+    spec.userdata = &buffer;
 
     qDebug()<<spec.freq<<spec.channels;
-    qDebug()<<*data;
     qDebug()<<len;
 
     if (SDL_OpenAudio(&spec,nullptr) < 0) {
@@ -107,34 +117,36 @@ void PlayThread::run(){
 
     // 开始播放 (0是取消暂停)
     SDL_PauseAudio(0);
-//    // 存放从文件中读取的数据 是一个数组
-//    char data[BUFFER_SIZE];
-//    while (!isInterruptionRequested()) {
-//        // 只要从文件中读取的音频数据，还没有填充完毕就跳过
-//        if (buffer.len > 0) continue;
-//        // 真实大小，虽然传的是BUFFER_SIZE但是真实读出来的不是这个大小
-//        buffer.len = file.read(data, BUFFER_SIZE);
-//        // 文件数据已经读取完毕
-//        if (buffer.len <= 0 ) {
-//            // 剩余的样本数量
-//            int samples = buffer.pulllen / BYTES_PER_SAMPLE;
-//            int ms = samples * 1000 / SAMPLE_RATE;
-//            SDL_Delay(ms);
-//            qDebug()<<ms;
-//            break;
-//        }
-//        // 读取到了文件数据
-//        buffer.data = data;
-//        // 采样率（每秒采样的次数）
-//        // freq
-//        // 每个样本的大小
-//        // size
-//        // 字节率 = freq * size
-//        // 2000/字节率 = 时间
-//    }
 
-    // 关闭文件
-    file.close();
+    int sampleSize = SDL_AUDIO_BITSIZE(spec.format);
+
+    int bytesPerSample = (sampleSize * spec.channels) >> 3;
+
+    while (!isInterruptionRequested()) {
+        // 只要从文件中读取的音频数据，还没有填充完毕就跳过
+        if (buffer.len > 0) continue;
+
+        // 文件数据已经读取完毕
+        if (buffer.len <= 0 ) {
+            // 剩余的样本数量
+            int samples = buffer.pulllen / bytesPerSample;
+            int ms = samples * 1000 / spec.freq;
+            SDL_Delay(ms);
+            qDebug()<<ms;
+            break;
+        }
+        // 读取到了文件数据
+        buffer.data = data;
+        // 采样率（每秒采样的次数）
+        // freq
+        // 每个样本的大小
+        // size
+        // 字节率 = freq * size
+        // 2000/字节率 = 时间
+    }
+
+    // 释放WAV文件数据
+    SDL_FreeWAV(data);
 
     // 关闭设备
     SDL_CloseAudio();

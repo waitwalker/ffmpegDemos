@@ -1,148 +1,133 @@
 #include "playthread.h"
-#include <QDebug>
+
 #include <SDL2/SDL.h>
 #include <QDebug>
 #include <QFile>
 
-#define FILE_NAME "/Users/walkerwait/Desktop/in.wav"
+#define FILE_NAME "/Users/walkerwait/Desktop/06_13_20_59_12.wav"
 
+/*
+
+// 每个样本占用多少个字节
+#define BYTES_PER_SAMPLE ((SAMPLE_SIZE * CHANNELS) >> 3)
+// 文件缓冲区的大小
+#define BUFFER_SIZE (SAMPLES * BYTES_PER_SAMPLE)
+*/
 
 typedef struct {
-    Uint8 *data = nullptr;
     int len = 0;
-    int pulllen = 0;
+    int pullLen = 0;
+    Uint8 *data = nullptr;
 } AudioBuffer;
 
-PlayThread::PlayThread(QObject *parent)
-    : QThread{parent}
-{
-    connect(this, &PlayThread::finished, this, &PlayThread::deleteLater);
-}
+PlayThread::PlayThread(QObject *parent) : QThread(parent) {
+    connect(this, &PlayThread::finished,
+            this, &PlayThread::deleteLater);
 
+}
 
 PlayThread::~PlayThread() {
     disconnect();
     requestInterruption();
     quit();
     wait();
-    qDebug()<<this<<"析构（释放内存）";
+
+    qDebug() << this << "析构了";
 }
 
-// 等待音频设备回调（会回调很多次）在子线程，默认会创建一个线程
-void pull_audio_data(void *userData,
-                     // 需要往stream中填充pcm数据
+// 等待音频设备回调(会回调多次)
+void pull_audio_data(void *userdata,
+                     // 需要往stream中填充PCM数据
                      Uint8 *stream,
-                     // 希望填充的大小（等于缓冲区样本数量*每个样本的大小 samples * channels * bit / 8 = 4096）
+                     // 希望填充的大小(samples * format * channels / 8)
                      int len
-                     ){
-    qDebug()<<"pull_audio_data"<<len;
+                    ) {
+    qDebug() << "pull_audio_data" << len;
 
-    // 清空stream
+    // 清空stream（静音处理）
     SDL_memset(stream, 0, len);
 
-    AudioBuffer *buffer = (AudioBuffer *)userData;
+    // 取出AudioBuffer
+    AudioBuffer *buffer = (AudioBuffer *) userdata;
 
-    // 文件还没准备好
-    if(buffer->len <=0 ) {
-        return;
-    }
+    // 文件数据还没准备好
+    if (buffer->len <= 0) return;
 
-    // 取len,bufferLen大的最小值
-    buffer->pulllen = (len > buffer->len) ? buffer->len : len;
+    // 取len、bufferLen的最小值（为了保证数据安全，防止指针越界）
+    buffer->pullLen = (len > buffer->len) ? buffer->len : len;
 
-    // 填充数据 到 stream去
-    SDL_MixAudio(stream, (Uint8 *)buffer->data, buffer->pulllen, SDL_MIX_MAXVOLUME);
-    buffer->pulllen += buffer->pulllen;
-    buffer->len -= buffer->pulllen;
-
+    // 填充数据
+    SDL_MixAudio(stream,
+                 buffer->data,
+                 buffer->pullLen,
+                 SDL_MIX_MAXVOLUME);
+    buffer->data += buffer->pullLen;
+    buffer->len -= buffer->pullLen;
 }
 
-void PlayThread::run(){
-    SDL_version version;
-    SDL_VERSION(&version);
-    qDebug()<<"当前版本："<<version.major<<version.minor<<version.patch;
-
+/*
+SDL播放音频有2种模式：
+Push（推）：【程序】主动推送数据给【音频设备】
+Pull（拉）：【音频设备】主动向【程序】拉取数据
+*/
+void PlayThread::run() {
     // 初始化Audio子系统
-    int ret = SDL_Init(SDL_INIT_AUDIO);
-    if (ret < 0) {
-        qDebug()<<"SDL_Init error"<<SDL_GetError();
+    if (SDL_Init(SDL_INIT_AUDIO)) {
+        qDebug() << "SDL_Init error" << SDL_GetError();
         return;
     }
 
     // 加载wav文件
     SDL_AudioSpec spec;
-    // 指向pcm数据
+    // 指向PCM数据
     Uint8 *data = nullptr;
-    // pcm数据的长度
-    Uint32 len;
-
-    SDL_LoadWAV(FILE_NAME, &spec, &data, &len);
+    // PCM数据的长度
+    Uint32 len = 0;
     if (!SDL_LoadWAV(FILE_NAME, &spec, &data, &len)) {
+        qDebug() << "SDL_LoadWAV error" << SDL_GetError();
+        // 清除所有的子系统
         SDL_Quit();
-        qDebug()<<"SDL_LoadWAV error"<<SDL_GetError();
         return;
     }
+
     // 音频缓冲区的样本数量
     spec.samples = 1024;
-    // 加载完设置回调
+    // 设置回调
     spec.callback = pull_audio_data;
-
-    // 设置userData
+    // 设置userdata
     AudioBuffer buffer;
     buffer.data = data;
     buffer.len = len;
     spec.userdata = &buffer;
 
-    qDebug()<<spec.freq<<spec.channels;
-    qDebug()<<len;
-
-    if (SDL_OpenAudio(&spec,nullptr) < 0) {
-        qDebug()<<"SDL_OpenAudio error"<<SDL_GetError();
+    // 打开设备
+    if (SDL_OpenAudio(&spec, nullptr)) {
+        qDebug() << "SDL_OpenAudio error" << SDL_GetError();
+        // 清除所有的子系统
         SDL_Quit();
         return;
     }
 
-    // 打开文件
-    QFile file(FILE_NAME);
-    if (!file.open(QFile::ReadOnly)) {
-        qDebug()<<"file open error"<<FILE_NAME;
-        SDL_CloseAudio();
-        SDL_Quit();
-        return;
-    }
-
-    // SDL播放视频有两种方式：
-    // PUSH（推）程序主动推送数据给音频设备
-    // PULL（拉）音频设备主动向程序拉取数据
-
-    // 开始播放 (0是取消暂停)
+    // 开始播放（0是取消暂停）
     SDL_PauseAudio(0);
 
+    // 计算一些参数
     int sampleSize = SDL_AUDIO_BITSIZE(spec.format);
-
     int bytesPerSample = (sampleSize * spec.channels) >> 3;
 
+    // 存放从文件中读取的数据
     while (!isInterruptionRequested()) {
-        // 只要从文件中读取的音频数据，还没有填充完毕就跳过
+        // 只要从文件中读取的音频数据，还没有填充完毕，就跳过
         if (buffer.len > 0) continue;
 
         // 文件数据已经读取完毕
-        if (buffer.len <= 0 ) {
+        if (buffer.len <= 0) {
             // 剩余的样本数量
-            int samples = buffer.pulllen / bytesPerSample;
+            int samples = buffer.pullLen / bytesPerSample;
             int ms = samples * 1000 / spec.freq;
             SDL_Delay(ms);
-            qDebug()<<ms;
             break;
         }
-        // 读取到了文件数据
-        buffer.data = data;
-        // 采样率（每秒采样的次数）
-        // freq
-        // 每个样本的大小
-        // size
-        // 字节率 = freq * size
-        // 2000/字节率 = 时间
     }
 
     // 释放WAV文件数据

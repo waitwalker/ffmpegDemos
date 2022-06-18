@@ -11,10 +11,12 @@
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
+#include <QtWidgets/QLabel>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QStatusBar>
+#include <QtWidgets/QVBoxLayout>
 #include <QtWidgets/QWidget>
 
 QT_BEGIN_NAMESPACE
@@ -23,7 +25,10 @@ class Ui_MainWindow
 {
 public:
     QWidget *centralwidget;
+    QWidget *verticalLayoutWidget;
+    QVBoxLayout *verticalLayout;
     QPushButton *recordButton;
+    QLabel *timeLabel;
     QMenuBar *menubar;
     QStatusBar *statusbar;
 
@@ -34,9 +39,22 @@ public:
         MainWindow->resize(800, 600);
         centralwidget = new QWidget(MainWindow);
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
-        recordButton = new QPushButton(centralwidget);
+        verticalLayoutWidget = new QWidget(centralwidget);
+        verticalLayoutWidget->setObjectName(QString::fromUtf8("verticalLayoutWidget"));
+        verticalLayoutWidget->setGeometry(QRect(80, 10, 160, 80));
+        verticalLayout = new QVBoxLayout(verticalLayoutWidget);
+        verticalLayout->setObjectName(QString::fromUtf8("verticalLayout"));
+        verticalLayout->setContentsMargins(0, 0, 0, 0);
+        recordButton = new QPushButton(verticalLayoutWidget);
         recordButton->setObjectName(QString::fromUtf8("recordButton"));
-        recordButton->setGeometry(QRect(90, 100, 100, 32));
+
+        verticalLayout->addWidget(recordButton);
+
+        timeLabel = new QLabel(verticalLayoutWidget);
+        timeLabel->setObjectName(QString::fromUtf8("timeLabel"));
+
+        verticalLayout->addWidget(timeLabel);
+
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName(QString::fromUtf8("menubar"));
@@ -55,6 +73,7 @@ public:
     {
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
         recordButton->setText(QCoreApplication::translate("MainWindow", "\345\274\200\345\247\213\345\275\225\351\237\263", nullptr));
+        timeLabel->setText(QCoreApplication::translate("MainWindow", "TextLabel", nullptr));
     } // retranslateUi
 
 };

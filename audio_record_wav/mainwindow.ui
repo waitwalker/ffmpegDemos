@@ -14,18 +14,31 @@
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="recordButton">
+   <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
      <rect>
-      <x>90</x>
-      <y>100</y>
-      <width>100</width>
-      <height>32</height>
+      <x>80</x>
+      <y>10</y>
+      <width>160</width>
+      <height>80</height>
      </rect>
     </property>
-    <property name="text">
-     <string>开始录音</string>
-    </property>
+    <layout class="QVBoxLayout" name="verticalLayout">
+     <item>
+      <widget class="QPushButton" name="recordButton">
+       <property name="text">
+        <string>开始录音</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="timeLabel">
+       <property name="text">
+        <string>TextLabel</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">

@@ -1,11 +1,19 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <QTime>
+#include <QString>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    connect(_audioThread, &AudioRecordThread::timeChanged, [this](unsigned long long ms){
+        QTime time(0,0,0,0);
+        QString text = time.addMSecs(ms).toString("mm:ss.z");
+        ui->timeLabel->setText(text);
+    });
 }
 
 MainWindow::~MainWindow()

@@ -28,6 +28,8 @@ protected:
     void run() override;
 
 signals:
+    // 时间改变
+    void timeChanged(unsigned long long ms);
 
 };
 

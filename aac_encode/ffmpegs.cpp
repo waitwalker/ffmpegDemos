@@ -67,5 +67,23 @@ void FFmpegs::aacEncode(AudioEncodeSpec &in,
     }
 
     qDebug()<<"codec name"<<codec->name;
+
+    // 创建编码上下文
+    ctx = avcodec_alloc_context3(codec);
+    if (!ctx) {
+        qDebug()<<"avcodec_alloc_context3 failed";
+        return;
+    }
+
+    // 设置PCM参数
+    ctx->sample_rate = in.sampleRate;
+    ctx->sample_fmt = in.sampleFmt;
+    ctx->channel_layout = in.chLayout;
+
+    // 比特率
+    ctx->bit_rate = 32000;
+
+    // 规格
+    ctx->profile = FF_PROFILE_AAC_HE_V2;
     qDebug()<<"线程正常结束";
 }

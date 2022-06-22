@@ -10,7 +10,7 @@ typedef struct {
     const char *filename;
     int sampleRate;
     AVSampleFormat sampleFmt;
-    int chLayout;
+    uint64_t chLayout;
 } AudioEncodeSpec;
 
 class FFmpegs

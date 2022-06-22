@@ -29,6 +29,38 @@ static int check_sample_fmt(const AVCodec *codec,
     return 0;
 }
 
+static int encode(AVCodecContext *ctx,
+                  AVFrame *frame,
+                  AVPacket *pkt,
+                  QFile &outFile){
+    // 发送数据到编码器
+    int ret = avcodec_send_frame(ctx, frame);
+    if (ret < 0) {
+        ERROR_BUF(ret);
+        qDebug()<<"avcodec_send_frame error"<<errbuf;
+        return ret;
+    }
+    // 发送到编码器数据成功
+    // 不断从编码器中取出编码后的数据
+    while (true) {
+        ret = avcodec_receive_packet(ctx,pkt);
+        if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF) {
+            // 遇到这两种错误继续读取数据到frame，然后送到编码器
+            return 0;
+        } else if (ret < 0) {
+            return ret;
+        }
+        // 成功从编码器拿到编码后的数据
+        // 将编码后的数据写入文件
+        outFile.write((char *)pkt->data,pkt->size);
+
+        // 释放pkt内部的资源
+        av_packet_unref(pkt);
+    }
+
+    return ret;
+}
+
 void FFmpegs::aacEncode(AudioEncodeSpec &in,
                         const char *outFilename) {
     // 文件
@@ -81,9 +113,81 @@ void FFmpegs::aacEncode(AudioEncodeSpec &in,
     ctx->channel_layout = in.chLayout;
 
     // 比特率
-    ctx->bit_rate = 32000;
+    //ctx->bit_rate = 32000;
 
-    // 规格
+    // 规格 也就是编码的等级 有aac aac_he_v2 还有其他的
     ctx->profile = FF_PROFILE_AAC_HE_V2;
+
+    // 打开编码器
+    AVDictionary *options = nullptr;
+    // 开启vbr（Variable Bit Rate，可变比特率），如果开启vbr，就不用写死比特率了
+    av_dict_set(&options,"vbr","1", 0);
+    // 命令行里面的采纳数 可以通过option 来设置
+    // av_dict_set(&options,"profile:a","aac_he_v2", 0);
+    ret = avcodec_open2(ctx,codec,&options);
+    if (ret < 0) {
+        ERROR_BUF(ret);
+        qDebug()<<"avcodec_open2 error"<<errbuf;
+        goto end;
+    }
+
+    // 创建AVFrame
+    frame = av_frame_alloc();
+    if (!frame) {
+        qDebug()<<"av_frame_alloc error";
+        goto end;
+    }
+
+    // frame 缓冲区中的样本帧数量（由ctx->frame_size决定）
+    frame->nb_samples = ctx->frame_size;
+    frame->format = ctx->sample_fmt;
+    frame->channel_layout = ctx->channel_layout;
+
+    // 利用nb_samples,format,channel_layout创建缓冲区
+    ret = av_frame_get_buffer(frame,0);
+    if (ret < 0) {
+        ERROR_BUF(ret);
+        qDebug()<<"av_frame_get_buffer error"<<errbuf;
+        goto end;
+    }
+    // 创建AVPacket
+    pkt = av_packet_alloc();
+    if (!pkt) {
+        qDebug()<<"av_packet_alloc error";
+        goto end;
+    }
+
+    // 打开文件
+    if (!inFile.open(QFile::ReadOnly)) {
+        qDebug()<<"file open error"<<in.filename;
+        goto end;
+    }
+
+    if (!outFile.open(QFile::WriteOnly)) {
+        qDebug()<<"file open error"<<outFilename;
+        goto end;
+    }
+
+    // 读取数据到frame中
+    while ((ret = inFile.read((char *) frame->data[0],
+                     frame->linesize[0])) > 0) {
+        if (encode(ctx, frame, pkt, outFile) < 0) {
+            goto end;
+        }
+    }
+
+    // 刷新缓冲区
+    encode(ctx, nullptr, pkt, outFile);
+
     qDebug()<<"线程正常结束";
+end:
+    // 关闭文件
+    inFile.close();
+    outFile.close();
+
+    // 释放资源
+    av_frame_free(&frame);
+    av_packet_free(&pkt);
+    avcodec_free_context(&ctx);
+    qDebug()<<"来到end 线程正常结束";
 }

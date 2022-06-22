@@ -53,10 +53,12 @@ OBJECTS_DIR   = ./
 ####### Files
 
 SOURCES       = ../aac_encode/audiothread.cpp \
+		../aac_encode/ffmpegs.cpp \
 		../aac_encode/main.cpp \
 		../aac_encode/mainwindow.cpp moc_audiothread.cpp \
 		moc_mainwindow.cpp
 OBJECTS       = audiothread.o \
+		ffmpegs.o \
 		main.o \
 		mainwindow.o \
 		moc_audiothread.o \
@@ -317,7 +319,9 @@ DIST          = /opt/homebrew/share/qt/mkspecs/features/spec_pre.prf \
 		/opt/homebrew/share/qt/mkspecs/features/yacc.prf \
 		/opt/homebrew/share/qt/mkspecs/features/lex.prf \
 		../aac_encode/aac_encode.pro ../aac_encode/audiothread.h \
+		../aac_encode/ffmpegs.h \
 		../aac_encode/mainwindow.h ../aac_encode/audiothread.cpp \
+		../aac_encode/ffmpegs.cpp \
 		../aac_encode/main.cpp \
 		../aac_encode/mainwindow.cpp
 QMAKE_TARGET  = aac_encode
@@ -893,8 +897,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /opt/homebrew/share/qt/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../aac_encode/audiothread.h ../aac_encode/mainwindow.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../aac_encode/audiothread.cpp ../aac_encode/main.cpp ../aac_encode/mainwindow.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../aac_encode/audiothread.h ../aac_encode/ffmpegs.h ../aac_encode/mainwindow.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../aac_encode/audiothread.cpp ../aac_encode/ffmpegs.cpp ../aac_encode/main.cpp ../aac_encode/mainwindow.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../aac_encode/mainwindow.ui $(DISTDIR)/
 
 
@@ -976,8 +980,74 @@ audiothread.o: ../aac_encode/audiothread.cpp ../aac_encode/audiothread.h \
 		/opt/homebrew/lib/QtCore.framework/Headers/QObject \
 		/opt/homebrew/lib/QtCore.framework/Headers/qobject.h \
 		/opt/homebrew/lib/QtCore.framework/Headers/QThread \
-		/opt/homebrew/lib/QtCore.framework/Headers/qthread.h
+		/opt/homebrew/lib/QtCore.framework/Headers/qthread.h \
+		/opt/homebrew/lib/QtCore.framework/Headers/QDebug \
+		/opt/homebrew/lib/QtCore.framework/Headers/qdebug.h \
+		../aac_encode/ffmpegs.h \
+		/usr/local/ffmpeg/include/libavcodec/avcodec.h \
+		/usr/local/ffmpeg/include/libavutil/samplefmt.h \
+		/usr/local/ffmpeg/include/libavutil/attributes.h \
+		/usr/local/ffmpeg/include/libavutil/avutil.h \
+		/usr/local/ffmpeg/include/libavutil/common.h \
+		/usr/local/ffmpeg/include/libavutil/macros.h \
+		/usr/local/ffmpeg/include/libavutil/avconfig.h \
+		/usr/local/ffmpeg/include/libavutil/mem.h \
+		/usr/local/ffmpeg/include/libavutil/version.h \
+		/usr/local/ffmpeg/include/libavutil/error.h \
+		/usr/local/ffmpeg/include/libavutil/rational.h \
+		/usr/local/ffmpeg/include/libavutil/mathematics.h \
+		/usr/local/ffmpeg/include/libavutil/intfloat.h \
+		/usr/local/ffmpeg/include/libavutil/log.h \
+		/usr/local/ffmpeg/include/libavutil/pixfmt.h \
+		/usr/local/ffmpeg/include/libavutil/buffer.h \
+		/usr/local/ffmpeg/include/libavutil/dict.h \
+		/usr/local/ffmpeg/include/libavutil/frame.h \
+		/usr/local/ffmpeg/include/libavutil/channel_layout.h \
+		/usr/local/ffmpeg/include/libavcodec/codec.h \
+		/usr/local/ffmpeg/include/libavutil/hwcontext.h \
+		/usr/local/ffmpeg/include/libavcodec/codec_id.h \
+		/usr/local/ffmpeg/include/libavcodec/version_major.h \
+		/usr/local/ffmpeg/include/libavcodec/codec_desc.h \
+		/usr/local/ffmpeg/include/libavcodec/codec_par.h \
+		/usr/local/ffmpeg/include/libavcodec/defs.h \
+		/usr/local/ffmpeg/include/libavcodec/packet.h \
+		/usr/local/ffmpeg/include/libavcodec/version.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o audiothread.o ../aac_encode/audiothread.cpp
+
+ffmpegs.o: ../aac_encode/ffmpegs.cpp ../aac_encode/ffmpegs.h \
+		/usr/local/ffmpeg/include/libavcodec/avcodec.h \
+		/usr/local/ffmpeg/include/libavutil/samplefmt.h \
+		/usr/local/ffmpeg/include/libavutil/attributes.h \
+		/usr/local/ffmpeg/include/libavutil/avutil.h \
+		/usr/local/ffmpeg/include/libavutil/common.h \
+		/usr/local/ffmpeg/include/libavutil/macros.h \
+		/usr/local/ffmpeg/include/libavutil/avconfig.h \
+		/usr/local/ffmpeg/include/libavutil/mem.h \
+		/usr/local/ffmpeg/include/libavutil/version.h \
+		/usr/local/ffmpeg/include/libavutil/error.h \
+		/usr/local/ffmpeg/include/libavutil/rational.h \
+		/usr/local/ffmpeg/include/libavutil/mathematics.h \
+		/usr/local/ffmpeg/include/libavutil/intfloat.h \
+		/usr/local/ffmpeg/include/libavutil/log.h \
+		/usr/local/ffmpeg/include/libavutil/pixfmt.h \
+		/usr/local/ffmpeg/include/libavutil/buffer.h \
+		/usr/local/ffmpeg/include/libavutil/dict.h \
+		/usr/local/ffmpeg/include/libavutil/frame.h \
+		/usr/local/ffmpeg/include/libavutil/channel_layout.h \
+		/usr/local/ffmpeg/include/libavcodec/codec.h \
+		/usr/local/ffmpeg/include/libavutil/hwcontext.h \
+		/usr/local/ffmpeg/include/libavcodec/codec_id.h \
+		/usr/local/ffmpeg/include/libavcodec/version_major.h \
+		/usr/local/ffmpeg/include/libavcodec/codec_desc.h \
+		/usr/local/ffmpeg/include/libavcodec/codec_par.h \
+		/usr/local/ffmpeg/include/libavcodec/defs.h \
+		/usr/local/ffmpeg/include/libavcodec/packet.h \
+		/usr/local/ffmpeg/include/libavcodec/version.h \
+		/opt/homebrew/lib/QtCore.framework/Headers/QFile \
+		/opt/homebrew/lib/QtCore.framework/Headers/qfile.h \
+		/opt/homebrew/lib/QtCore.framework/Headers/QDebug \
+		/opt/homebrew/lib/QtCore.framework/Headers/qdebug.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o ffmpegs.o ../aac_encode/ffmpegs.cpp
 
 main.o: ../aac_encode/main.cpp ../aac_encode/mainwindow.h \
 		/opt/homebrew/lib/QtWidgets.framework/Headers/QMainWindow \

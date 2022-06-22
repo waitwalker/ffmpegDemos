@@ -25,4 +25,6 @@ void AudioThread::run() {
     in.filename = "/Users/walkerwait/Desktop/44100_s16le.pcm";
     in.sampleRate = 44100;
     in.sampleFmt = AV_SAMPLE_FMT_S16;
+    in.chLayout = AV_CH_LAYOUT_STEREO;
+    FFmpegs::aacEncode(in,"/Users/walkerwait/Desktop/out7.aac");
 }

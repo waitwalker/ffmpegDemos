@@ -10,7 +10,10 @@ extern "C" {
 #define ERROR_BUF(ret) \
     char errbuf[1024]; \
     av_strerror(ret,errbuf,sizeof(errbuf));
+// 输入缓冲区大小
 #define IN_DATA_SIZE 20480
+// 阈值 需要再次读取输入文件数据的阈值
+#define REFILL_THRESH 4096
 
 FFmpegs::FFmpegs()
 {
@@ -246,6 +249,8 @@ void FFmpegs::aacDecode(const char *inFilename,
 
     // 每次从输入文件中读取的长度（aac）
     int inLen;
+    // 是否已经读取到了输入文件的尾部 默认没有
+    int inEnd = 0;
 
     // 文件
     QFile inFile(inFilename);
@@ -321,6 +326,7 @@ void FFmpegs::aacDecode(const char *inFilename,
     }
 
     // 读取文件数据 读的是IN_DATA_SIZE大小 一开始填满了，解析器不是一次把这个数据吃完
+    // 真正读取大小是inLen
     inLen = inFile.read(inData, IN_DATA_SIZE);
     // 读取到数据
     while (inLen > 0) {
@@ -335,17 +341,48 @@ void FFmpegs::aacDecode(const char *inFilename,
             goto end;
         }
 
-        // 跳过已经解析过的数据
+
+        // 跳过已经解析过的数据 指针往后挪
         inData += ret;
 
-        // 减去已经解析过的数据大小
+        // 减去已经解析过的数据大小 计算还剩下的大小
         inLen -= ret;
 
+        if (pkt->size <- 0) continue;
         if (decode(ctx,pkt, frame, outFile) < 0) {
             goto end;
         }
 
+        // 检查是否需要读取新的文件数组 判断最后剩的是否小于阈值
+        if (inLen < REFILL_THRESH && !inEnd) {
+            // 剩余数据移动到缓冲区的最前面 从inData开始的inLen大小的数据，移动到inDataArray最前面
+            memmove(inDataArray, inData, inLen);
+
+            // 充值inData
+            inData = inDataArray;
+
+            // 读取新的文件数据到inData+inLen后面
+            int len = inFile.read(inData + inLen, IN_DATA_SIZE - inLen);
+            // 真正读到数据 有读取到数据
+            if (len > 0) {
+                inLen += len;
+            } else {
+                // 文件中已经没有任何数据 读取到文件的尾部
+                inEnd = 1;
+            }
+        }
     }
+
+    // 刷新缓冲区 这种也行
+    // pkt->data = NULL;
+    // pkt->size = 0;
+    decode(ctx, nullptr, frame, outFile);
+
+    // 赋值输出参数
+    out.sampleRate = ctx->sample_rate;
+    out.sampleFmt = ctx->sample_fmt;
+    out.chLayout = ctx->channel_layout;
+
 
 end:
     // 关闭文件

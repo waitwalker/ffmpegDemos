@@ -250,6 +250,39 @@ void FFmpegs::aacDecode(const char *inFilename,
         goto end;
     }
 
+    // 创建AVPacket
+    pkt = av_packet_alloc();
+    if (!pkt) {
+        qDebug()<<"av_packet_alloc error";
+        goto end;
+    }
+
+    // 创建AVFrame
+    frame = av_frame_alloc();
+    if (!frame) {
+        qDebug()<<"av_frame_alloc error";
+        goto end;
+    }
+
+    // 打开解码器
+    ret = avcodec_open2(ctx, codec, nullptr);
+    if (ret < 0) {
+        ERROR_BUF(ret);
+        qDebug()<<"avcodec_open2 error:"<<errbuf;
+        goto end;
+    }
+
+    // 打开文件
+    if (!inFile.open(QFile::ReadOnly)) {
+        qDebug()<<"file open error:"<<inFilename;
+        goto end;
+    }
+
+    if (!outFile.open(QFile::WriteOnly)) {
+        qDebug()<<"file open error:"<<out.filename;
+        goto end;
+    }
+
 end:
     // 关闭文件
     inFile.close();

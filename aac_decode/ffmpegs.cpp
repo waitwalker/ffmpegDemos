@@ -205,6 +205,7 @@ end:
     qDebug()<<"来到end 线程正常结束";
 }
 
+// 解码数据
 static int decode(AVCodecContext *ctx,
                   AVPacket *pkt,
                   AVFrame *frame,
@@ -215,6 +216,20 @@ static int decode(AVCodecContext *ctx,
         ERROR_BUF(ret);
         qDebug()<<"avcodec_send_packet error:"<<errbuf;
         return ret;
+    }
+
+    while (true) {
+        // 获取解码后的数据
+        ret = avcodec_receive_frame(ctx, frame);
+        if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF) {
+            return 0;
+        } else if (ret < 0) {
+            ERROR_BUF(ret);
+            qDebug()<<"avcodec_send_packet error:"<<errbuf;
+            return ret;
+        }
+        // 将解码后的数据写入文件
+        outFile.write((char *)frame->data[0], frame->linesize[0]);
     }
 }
 

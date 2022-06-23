@@ -320,7 +320,7 @@ void FFmpegs::aacDecode(const char *inFilename,
         goto end;
     }
 
-    // 读取文件数据
+    // 读取文件数据 读的是IN_DATA_SIZE大小 一开始填满了，解析器不是一次把这个数据吃完
     inLen = inFile.read(inData, IN_DATA_SIZE);
     // 读取到数据
     while (inLen > 0) {
@@ -332,6 +332,16 @@ void FFmpegs::aacDecode(const char *inFilename,
         if (ret < 0) {
             ERROR_BUF(ret);
             qDebug()<<"av_parser_parse2 error:"<<errbuf;
+            goto end;
+        }
+
+        // 跳过已经解析过的数据
+        inData += ret;
+
+        // 减去已经解析过的数据大小
+        inLen -= ret;
+
+        if (decode(ctx,pkt, frame, outFile) < 0) {
             goto end;
         }
 

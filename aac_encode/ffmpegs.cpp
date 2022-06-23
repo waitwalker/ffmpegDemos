@@ -168,9 +168,21 @@ void FFmpegs::aacEncode(AudioEncodeSpec &in,
         goto end;
     }
 
-    // 读取数据到frame中
+    // 读取数据到frame中，linesize读取到的大小，也是frame最大的容纳大小，通过比特率，声道，采样格式算出来
+    // 尝试填满frame缓冲区，但是最后一次有可能填不满缓冲区
     while ((ret = inFile.read((char *) frame->data[0],
                      frame->linesize[0])) > 0) {
+        // 从文件中读取的数据，不足以填满frame缓冲区
+        if (ret < frame->linesize[0]) {
+            // 每个样本多大
+            int bytes = av_get_bytes_per_sample((AVSampleFormat)frame->format);
+            // 声道数
+            int ch = av_get_channel_layout_nb_channels(frame->channel_layout);
+            // 设置真正有效的样本数量
+            // 防止编码器编码了一些冗余数据
+            frame->nb_samples = ret / (bytes * ch);
+        }
+
         if (encode(ctx, frame, pkt, outFile) < 0) {
             goto end;
         }

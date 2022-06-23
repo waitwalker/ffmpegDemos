@@ -205,6 +205,18 @@ end:
     qDebug()<<"来到end 线程正常结束";
 }
 
+static int decode(AVCodecContext *ctx,
+                  AVPacket *pkt,
+                  AVFrame *frame,
+                  QFile &outFile){
+    // 发送压缩数据到解码器
+    int ret = avcodec_send_packet(ctx, pkt);
+    if (ret < 0) {
+        ERROR_BUF(ret);
+        qDebug()<<"avcodec_send_packet error:"<<errbuf;
+        return ret;
+    }
+}
 
 void FFmpegs::aacDecode(const char *inFilename,
                         AudioDecodeSpec &out) {
@@ -214,7 +226,11 @@ void FFmpegs::aacDecode(const char *inFilename,
     // 加上AV_INPUT_BUFFER_PADDING_SIZE是为了防止某些优化过程的reader一次性读取过多导致越界
     // 一些优化可能一次读4/8个字节，有可能读越界
     char inDataArray[IN_DATA_SIZE + AV_INPUT_BUFFER_PADDING_SIZE];
+    // 将数组首元素赋值给inData指针
     char *inData = inDataArray;
+
+    // 每次从输入文件中读取的长度（aac）
+    int inLen;
 
     // 文件
     QFile inFile(inFilename);
@@ -287,6 +303,23 @@ void FFmpegs::aacDecode(const char *inFilename,
     if (!outFile.open(QFile::WriteOnly)) {
         qDebug()<<"file open error:"<<out.filename;
         goto end;
+    }
+
+    // 读取文件数据
+    inLen = inFile.read(inData, IN_DATA_SIZE);
+    // 读取到数据
+    while (inLen > 0) {
+        // 经过解析器解析
+        ret = av_parser_parse2(parserCtx, ctx,
+                               &pkt->data, &pkt->size,// 输出数据
+                               (uint8_t *)inData, inLen, //输入的数据
+                               AV_NOPTS_VALUE, AV_NOPTS_VALUE,0);
+        if (ret < 0) {
+            ERROR_BUF(ret);
+            qDebug()<<"av_parser_parse2 error:"<<errbuf;
+            goto end;
+        }
+
     }
 
 end:

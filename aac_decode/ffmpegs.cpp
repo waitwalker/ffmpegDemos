@@ -10,6 +10,7 @@ extern "C" {
 #define ERROR_BUF(ret) \
     char errbuf[1024]; \
     av_strerror(ret,errbuf,sizeof(errbuf));
+#define IN_DATA_SIZE 20480
 
 FFmpegs::FFmpegs()
 {
@@ -209,6 +210,11 @@ void FFmpegs::aacDecode(const char *inFilename,
                         AudioDecodeSpec &out) {
     // 返回结果
     int ret = 0;
+    // 用来存放去取的输入文件数据（aac）
+    // 加上AV_INPUT_BUFFER_PADDING_SIZE是为了防止某些优化过程的reader一次性读取过多导致越界
+    // 一些优化可能一次读4/8个字节，有可能读越界
+    char inDataArray[IN_DATA_SIZE + AV_INPUT_BUFFER_PADDING_SIZE];
+    char *inData = inDataArray;
 
     // 文件
     QFile inFile(inFilename);

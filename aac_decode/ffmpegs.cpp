@@ -207,5 +207,59 @@ end:
 
 void FFmpegs::aacDecode(const char *inFilename,
                         AudioDecodeSpec &out) {
+    // 返回结果
+    int ret = 0;
+
+    // 文件
+    QFile inFile(inFilename);
+    QFile outFile(out.filename);
+
+    // 编解码器
+    const AVCodec *codec = nullptr;
+
+    // 编解码上下文
+    AVCodecContext *ctx = nullptr;
+
+    // 解析器上下文
+    AVCodecParserContext *parserCtx = nullptr;
+
+    // 存放解码前的数据（aac）
+    AVPacket *pkt = nullptr;
+
+    // 存放解码后的数据（pcm）
+    AVFrame *frame = nullptr;
+
+    // 获取编码器
+    codec = avcodec_find_decoder_by_name("libfdk_aac");
+    if (!codec) {
+        qDebug()<<"avcodec_find_decoder_by_name error:"<<"libfdk_aac";
+        return;
+    }
+
+    // 初始化解析器上下文
+    parserCtx = av_parser_init(codec->id);
+    if (!parserCtx) {
+        qDebug()<<"av_parser_init error";
+        return;
+    }
+
+    // 创建编解码器上下文
+    ctx = avcodec_alloc_context3(codec);
+    if (!ctx) {
+        qDebug()<<"avcodec_alloc_context3 error";
+        goto end;
+    }
+
+end:
+    // 关闭文件
+    inFile.close();
+    outFile.close();
+    // 释放资源
+    av_packet_free(&pkt);
+    av_frame_free(&frame);
+    av_parser_close(parserCtx);
+    avcodec_free_context(&ctx);
+
+
 
 }

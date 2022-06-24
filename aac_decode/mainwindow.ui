@@ -24,7 +24,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>audioEncode</string>
+     <string>开始编解码</string>
     </property>
    </widget>
   </widget>

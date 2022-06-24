@@ -54,7 +54,7 @@ public:
     void retranslateUi(QMainWindow *MainWindow)
     {
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
-        encodeButton->setText(QCoreApplication::translate("MainWindow", "audioEncode", nullptr));
+        encodeButton->setText(QCoreApplication::translate("MainWindow", "\345\274\200\345\247\213\347\274\226\350\247\243\347\240\201", nullptr));
     } // retranslateUi
 
 };

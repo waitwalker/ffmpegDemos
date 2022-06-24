@@ -34,5 +34,5 @@ void AudioThread::run() {
 
     qDebug()<<"采样率："<<out.sampleRate;
     qDebug()<<"采样格式："<<av_get_sample_fmt_name(out.sampleFmt);
-    qDebug()<<"声道叔："<<av_get_channel_layout_nb_channels(out.chLayout);
+    qDebug()<<"声道数："<<av_get_channel_layout_nb_channels(out.chLayout);
 }

@@ -348,8 +348,7 @@ void FFmpegs::aacDecode(const char *inFilename,
         // 减去已经解析过的数据大小 计算还剩下的大小
         inLen -= ret;
 
-        if (pkt->size <- 0) continue;
-        if (decode(ctx,pkt, frame, outFile) < 0) {
+        if (pkt->size > 0 && decode(ctx,pkt, frame, outFile) < 0) {
             goto end;
         }
 

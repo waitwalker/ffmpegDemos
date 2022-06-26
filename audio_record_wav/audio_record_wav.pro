@@ -33,7 +33,7 @@ win32 {
 }
 
 macx {
-    FFMPEG_HOME = /opt/homebrew/Cellar/ffmpeg/5.0
+    FFMPEG_HOME = /usr/local/ffmpeg/
     QMAKE_INFO_PLIST = mac/Info.plist
 }
 

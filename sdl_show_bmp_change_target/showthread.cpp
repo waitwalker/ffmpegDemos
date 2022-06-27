@@ -20,13 +20,19 @@ ShowThread::ShowThread(QObject *parent)
 }
 
 SDL_Texture * ShowThread::createTexture(SDL_Renderer *renderer) {
-    SDL_Texture *texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB24,
+    SDL_Texture *texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB32,
                       SDL_TEXTUREACCESS_TARGET,
                       50,50);
     if (!texture) return nullptr;
 
     // 设置纹理为渲染目标
     if (SDL_SetRenderTarget(renderer, texture)) return nullptr;
+
+    // 设置颜色
+    if (SDL_SetRenderDrawColor(renderer,0, 0, 0, 255)) return nullptr;;
+
+    // 清空
+    if (SDL_RenderClear(renderer)) return nullptr;;
 
     // 设置颜色
     if (SDL_SetRenderDrawColor(renderer,255, 255,0, SDL_ALPHA_OPAQUE)) return nullptr;;
@@ -62,6 +68,8 @@ void ShowThread::run(){
 
     // 创建纹理
     SDL_Texture *texture = nullptr;
+
+    SDL_Rect dstRect = {100,100,50,50};
 
     // 初始化子系统
     END(SDL_Init(SDL_INIT_VIDEO),SDL_Init);
@@ -101,6 +109,9 @@ void ShowThread::run(){
     texture = createTexture(renderer);
     END(!texture, SDL_CreateTextureFromSurface);
 
+    // 设置渲染目标为window
+    END(SDL_SetRenderTarget(renderer, nullptr), SDL_SetRenderTarget);
+
     // 设置绘制颜色（画笔颜色）
     END(SDL_SetRenderDrawColor(renderer,
                                    0,0,0,SDL_ALPHA_OPAQUE),SDL_SetRenderDrawColor);
@@ -108,13 +119,26 @@ void ShowThread::run(){
     // 用绘制颜色（画笔颜色）清除渲染目标
     END(SDL_RenderClear(renderer),SDL_RenderClear);
 
+    // 拷贝文件到渲染目标
+    END(SDL_RenderCopy(renderer, texture, nullptr, &dstRect), SDL_RenderCopy);
+
     // 更新所有的操作到屏幕上
     SDL_RenderPresent(renderer);
 
-    SDL_Delay(2000);
+    // 等待退出事件 监听各种事件
+    while (!isInterruptionRequested()) {
+        SDL_Event event;
+        SDL_WaitEvent(&event);
+        qDebug()<<"事件"<<event.type;
+        switch (event.type) {
+            case SDL_QUIT:
+                goto end;
+
+        }
+    }
 
 end:
-    SDL_FreeSurface(surface);
+
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyTexture(texture);

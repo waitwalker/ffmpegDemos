@@ -17,6 +17,7 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_showButton_clicked()
 {
+    qDebug()<<"走到这里 线程start";
     ShowThread *show = new ShowThread(this);
     show->start();
 }

@@ -19,6 +19,29 @@ ShowThread::ShowThread(QObject *parent)
             this, &ShowThread::deleteLater);
 }
 
+SDL_Texture * ShowThread::createTexture(SDL_Renderer *renderer) {
+    SDL_Texture *texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB24,
+                      SDL_TEXTUREACCESS_TARGET,
+                      50,50);
+    if (!texture) return nullptr;
+
+    // 设置纹理为渲染目标
+    if (SDL_SetRenderTarget(renderer, texture)) return nullptr;
+
+    // 设置颜色
+    if (SDL_SetRenderDrawColor(renderer,255, 255,0, SDL_ALPHA_OPAQUE)) return nullptr;;
+
+    // 画空心的矩形框 应该是填满整个纹理
+    SDL_Rect rect = {0,0,50,50};
+    if (SDL_RenderDrawRect(renderer, &rect)) return nullptr;
+
+    // 画线
+    if (SDL_RenderDrawLine(renderer, 0,0,50,50)) return nullptr;;
+    if (SDL_RenderDrawLine(renderer, 50,0,0,50)) return nullptr;
+
+    return texture;
+}
+
 ShowThread::~ShowThread() {
     disconnect();
     requestInterruption();
@@ -30,8 +53,7 @@ ShowThread::~ShowThread() {
 
 void ShowThread::run(){
     qDebug()<<"开始执行run方法";
-    // 像素数据
-    SDL_Surface *surface = nullptr;
+
     // 窗口
     SDL_Window *window = nullptr;
 
@@ -41,10 +63,6 @@ void ShowThread::run(){
     // 创建纹理
     SDL_Texture *texture = nullptr;
 
-    // 矩形框
-    SDL_Rect srcRect = {0,0,512,512};
-    SDL_Rect dstRect = {0,0,512,512};
-
     // 初始化子系统
     END(SDL_Init(SDL_INIT_VIDEO),SDL_Init);
 //    if (SDL_Init(SDL_INIT_VIDEO)) {
@@ -52,26 +70,16 @@ void ShowThread::run(){
 //        goto end;
 //    }
 
-    // 加载bmp文件
-    qDebug()<<"走到这里1";
-    surface =  SDL_LoadBMP("/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/resource/in.bmp");
-    qDebug()<<"走到这里2";
-    END(!surface, SDL_LoadBMP);
-//    if (!surface) {
-//        qDebug()<<"SDL_LoadBMP error:"<<SDL_GetError();
-//        goto end;
-//    }
-
     // 创建一个窗口
-     window = SDL_CreateWindow("SDL显示图片",
+     window = SDL_CreateWindow("SDL修改渲染目标",
                      // x
                      SDL_WINDOWPOS_UNDEFINED,
                      // y
                      SDL_WINDOWPOS_UNDEFINED,
                      // w
-                     surface->w,
+                     1000,
                      // h
-                     surface->h,
+                     1000,
                      SDL_WINDOW_SHOWN
                      );
     END(!window,SDL_CreateWindow);
@@ -90,18 +98,15 @@ void ShowThread::run(){
     }
 
     // 创建纹理
-    texture = SDL_CreateTextureFromSurface(renderer, surface);
+    texture = createTexture(renderer);
     END(!texture, SDL_CreateTextureFromSurface);
 
     // 设置绘制颜色（画笔颜色）
     END(SDL_SetRenderDrawColor(renderer,
-                                   0,0,0,SDL_ALPHA_OPAQUE), SDL_SetRenderDrawColor);
+                                   0,0,0,SDL_ALPHA_OPAQUE),SDL_SetRenderDrawColor);
 
     // 用绘制颜色（画笔颜色）清除渲染目标
     END(SDL_RenderClear(renderer),SDL_RenderClear);
-
-    // 拷贝纹理数据到渲染目标（默认是window）
-    END(SDL_RenderCopy(renderer, texture, &srcRect, &dstRect), SDL_RenderCopy);
 
     // 更新所有的操作到屏幕上
     SDL_RenderPresent(renderer);

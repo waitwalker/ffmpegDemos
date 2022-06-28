@@ -11,6 +11,8 @@ class ShowThread : public QThread
 private:
     void run() override;
     SDL_Texture *createTexture(SDL_Renderer *render);
+
+    void showClick(SDL_Event &event, SDL_Renderer *renderer, SDL_Texture *texture);
 public:
     explicit ShowThread(QObject *parent = nullptr);
     ~ShowThread();

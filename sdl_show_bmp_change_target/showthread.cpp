@@ -57,6 +57,30 @@ ShowThread::~ShowThread() {
     qDebug()<<"正常析构了";
 }
 
+void ShowThread::showClick(SDL_Event &event,
+                           SDL_Renderer *renderer,
+                           SDL_Texture *texture) {
+    SDL_MouseButtonEvent btn = event.button;
+
+    int w = 0;
+    int h = 0;
+    // 查询纹理宽高
+    if (SDL_QueryTexture(texture, nullptr, nullptr, &w, &h)) return;
+    // 点击在中间位置
+    int x = btn.x - (w >> 1);
+    int y = btn.y - (h >> 1);
+    SDL_Rect rect = {x,y,w,h};
+
+    // 清除操作
+    if (SDL_RenderClear(renderer)) return;
+
+    // 赋值纹理到渲染目标
+    SDL_RenderCopy(renderer, texture, nullptr, &rect);
+
+    // 更新渲染操作到屏幕上
+    SDL_RenderPresent(renderer);
+}
+
 void ShowThread::run(){
     qDebug()<<"开始执行run方法";
 
@@ -133,6 +157,10 @@ void ShowThread::run(){
         switch (event.type) {
             case SDL_QUIT:
                 goto end;
+
+        case SDL_MOUSEBUTTONUP:
+            showClick(event, renderer, texture);
+            break;
 
         }
     }

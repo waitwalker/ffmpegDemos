@@ -21,8 +21,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     // 设置YUV
     Yuv yuv = {
-        "",
-        640,480,
+        "/Users/walkerwait/Desktop/out.yuv",
+        1920,1076,
         AV_PIX_FMT_YUV420P,
         30
     };

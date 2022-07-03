@@ -46,7 +46,8 @@ void YuvPlayer::paintEvent(QPaintEvent *event) {
     if (!_currentImage) return;
     QPainter painter(this);
     // 将图片绘制到当前组件上
-    painter.drawImage(QPoint(0,0),*_currentImage);
+//    painter.drawImage(QPoint(0,0),*_currentImage);
+    painter.drawImage(QRect(0,0,width(), height()),*_currentImage);
 }
 
 void YuvPlayer::setYuv(Yuv &yuv) {

@@ -49,9 +49,13 @@ private:
     int _timerId = 0;
     Yuv _yuv;
     State _state = Stopped;
+
+    QImage *_currentImage = nullptr;
     void timerEvent(QTimerEvent *event);
 
     void paintEvent(QPaintEvent *event);
+
+    void freeCurrentImage();
 
 signals:
 

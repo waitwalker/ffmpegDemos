@@ -1,5 +1,6 @@
 #include "yuvplayer.h"
 #include <QPainter>
+#include "xcd.h"
 extern "C" {
 #include <libavutil/imgutils.h>
 }
@@ -42,9 +43,10 @@ bool YuvPlayer::isPlaying() {
 // 当组件想重绘的时候，就会调用这个函数
 // 想要绘制什么内容，在这个函数中实现
 void YuvPlayer::paintEvent(QPaintEvent *event) {
+    if (!_currentImage) return;
     QPainter painter(this);
     // 将图片绘制到当前组件上
-//    painter.drawImage(data, width, height, QImage::Format);
+    painter.drawImage(QPoint(0,0),*_currentImage);
 }
 
 void YuvPlayer::setYuv(Yuv &yuv) {
@@ -62,14 +64,35 @@ void YuvPlayer::timerEvent(QTimerEvent *event){
                                            _yuv.width, _yuv.height, 1);
     char data[imgSize];
     if (_file.read(data, imgSize) > 0) {
+        RawVideoFrame in = {
+            data,
+            _yuv.width,_yuv.height, _yuv.pixelFormat
+        };
 
+        RawVideoFrame out = {
+            nullptr,
+            _yuv.width, _yuv.height, AV_PIX_FMT_RGB24
+        };
+        XCD::convertRawFrame(in, out);
+        freeCurrentImage();
+        _currentImage = new QImage((uchar *)out.pixels, out.width, out.height, QImage::Format_RGB888);
+        // 刷新
+        update();
     } else {
         // 文件数据已经读取完毕
         killTimer(_timerId);
     }
 }
 
+void YuvPlayer::freeCurrentImage() {
+    if(!_currentImage) return;
+    free(_currentImage->bits());
+    delete _currentImage;
+    _currentImage = nullptr;
+}
+
 // 析构
 YuvPlayer::~YuvPlayer() {
     _file.close();
+    freeCurrentImage();
 }

@@ -10,15 +10,32 @@ CONFIG += c++11
 
 SOURCES += \
     main.cpp \
-    widget.cpp
+    mainwindow.cpp \
+    xcd.cpp \
+    yuvplayer.cpp
 
 HEADERS += \
-    widget.h
+    mainwindow.h \
+    xcd.h \
+    yuvplayer.h
 
 FORMS += \
-    widget.ui
+    mainwindow.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+win32 {
+    FFMPEG_HOME = F:/Dev/msys64/usr/local/sdl
+}
+
+mac {
+    FFMPEG_HOME = /usr/local/ffmpeg
+}
+
+INCLUDEPATH += $${FFMPEG_HOME}/include
+LIBS += -L$${FFMPEG_HOME}/lib \
+        -lavutil \
+        -lswscale

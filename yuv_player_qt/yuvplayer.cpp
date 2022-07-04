@@ -62,7 +62,6 @@ void YuvPlayer::setYuv(Yuv &yuv) {
     int dy = 0;
     int dw = _yuv.width;
     int dh = _yuv.height;
-    QRect rect(dx,dy,dw,dh);
     if (dw > w || dh > h) {
         if (dw * h > w * dw) {//视频的宽高比 > 播放器的宽高比
             dh = w * dh / dw;

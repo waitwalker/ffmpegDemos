@@ -46,6 +46,9 @@ void YuvPlayer::pause() {
 }
 
 void YuvPlayer::stop() {
+    if (_state == YuvPlayer::Stopped) return;
+
+    // 能来到后面说明状态可能是：正在播放、暂停、正常完毕
     if (_timerId) {
         killTimer(_timerId);
     }

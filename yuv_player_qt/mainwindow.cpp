@@ -1,6 +1,28 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
+static int yuvIndex = 0;
+static const Yuv yuvs[] = {
+    {
+            "/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/resource/1.yuv",
+            640,360,
+            AV_PIX_FMT_YUV420P,
+            30
+    },
+    {
+            "/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/resource/2.yuv",
+            960,400,
+            AV_PIX_FMT_YUV420P,
+            30
+    },
+    {
+            "/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/resource/3.yuv",
+            854,480,
+            AV_PIX_FMT_YUV420P,
+            30
+    }
+};
+
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -11,6 +33,10 @@ MainWindow::MainWindow(QWidget *parent)
     // 创建播放器
     _player = new YuvPlayer(this);
 
+    // 监听播放器
+    connect(_player, &YuvPlayer::stateChanged,
+            this, &MainWindow::onPlayerStateChanged);
+
     // 设置frame
     int w = 400;
     int h = 400;
@@ -20,17 +46,8 @@ MainWindow::MainWindow(QWidget *parent)
     _player->setGeometry(x, y, w, h);
 
     // 设置YUV
-    Yuv yuv = {
-        "/Users/walkerwait/Desktop/out.yuv",
-        1920,1076,
-        AV_PIX_FMT_YUV420P,
-        30
-    };
+    Yuv yuv = yuvs[0];
     _player->setYuv(yuv);
-
-    // 监听播放器
-    connect(_player, &YuvPlayer::stateChanged,
-            this, &MainWindow::onPlayerStateChanged);
 }
 
 // 监听到播放器状态改变
@@ -63,5 +80,16 @@ void MainWindow::on_playButton_clicked()
 void MainWindow::on_stopButton_clicked()
 {
     _player->stop();
+}
+
+
+void MainWindow::on_nextButton_clicked()
+{
+    int yuvCount = sizeof (yuvs) / sizeof(Yuv);
+    yuvIndex = ++yuvIndex % yuvCount;
+    Yuv yuv = yuvs[yuvIndex];
+    _player->stop();
+    _player->setYuv(yuv);
+    _player->play();
 }
 

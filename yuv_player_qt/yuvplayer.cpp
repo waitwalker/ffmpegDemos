@@ -39,9 +39,7 @@ void YuvPlayer::pause() {
     if (_state != YuvPlayer::Playing) return;
 
     // 能来到后面说明状态可能是：正在播放
-    if (_timerId) {
-        killTimer(_timerId);
-    }
+    stopTimer();
     setState(YuvPlayer::Paused);
 }
 
@@ -49,9 +47,7 @@ void YuvPlayer::stop() {
     if (_state == YuvPlayer::Stopped) return;
 
     // 能来到后面说明状态可能是：正在播放、暂停、正常完毕
-    if (_timerId) {
-        killTimer(_timerId);
-    }
+    stopTimer();
     // 释放图片
     freeCurrentImage();
     // 刷新
@@ -131,10 +127,17 @@ void YuvPlayer::timerEvent(QTimerEvent *event){
         update();
     } else {
         // 文件数据已经读取完毕
-        killTimer(_timerId);
+        // 停止定时器
+        stopTimer();
         // 正常播放完毕
         setState(YuvPlayer::Finished);
     }
+}
+
+void YuvPlayer::stopTimer() {
+    if (_timerId == 0) return;
+    killTimer(_timerId);
+    _timerId = 0;
 }
 
 // 释放当前帧数据

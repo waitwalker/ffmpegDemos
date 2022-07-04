@@ -25,6 +25,7 @@ public:
     QWidget *centralwidget;
     QPushButton *playButton;
     QPushButton *stopButton;
+    QPushButton *nextButton;
     QMenuBar *menubar;
     QStatusBar *statusbar;
 
@@ -41,6 +42,9 @@ public:
         stopButton = new QPushButton(centralwidget);
         stopButton->setObjectName(QString::fromUtf8("stopButton"));
         stopButton->setGeometry(QRect(160, 20, 100, 32));
+        nextButton = new QPushButton(centralwidget);
+        nextButton->setObjectName(QString::fromUtf8("nextButton"));
+        nextButton->setGeometry(QRect(290, 20, 100, 32));
         MainWindow->setCentralWidget(centralwidget);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName(QString::fromUtf8("menubar"));
@@ -60,6 +64,7 @@ public:
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
         playButton->setText(QCoreApplication::translate("MainWindow", "\346\222\255\346\224\276", nullptr));
         stopButton->setText(QCoreApplication::translate("MainWindow", "\345\201\234\346\255\242", nullptr));
+        nextButton->setText(QCoreApplication::translate("MainWindow", "\344\270\213\344\270\200\344\270\252", nullptr));
     } // retranslateUi
 
 };

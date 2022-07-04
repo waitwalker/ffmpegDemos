@@ -22,6 +22,8 @@ private slots:
 
     void onPlayerStateChanged();
 
+    void on_nextButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     YuvPlayer *_player = nullptr;

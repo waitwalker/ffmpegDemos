@@ -57,7 +57,11 @@ private:
 
     void paintEvent(QPaintEvent *event);
 
+    // 释放图片
     void freeCurrentImage();
+
+    // 停止定时器
+    void stopTimer();
 
     // 设置状态（改变状态）
     void setState(State state);

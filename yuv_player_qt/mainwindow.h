@@ -18,8 +18,9 @@ public:
 
 private slots:
     void on_playButton_clicked();
-
     void on_stopButton_clicked();
+
+    void onPlayerStateChanged();
 
 private:
     Ui::MainWindow *ui;

@@ -5,6 +5,11 @@ extern "C" {
 #include <libavutil/imgutils.h>
 }
 
+void YuvPlayer::setState(State state) {
+    if (state == _state) return;
+    _state = state;
+    emit stateChanged();
+}
 
 YuvPlayer::State YuvPlayer::getState() {
     return _state;
@@ -19,21 +24,21 @@ YuvPlayer::YuvPlayer(QWidget *parent)
 
 void YuvPlayer::play() {
     _timerId = startTimer(1000/_yuv.fps);
-    _state = YuvPlayer::Playing;
+    setState(YuvPlayer::Playing);
 }
 
 void YuvPlayer::pause() {
     if (_timerId) {
         killTimer(_timerId);
     }
-    _state = YuvPlayer::Paused;
+    setState(YuvPlayer::Paused);
 }
 
 void YuvPlayer::stop() {
     if (_timerId) {
         killTimer(_timerId);
     }
-    _state = YuvPlayer::Stopped;
+    setState(YuvPlayer::Stopped);
 }
 
 bool YuvPlayer::isPlaying() {
@@ -109,6 +114,8 @@ void YuvPlayer::timerEvent(QTimerEvent *event){
     } else {
         // 文件数据已经读取完毕
         killTimer(_timerId);
+        // 正常播放完毕
+        setState(YuvPlayer::Finished);
     }
 }
 

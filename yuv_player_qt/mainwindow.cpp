@@ -12,7 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
     _player = new YuvPlayer(this);
 
     // 设置frame
-    int w = 500;
+    int w = 400;
     int h = 400;
     int x = (width() - w) >> 1;
     int y = (height() - w) >> 1;
@@ -27,6 +27,20 @@ MainWindow::MainWindow(QWidget *parent)
         30
     };
     _player->setYuv(yuv);
+
+    // 监听播放器
+    connect(_player, &YuvPlayer::stateChanged,
+            this, &MainWindow::onPlayerStateChanged);
+}
+
+// 监听到播放器状态改变
+void MainWindow::onPlayerStateChanged() {
+    if (_player->getState() == YuvPlayer::Playing) {
+        ui->playButton->setText("暂停");
+    } else {
+        // 不是处于播放状态 按钮置为播放
+        ui->playButton->setText("播放");
+    }
 }
 
 MainWindow::~MainWindow()
@@ -39,10 +53,8 @@ void MainWindow::on_playButton_clicked()
 {
     if (_player->isPlaying()) {
         _player->pause();
-        ui->playButton->setText("播放");
     } else {
         _player->play();
-        ui->playButton->setText("暂停");
     }
 }
 

@@ -59,7 +59,12 @@ private:
 
     void freeCurrentImage();
 
+    // 设置状态（改变状态）
+    void setState(State state);
+
 signals:
+    // 状态改变的时候发送信号
+    void stateChanged();
 
 };
 

@@ -7,6 +7,12 @@ extern "C" {
 
 void YuvPlayer::setState(State state) {
     if (state == _state) return;
+    if (state == YuvPlayer::Stopped || state == YuvPlayer::Finished) {
+
+        // 让文件读取指针回到文件首部
+        _file.seek(0);
+
+    }
     _state = state;
     emit stateChanged();
 }
@@ -23,11 +29,13 @@ YuvPlayer::YuvPlayer(QWidget *parent)
 }
 
 void YuvPlayer::play() {
+    if (_state == YuvPlayer::Playing) return;
     _timerId = startTimer(1000/_yuv.fps);
     setState(YuvPlayer::Playing);
 }
 
 void YuvPlayer::pause() {
+    if (_state == YuvPlayer::Paused) return;
     if (_timerId) {
         killTimer(_timerId);
     }
@@ -42,10 +50,6 @@ void YuvPlayer::stop() {
     freeCurrentImage();
     // 刷新
     update();
-
-    // 让文件读取指针回到文件首部
-    _file.seek(0);
-
     setState(YuvPlayer::Stopped);
 }
 

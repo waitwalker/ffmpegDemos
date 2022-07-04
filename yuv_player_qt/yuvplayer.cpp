@@ -62,7 +62,8 @@ void YuvPlayer::setYuv(Yuv &yuv) {
     int dy = 0;
     int dw = _yuv.width;
     int dh = _yuv.height;
-    if (dw > w || dh > h) {
+    // 计算目标尺寸
+    if (dw > w || dh > h) { // 缩放
         if (dw * h > w * dw) {//视频的宽高比 > 播放器的宽高比
             dh = w * dh / dw;
             dw = w;
@@ -72,6 +73,7 @@ void YuvPlayer::setYuv(Yuv &yuv) {
         }
     }
 
+    // 居中
     dx = (w - dw) >> 1;
     dy = (h - dh) >> 1;
 

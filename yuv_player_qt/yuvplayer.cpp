@@ -38,6 +38,14 @@ void YuvPlayer::stop() {
     if (_timerId) {
         killTimer(_timerId);
     }
+    // 释放图片
+    freeCurrentImage();
+    // 刷新
+    update();
+
+    // 让文件读取指针回到文件首部
+    _file.seek(0);
+
     setState(YuvPlayer::Stopped);
 }
 

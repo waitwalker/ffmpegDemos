@@ -35,6 +35,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 // 监听到播放器状态改变
 void MainWindow::onPlayerStateChanged() {
+    qDebug()<<"播放器当前状态："<<_player->getState();
     if (_player->getState() == YuvPlayer::Playing) {
         ui->playButton->setText("暂停");
     } else {

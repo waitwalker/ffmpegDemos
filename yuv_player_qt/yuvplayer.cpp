@@ -30,12 +30,15 @@ YuvPlayer::YuvPlayer(QWidget *parent)
 
 void YuvPlayer::play() {
     if (_state == YuvPlayer::Playing) return;
+    // 能来到后面说明状态可能是：暂停、停止、正常结束
     _timerId = startTimer(1000/_yuv.fps);
     setState(YuvPlayer::Playing);
 }
 
 void YuvPlayer::pause() {
-    if (_state == YuvPlayer::Paused) return;
+    if (_state != YuvPlayer::Playing) return;
+
+    // 能来到后面说明状态可能是：正在播放
     if (_timerId) {
         killTimer(_timerId);
     }

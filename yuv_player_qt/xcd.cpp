@@ -16,10 +16,14 @@ void XCD::convertRawVideo(RawVideoFile &in,
     SwsContext *ctx = nullptr;
 
     // 输入 输出缓冲区
+    // 比如输入yuv420p->yuv444p
     uint8_t *inData[4];
     uint8_t *outData[4];
     // 每一个平面的大小
+    // stride 代表步长
+    // inStrides[0]代表的是输入yuv420p，Y分量一行的数据
     int inStrides[4];
+    // outStrides[0]代表的是输入RGB，RGB分量一行的数据，也就是分辨率width * 3（3表示R G B分别代表一个字节）
     int outStrides[4];
     // 有多少个像素，Y就有多少字节
     // 每一帧图片大小

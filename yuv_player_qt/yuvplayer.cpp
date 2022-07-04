@@ -47,11 +47,36 @@ void YuvPlayer::paintEvent(QPaintEvent *event) {
     QPainter painter(this);
     // 将图片绘制到当前组件上
 //    painter.drawImage(QPoint(0,0),*_currentImage);
-    painter.drawImage(QRect(0,0,width(), height()),*_currentImage);
+    painter.drawImage(_dstRect, *_currentImage);
 }
 
 void YuvPlayer::setYuv(Yuv &yuv) {
     _yuv = yuv;
+
+    // 组件尺寸
+    int w = width();
+    int h = height();
+
+    // 计算Rect
+    int dx = 0;
+    int dy = 0;
+    int dw = _yuv.width;
+    int dh = _yuv.height;
+    QRect rect(dx,dy,dw,dh);
+    if (dw > w || dh > h) {
+        if (dw * h > w * dw) {//视频的宽高比 > 播放器的宽高比
+            dh = w * dh / dw;
+            dw = w;
+        } else {
+            dw = h * dw / dh;
+            dh = h;
+        }
+    }
+
+    dx = (w - dw) >> 1;
+    dy = (h - dh) >> 1;
+
+    _dstRect = QRect(dx, dy, dw, dh);
 
     // 打开文件
     _file.setFileName(_yuv.filename);
@@ -77,7 +102,8 @@ void YuvPlayer::timerEvent(QTimerEvent *event){
         XCD::convertRawFrame(in, out);
         freeCurrentImage();
         _currentImage = new QImage((uchar *)out.pixels, out.width, out.height, QImage::Format_RGB888);
-        // 刷新
+
+        // 刷新 调用后会重绘
         update();
     } else {
         // 文件数据已经读取完毕
@@ -85,6 +111,7 @@ void YuvPlayer::timerEvent(QTimerEvent *event){
     }
 }
 
+// 释放当前帧数据
 void YuvPlayer::freeCurrentImage() {
     if(!_currentImage) return;
     free(_currentImage->bits());

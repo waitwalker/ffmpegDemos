@@ -50,6 +50,8 @@ private:
     Yuv _yuv;
     State _state = Stopped;
 
+    QRect _dstRect;
+
     QImage *_currentImage = nullptr;
     void timerEvent(QTimerEvent *event);
 

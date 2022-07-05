@@ -27,5 +27,5 @@ void AudioThread::run() {
     in.height = 360;
     in.fps = 30;
     in.pix_fmt = AV_PIX_FMT_YUV420P;
-    FFmpegs::h264Encode(in,"/Users/walkerwait/Desktop/out.h264");
+    FFmpegs::h264Encode(in,"/Users/walkerwait/Desktop/out-1.h264");
 }

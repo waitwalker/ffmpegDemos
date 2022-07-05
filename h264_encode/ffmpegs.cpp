@@ -70,10 +70,11 @@ void FFmpegs::h264Encode(VideoEncodeSpec &in,
     // 一帧图片的大小
     int imgSize = av_image_get_buffer_size(in.pix_fmt, in.width, in.height, 1);
 
+    //
+    uint8_t *buf = nullptr;
+
     // 返回结果
     int ret = 0;
-
-
 
     // 编码器
     const AVCodec *codec = nullptr;
@@ -148,6 +149,21 @@ void FFmpegs::h264Encode(VideoEncodeSpec &in,
         qDebug()<<"av_frame_get_buffer error"<<errbuf;
         goto end;
     }
+
+
+    // 创建输入缓冲区（方法2）
+//    buf = (uint8_t *)av_malloc(imgSize);
+//    ret = av_image_fill_arrays(frame->data, frame->linesize,
+//            buf,
+//            in.pix_fmt, in.width, in.height, 1);
+//    if (ret < 0) {
+//        ERROR_BUF(ret);
+//        qDebug()<<"av_image_fill_arrays error:"<<errbuf;
+//        goto end;
+//    }
+
+
+    // 创建输入缓冲区（方法3）
 //    ret = av_frame_get_buffer(frame,0);
 //    if (ret < 0) {
 //        ERROR_BUF(ret);
@@ -194,7 +210,7 @@ end:
     // 关闭文件
     inFile.close();
     outFile.close();
-
+    av_freep(&buf);
     // 释放资源
     if (frame) {
         av_freep(&frame->data[0]);

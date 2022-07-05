@@ -45,7 +45,9 @@ public:
 
 private:
     QWidget *_widget;
-    QFile _file;
+    QFile *_file = nullptr;
+    // 一帧图片大小
+    int _imageSize;
     int _timerId = 0;
     Yuv _yuv;
     State _state = Stopped;
@@ -62,6 +64,9 @@ private:
 
     // 停止定时器
     void stopTimer();
+
+    // 关闭文件
+    void closeFile();
 
     // 设置状态（改变状态）
     void setState(State state);

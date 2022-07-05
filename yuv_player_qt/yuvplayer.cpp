@@ -10,7 +10,7 @@ void YuvPlayer::setState(State state) {
     if (state == YuvPlayer::Stopped || state == YuvPlayer::Finished) {
 
         // 让文件读取指针回到文件首部
-        _file.seek(0);
+        _file->seek(0);
 
     }
     _state = state;
@@ -71,6 +71,20 @@ void YuvPlayer::paintEvent(QPaintEvent *event) {
 
 void YuvPlayer::setYuv(Yuv &yuv) {
     _yuv = yuv;
+    closeFile();
+
+    // 初始化文件
+    _file = new QFile();
+
+    // 打开文件
+    _file->setFileName(_yuv.filename);
+    if (!_file->open(QFile::ReadOnly)) {
+        qDebug()<<"file open error" <<_yuv.filename;
+    }
+
+    // 一帧图片大小
+    _imageSize = av_image_get_buffer_size(_yuv.pixelFormat,
+                                           _yuv.width, _yuv.height, 1);
 
     // 组件尺寸
     int w = width();
@@ -97,19 +111,11 @@ void YuvPlayer::setYuv(Yuv &yuv) {
     dy = (h - dh) >> 1;
 
     _dstRect = QRect(dx, dy, dw, dh);
-
-    // 打开文件
-    _file.setFileName(_yuv.filename);
-    if (!_file.open(QFile::ReadOnly)) {
-        qDebug()<<"file open error" <<_yuv.filename;
-    }
 }
 
 void YuvPlayer::timerEvent(QTimerEvent *event){
-    int imgSize = av_image_get_buffer_size(_yuv.pixelFormat,
-                                           _yuv.width, _yuv.height, 1);
-    char data[imgSize];
-    if (_file.read(data, imgSize) > 0) {
+    char data[_imageSize];
+    if (_file->read(data, _imageSize) > 0) {
         RawVideoFrame in = {
             data,
             _yuv.width,_yuv.height, _yuv.pixelFormat
@@ -148,8 +154,16 @@ void YuvPlayer::freeCurrentImage() {
     _currentImage = nullptr;
 }
 
+void YuvPlayer::closeFile() {
+    if (!_file)  return;
+    _file->close();
+    delete _file;
+    _file = nullptr;
+}
+
 // 析构
 YuvPlayer::~YuvPlayer() {
-    _file.close();
+    closeFile();
     freeCurrentImage();
+    stopTimer();
 }

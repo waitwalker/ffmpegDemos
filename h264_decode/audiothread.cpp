@@ -1,6 +1,9 @@
 #include "audiothread.h"
 #include <QDebug>
 #include "ffmpegs.h"
+extern "C" {
+#include <libavutil/imgutils.h>
+}
 
 AudioThread::AudioThread(QObject *parent)
     : QThread{parent}
@@ -29,10 +32,10 @@ void AudioThread::run() {
 //    FFmpegs::aacEncode(in,"/Users/walkerwait/Desktop/out7.aac");
 
     VideoDecodeSpec out;
-    out.filename = "/Users/walkerwait/Desktop/out8.pcm";
-    FFmpegs::h264Decode("/Users/walkerwait/Desktop/out7.aac",out);
+    out.filename = "/Users/walkerwait/Desktop/new.yuv";
+    FFmpegs::h264Decode("/Users/walkerwait/Desktop/out.h264",out);
 
-    qDebug()<<"采样率："<<out.sampleRate;
-    qDebug()<<"采样格式："<<av_get_sample_fmt_name(out.sampleFmt);
-    qDebug()<<"声道数："<<av_get_channel_layout_nb_channels(out.chLayout);
+    qDebug()<<"宽度："<<out.width;
+    qDebug()<<"高度："<<out.height;
+    qDebug()<<"编码格式："<<av_get_pix_fmt_name(out.pxiFmt);
 }

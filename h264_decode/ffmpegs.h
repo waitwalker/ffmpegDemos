@@ -15,9 +15,10 @@ typedef struct {
 
 typedef struct {
     const char *filename;
-    int sampleRate;
-    AVSampleFormat sampleFmt;
-    uint64_t chLayout;
+    int width;
+    int height;
+    AVPixelFormat pxiFmt;
+    int fps;
 } VideoDecodeSpec;
 
 

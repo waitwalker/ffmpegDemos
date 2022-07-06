@@ -5,6 +5,7 @@
 extern "C" {
 #include <libavcodec/avcodec.h>
 #include <libavutil/avutil.h>
+#include <libavutil/imgutils.h>
 }
 
 #define ERROR_BUF(ret) \
@@ -206,6 +207,8 @@ end:
     qDebug()<<"来到end 线程正常结束";
 }
 
+static int frameIndex = 0;
+
 // 解码数据
 static int decode(AVCodecContext *ctx,
                   AVPacket *pkt,
@@ -230,7 +233,23 @@ static int decode(AVCodecContext *ctx,
             return ret;
         }
         // 将解码后的数据写入文件
-        outFile.write((char *)frame->data[0], frame->linesize[0]);
+//        int imgSize = av_image_get_buffer_size(ctx->pix_fmt, ctx->width, ctx->height, 1);
+//        qDebug()<<"一帧的大小："<<imgSize;
+        qDebug()<<"解码出第："<<++frameIndex<<"帧";
+        qDebug()<<"data[0]："<<frame->data[0];
+        qDebug()<<"data[1]："<<frame->data[1];
+        qDebug()<<"data[2]："<<frame->data[2];
+//        outFile.write((char *)frame->data[0], frame->linesize[0]);
+//        outFile.write((char *)frame->data[0], imgSize);
+        // 写入Y平面
+        outFile.write((char *)frame->data[0],
+                frame->linesize[0] * ctx->height);
+        // 写入U平面
+        outFile.write((char *)frame->data[1],
+                frame->linesize[1] * ctx->height >> 1);
+        // 写入V平面
+        outFile.write((char *)frame->data[2],
+                frame->linesize[2] * ctx->height >> 1);
     }
 }
 
@@ -248,8 +267,8 @@ void FFmpegs::h264Decode(const char *inFilename,
     // 每次从输入文件中读取的长度（h264）
     // 输入缓冲区中，剩下等待要进行解码的有效数据长度
     int inLen;
-//    // 是否已经读取到了输入文件的尾部 默认没有
-//    int inEnd = 0;
+    // 是否已经读取到了输入文件的尾部 默认没有
+    int inEnd = 0;
 
     // 文件
     QFile inFile(inFilename);
@@ -299,6 +318,9 @@ void FFmpegs::h264Decode(const char *inFilename,
         goto end;
     }
 
+    //
+//    av_image_alloc(frame->data, frame->linesize, frame->width, frame->height, AV_PIX_FMT_YUV420P,1);
+
     // 创建AVFrame
     frame = av_frame_alloc();
     if (!frame) {
@@ -329,11 +351,15 @@ void FFmpegs::h264Decode(const char *inFilename,
     // 真正读取大小是inLen
 //    inLen = inFile.read(inDataArray, IN_DATA_SIZE);
     // 读取到数据
-    while ((inLen = inFile.read(inDataArray, IN_DATA_SIZE)) > 0) {
+    do {
+        inLen = inFile.read(inDataArray, IN_DATA_SIZE);
+        // 设置是否到了文件尾部
+        inEnd = !inLen;
+
         // 让inData指向数组的首元素
         inData = inDataArray;
-        // 只要输入缓冲区中海油等待进行解码的数据
-        while (inLen > 0) {
+        // 只要输入缓冲区中海油等待进行解码的数据，到了文件尾部虽然没有读取到任何数据也要调用av_parser_parse2，修复bug
+        while (inLen > 0 || inEnd) {
             // 经过解析器解析
             ret = av_parser_parse2(parserCtx, ctx,
                                    &pkt->data, &pkt->size,// 输出数据
@@ -345,7 +371,6 @@ void FFmpegs::h264Decode(const char *inFilename,
                 goto end;
             }
 
-
             // 跳过已经解析过的数据 指针往后挪
             inData += ret;
 
@@ -355,8 +380,39 @@ void FFmpegs::h264Decode(const char *inFilename,
             if (pkt->size > 0 && decode(ctx,pkt, frame, outFile) < 0) {
                 goto end;
             }
+            // 如果到了文件尾部
+            if (inEnd) break;
         }
-    }
+    } while (!inEnd);
+
+//    while ((inLen = inFile.read(inDataArray, IN_DATA_SIZE)) > 0) {
+//        // 让inData指向数组的首元素
+//        inData = inDataArray;
+//        // 只要输入缓冲区中海油等待进行解码的数据
+//        while (inLen > 0) {
+//            // 经过解析器解析
+//            ret = av_parser_parse2(parserCtx, ctx,
+//                                   &pkt->data, &pkt->size,// 输出数据
+//                                   (uint8_t *)inData, inLen, //输入的数据
+//                                   AV_NOPTS_VALUE, AV_NOPTS_VALUE,0);
+//            if (ret < 0) {
+//                ERROR_BUF(ret);
+//                qDebug()<<"av_parser_parse2 error:"<<errbuf;
+//                goto end;
+//            }
+
+//            // 跳过已经解析过的数据 指针往后挪
+//            inData += ret;
+
+//            // 减去已经解析过的数据大小 计算还剩下的大小
+//            inLen -= ret;
+
+//            if (pkt->size > 0 && decode(ctx,pkt, frame, outFile) < 0) {
+//                goto end;
+//            }
+//        }
+//    }
+
 
     // 刷新缓冲区 这种也行
     // pkt->data = NULL;
@@ -366,9 +422,10 @@ void FFmpegs::h264Decode(const char *inFilename,
     // 赋值输出参数
     out.width = ctx->width;
     out.height = ctx->height;
-    out.fps = ctx->time_base.den;
+    // 获取帧率
+    out.fps = ctx->framerate.num;
     out.pxiFmt = ctx->pix_fmt;
-
+    qDebug()<<ctx->time_base.num<<ctx->time_base.den;
 
 end:
     // 关闭文件

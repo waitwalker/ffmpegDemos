@@ -63,6 +63,11 @@ private:
     // 存放解码后的数据
     AVFrame *_frame = nullptr;
 
+    // 存放一帧解码图片的缓冲区
+    uint8_t *_imgBuf[4] = {nullptr};
+    int _imgLineSize[4] = {0};
+    int _imgSize = 0;
+
     int initAudioInfo();
     int initVideoInfo();
     int initDecoder(AVCodecContext **decodeCtx,

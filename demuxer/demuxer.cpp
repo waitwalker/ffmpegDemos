@@ -28,9 +28,7 @@ Demuxer::Demuxer(QObject *parent)
 // 初始化视频信息
 int Demuxer::initVideoInfo() {
     int ret = initDecoder(&_vDecodeCtx, &_vStreamIndex, AVMEDIA_TYPE_VIDEO);
-    if (ret < 0) {
-        return ret;
-    }
+    RET(initDecoder);
 
     // 打开文件
     _aOutFile.setFileName(_aOut->filename);
@@ -46,6 +44,11 @@ int Demuxer::initVideoInfo() {
 
     AVRational framerate = av_guess_frame_rate(_fmtCtx, _fmtCtx->streams[_aStreamIndex], nullptr);
     _vOut->fps = framerate.num / framerate.den;
+
+    // 创建用于存放一帧解码图片的缓冲区
+    ret = av_image_alloc(_imgBuf, _imgLineSize, _vOut->width, _vOut->height, _vOut->pxiFmt, 1);
+    RET(av_image_alloc);
+    _imgSize = ret;
     return 0;
 }
 
@@ -53,9 +56,7 @@ int Demuxer::initVideoInfo() {
 int Demuxer::initAudioInfo() {
     // 初始化解码器
     int ret = initDecoder(&_aDecodeCtx, &_aStreamIndex, AVMEDIA_TYPE_AUDIO);
-    if (ret < 0) {
-        return ret;
-    }
+    RET(initDecoder);
 
     // 打开文件
     _vOutFile.setFileName(_vOut->filename);
@@ -125,6 +126,7 @@ void Demuxer::demux(const char *inFilename,
 
     AVPacket *pkt = nullptr;
 
+
     // 解封装上下文
     ret = avformat_open_input(&_fmtCtx, inFilename, nullptr, nullptr);
     END(avformat_open_input);
@@ -191,6 +193,7 @@ void Demuxer::demux(const char *inFilename,
     avcodec_free_context(&_vDecodeCtx);
     avformat_close_input(&_fmtCtx);
     av_packet_free(&pkt);
+    av_freep(&_imgBuf[0]);
 }
 
 // 解码数据
@@ -220,7 +223,13 @@ int Demuxer::decode(AVCodecContext *decodeCtx, AVPacket *pkt, void (Demuxer::*fu
 }
 
 void Demuxer::writeVideoFrame() {
-
+    // 拷贝frame数据到imgBuf缓冲区
+    av_image_copy(_imgBuf, _imgLineSize,
+                  (const uint8_t**)(_frame->data),
+                  _frame->linesize,
+                  _vOut->pxiFmt, _vOut->width, _vOut->height);
+    // 将缓冲区的文件写入文件
+    _vOutFile.write((char *)_imgBuf[0], _imgSize);
 
 //    // 写入Y平面
 //    _vOutFile.write((char *)_frame->data[0],

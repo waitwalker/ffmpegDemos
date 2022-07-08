@@ -88,9 +88,15 @@ int Demuxer::initDecoder(AVCodecContext **decodeCtx,
         qDebug()<<"stream is empty";
         return -1;
     }
+    const AVCodec *decoder = nullptr;
+    if (stream->codecpar->codec_id == AV_CODEC_ID_AAC) {
+        decoder = avcodec_find_decoder_by_name("libfdk_aac");
+    } else {
+        decoder = avcodec_find_decoder((stream)->codecpar->codec_id);
+    }
 
     // 为当前流找到合适的解码器
-    const AVCodec *decoder = avcodec_find_decoder((stream)->codecpar->codec_id);
+//    const AVCodec *decoder = avcodec_find_decoder((stream)->codecpar->codec_id);
     // 如果解码器不存在
     if (!decoder) {
         qDebug()<<"avcodec_find_decoder not found";
@@ -243,5 +249,36 @@ void Demuxer::writeVideoFrame() {
 }
 
 void Demuxer::writeAudioFrame() {
+    // libfdk_aac解码出来的PCM数据格式：s16 不是planar
+    // aac 解码器解码出来的PCM数据格式是ftlp 是planar
+    if (av_sample_fmt_is_planar(_aOut->sampleFmt)) {
+        // 是planar
 
+
+    } else {
+        // 非planar
+        // linesize 如果是视频 是每个平面一行的大小
+        // 如果是音频是每个声道平面的大小
+        int v1 = _frame->linesize[0];
+        int v2 = _frame->nb_samples * av_get_bytes_per_sample(_aOut->sampleFmt);
+        if (v1 != v2) {
+            qDebug()<<"frame->linesize"<<_frame->linesize[0];
+            qDebug()<<"av_get_bytes_per_sample"<<_frame->nb_samples * av_get_bytes_per_sample(_aOut->sampleFmt);
+        }
+
+        _aOutFile.write((char *)_frame->data[0], _frame->linesize[0]);
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+

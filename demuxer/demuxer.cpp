@@ -69,6 +69,8 @@ int Demuxer::initAudioInfo() {
     _aOut->sampleRate = _aDecodeCtx->sample_rate;
     _aOut->sampleFmt = _aDecodeCtx->sample_fmt;
     _aOut->chLayout = _aDecodeCtx->channel_layout;
+    // 音频样本帧的大小
+    _sampleFrameSize = av_get_bytes_per_sample(_aOut->sampleFmt) * _aDecodeCtx->channels;
     return 0;
 }
 
@@ -266,7 +268,8 @@ void Demuxer::writeAudioFrame() {
             qDebug()<<"av_get_bytes_per_sample"<<_frame->nb_samples * av_get_bytes_per_sample(_aOut->sampleFmt);
         }
 
-        _aOutFile.write((char *)_frame->data[0], _frame->linesize[0]);
+        //_aOutFile.write((char *)_frame->data[0], _frame->linesize[0]);
+        _aOutFile.write((char *)_frame->data[0], _frame->nb_samples * _sampleFrameSize);
     }
 }
 

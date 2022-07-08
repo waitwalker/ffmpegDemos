@@ -68,6 +68,9 @@ private:
     int _imgLineSize[4] = {0};
     int _imgSize = 0;
 
+    // 每个音频样本帧（包括所有的声道）的大小
+    int _sampleFrameSize = 0;
+
     int initAudioInfo();
     int initVideoInfo();
     int initDecoder(AVCodecContext **decodeCtx,

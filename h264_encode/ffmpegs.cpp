@@ -119,6 +119,7 @@ void FFmpegs::h264Encode(VideoEncodeSpec &in,
     ctx->pix_fmt = in.pix_fmt;
     // 设置帧率 1s显示的帧数
     ctx->time_base = {1, in.fps};
+    ctx->gop_size = 0;
 
     // 打开编码器
     ret = avcodec_open2(ctx,codec,nullptr);

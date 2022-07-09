@@ -29,7 +29,7 @@ class Ui_MainWindow
 public:
     QWidget *centralwidget;
     QGridLayout *gridLayout;
-    QStackedWidget *stackedWidget;
+    QStackedWidget *playWidget;
     QWidget *page;
     QHBoxLayout *horizontalLayout_5;
     QPushButton *openFileBtn;
@@ -61,8 +61,8 @@ public:
         centralwidget->setObjectName(QString::fromUtf8("centralwidget"));
         gridLayout = new QGridLayout(centralwidget);
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
-        stackedWidget = new QStackedWidget(centralwidget);
-        stackedWidget->setObjectName(QString::fromUtf8("stackedWidget"));
+        playWidget = new QStackedWidget(centralwidget);
+        playWidget->setObjectName(QString::fromUtf8("playWidget"));
         page = new QWidget();
         page->setObjectName(QString::fromUtf8("page"));
         horizontalLayout_5 = new QHBoxLayout(page);
@@ -73,7 +73,7 @@ public:
 
         horizontalLayout_5->addWidget(openFileBtn);
 
-        stackedWidget->addWidget(page);
+        playWidget->addWidget(page);
         page_2 = new QWidget();
         page_2->setObjectName(QString::fromUtf8("page_2"));
         gridLayout_2 = new QGridLayout(page_2);
@@ -83,9 +83,9 @@ public:
 
         gridLayout_2->addWidget(videoWidget, 0, 0, 1, 1);
 
-        stackedWidget->addWidget(page_2);
+        playWidget->addWidget(page_2);
 
-        gridLayout->addWidget(stackedWidget, 0, 0, 1, 1);
+        gridLayout->addWidget(playWidget, 0, 0, 1, 1);
 
         horizontalLayout_4 = new QHBoxLayout();
         horizontalLayout_4->setObjectName(QString::fromUtf8("horizontalLayout_4"));
@@ -173,7 +173,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        stackedWidget->setCurrentIndex(1);
+        playWidget->setCurrentIndex(1);
 
 
         QMetaObject::connectSlotsByName(MainWindow);

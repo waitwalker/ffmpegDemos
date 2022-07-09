@@ -13,3 +13,21 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+
+void MainWindow::on_playBtn_clicked()
+{
+
+}
+
+
+void MainWindow::on_stopBtn_clicked()
+{
+
+}
+
+
+void MainWindow::on_silenceBtn_clicked()
+{
+
+}
+

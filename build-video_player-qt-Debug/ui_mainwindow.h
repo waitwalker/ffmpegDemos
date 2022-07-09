@@ -173,7 +173,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        playWidget->setCurrentIndex(1);
+        playWidget->setCurrentIndex(0);
 
 
         QMetaObject::connectSlotsByName(MainWindow);

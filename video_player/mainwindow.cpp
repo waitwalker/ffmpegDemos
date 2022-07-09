@@ -22,7 +22,9 @@ void MainWindow::on_playBtn_clicked()
 
 void MainWindow::on_stopBtn_clicked()
 {
-
+    int count = ui->playWidget->count();
+    int idx = ui->playWidget->currentIndex();
+    ui->playWidget->setCurrentIndex(++idx % count);
 }
 
 

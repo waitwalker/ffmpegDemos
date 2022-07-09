@@ -71,6 +71,9 @@ private:
     // 每个音频样本帧（包括所有的声道）的大小
     int _sampleFrameSize = 0;
 
+    // 每个音频样本的大小（单声道的）
+    int _sampleSize = 0;
+
     int initAudioInfo();
     int initVideoInfo();
     int initDecoder(AVCodecContext **decodeCtx,

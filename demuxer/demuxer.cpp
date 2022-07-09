@@ -69,8 +69,9 @@ int Demuxer::initAudioInfo() {
     _aOut->sampleRate = _aDecodeCtx->sample_rate;
     _aOut->sampleFmt = _aDecodeCtx->sample_fmt;
     _aOut->chLayout = _aDecodeCtx->channel_layout;
+    _sampleSize = av_get_bytes_per_sample(_aOut->sampleFmt);
     // 音频样本帧的大小
-    _sampleFrameSize = av_get_bytes_per_sample(_aOut->sampleFmt) * _aDecodeCtx->channels;
+    _sampleFrameSize = _sampleSize * _aDecodeCtx->channels;
     return 0;
 }
 
@@ -90,15 +91,15 @@ int Demuxer::initDecoder(AVCodecContext **decodeCtx,
         qDebug()<<"stream is empty";
         return -1;
     }
-    const AVCodec *decoder = nullptr;
-    if (stream->codecpar->codec_id == AV_CODEC_ID_AAC) {
-        decoder = avcodec_find_decoder_by_name("libfdk_aac");
-    } else {
-        decoder = avcodec_find_decoder((stream)->codecpar->codec_id);
-    }
+//    const AVCodec *decoder = nullptr;
+//    if (stream->codecpar->codec_id == AV_CODEC_ID_AAC) {
+//        decoder = avcodec_find_decoder_by_name("libfdk_aac");
+//    } else {
+//        decoder = avcodec_find_decoder((stream)->codecpar->codec_id);
+//    }
 
     // 为当前流找到合适的解码器
-//    const AVCodec *decoder = avcodec_find_decoder((stream)->codecpar->codec_id);
+    const AVCodec *decoder = avcodec_find_decoder((stream)->codecpar->codec_id);
     // 如果解码器不存在
     if (!decoder) {
         qDebug()<<"avcodec_find_decoder not found";
@@ -255,8 +256,13 @@ void Demuxer::writeAudioFrame() {
     // aac 解码器解码出来的PCM数据格式是ftlp 是planar
     if (av_sample_fmt_is_planar(_aOut->sampleFmt)) {
         // 是planar
-
-
+        // 外层循环 ：每一个声道的样本数
+        for(int si =0; si < _frame->nb_samples; si++) {
+            // 内存循环 ： 有多少个声道
+            for (int ci = 0; ci < _aDecodeCtx->channels; ci++) {
+                _aOutFile.write((char *)(_frame->data[ci] + si * _sampleSize), _sampleSize);
+            }
+        }
     } else {
         // 非planar
         // linesize 如果是视频 是每个平面一行的大小

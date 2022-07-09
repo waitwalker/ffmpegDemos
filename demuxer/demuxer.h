@@ -74,16 +74,22 @@ private:
     // 每个音频样本的大小（单声道的）
     int _sampleSize = 0;
 
+    // 初始化音频信息
     int initAudioInfo();
+    // 初始化视频信息
     int initVideoInfo();
+    // 初始化解码器
     int initDecoder(AVCodecContext **decodeCtx,
                     int *streamIndex,
                     AVMediaType type);
+    // 开始解码
     int decode(AVCodecContext *decodeCtx,
                AVPacket *pkt,
                void (Demuxer::*func)());
 
+    // 写入视频frame数据
     void writeVideoFrame();
+    // 写入音频frame数据
     void writeAudioFrame();
 
 signals:

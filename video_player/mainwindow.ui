@@ -81,7 +81,7 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_2">
         <item>
-         <widget class="QSlider" name="currentSlider">
+         <widget class="VideoSlider" name="currentSlider">
           <property name="minimumSize">
            <size>
             <width>240</width>
@@ -139,7 +139,7 @@
            </widget>
           </item>
           <item>
-           <widget class="QSlider" name="volumeSlider">
+           <widget class="VideoSlider" name="volumeSlider">
             <property name="minimumSize">
              <size>
               <width>100</width>
@@ -202,6 +202,11 @@
    <extends>QWidget</extends>
    <header>videowidget.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>VideoSlider</class>
+   <extends>QSlider</extends>
+   <header>videoslider.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

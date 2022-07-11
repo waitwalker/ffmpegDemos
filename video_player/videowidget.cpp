@@ -6,3 +6,9 @@ VideoWidget::VideoWidget(QWidget *parent)
 {
     qDebug()<<"VideoWidget初始化了";
 }
+
+VideoWidget::~VideoWidget() {
+
+}
+
+

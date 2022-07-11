@@ -7,7 +7,13 @@ class VideoWidget : public QWidget
 {
     Q_OBJECT
 public:
+
+    // 构造函数
     explicit VideoWidget(QWidget *parent = nullptr);
+    // 析构函数
+    ~VideoWidget();
+
+private:
 
 signals:
 

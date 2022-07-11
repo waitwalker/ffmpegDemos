@@ -54,12 +54,20 @@ OBJECTS_DIR   = ./
 
 SOURCES       = ../video_player/main.cpp \
 		../video_player/mainwindow.cpp \
+		../video_player/videoplayer.cpp \
+		../video_player/videoslider.cpp \
 		../video_player/videowidget.cpp moc_mainwindow.cpp \
+		moc_videoplayer.cpp \
+		moc_videoslider.cpp \
 		moc_videowidget.cpp
 OBJECTS       = main.o \
 		mainwindow.o \
+		videoplayer.o \
+		videoslider.o \
 		videowidget.o \
 		moc_mainwindow.o \
+		moc_videoplayer.o \
+		moc_videoslider.o \
 		moc_videowidget.o
 DIST          = /opt/homebrew/share/qt/mkspecs/features/spec_pre.prf \
 		/opt/homebrew/share/qt/mkspecs/features/device_config.prf \
@@ -317,8 +325,12 @@ DIST          = /opt/homebrew/share/qt/mkspecs/features/spec_pre.prf \
 		/opt/homebrew/share/qt/mkspecs/features/yacc.prf \
 		/opt/homebrew/share/qt/mkspecs/features/lex.prf \
 		../video_player/video_player.pro ../video_player/mainwindow.h \
+		../video_player/videoplayer.h \
+		../video_player/videoslider.h \
 		../video_player/videowidget.h ../video_player/main.cpp \
 		../video_player/mainwindow.cpp \
+		../video_player/videoplayer.cpp \
+		../video_player/videoslider.cpp \
 		../video_player/videowidget.cpp
 QMAKE_TARGET  = video_player
 DESTDIR       = 
@@ -893,8 +905,8 @@ distdir: FORCE
 	@test -d $(DISTDIR) || mkdir -p $(DISTDIR)
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /opt/homebrew/share/qt/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../video_player/mainwindow.h ../video_player/videowidget.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../video_player/main.cpp ../video_player/mainwindow.cpp ../video_player/videowidget.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../video_player/mainwindow.h ../video_player/videoplayer.h ../video_player/videoslider.h ../video_player/videowidget.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../video_player/main.cpp ../video_player/mainwindow.cpp ../video_player/videoplayer.cpp ../video_player/videoslider.cpp ../video_player/videowidget.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../video_player/mainwindow.ui $(DISTDIR)/
 
 
@@ -930,15 +942,29 @@ compiler_moc_predefs_clean:
 moc_predefs.h: /opt/homebrew/share/qt/mkspecs/features/data/dummy.cpp
 	/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++ -pipe -stdlib=libc++ -g -std=gnu++1z $(EXPORT_ARCH_ARGS) -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk -mmacosx-version-min=12 -Wall -Wextra -dM -E -o moc_predefs.h /opt/homebrew/share/qt/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_mainwindow.cpp moc_videowidget.cpp
+compiler_moc_header_make_all: moc_mainwindow.cpp moc_videoplayer.cpp moc_videoslider.cpp moc_videowidget.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_mainwindow.cpp moc_videowidget.cpp
+	-$(DEL_FILE) moc_mainwindow.cpp moc_videoplayer.cpp moc_videoslider.cpp moc_videowidget.cpp
 moc_mainwindow.cpp: ../video_player/mainwindow.h \
 		/opt/homebrew/lib/QtWidgets.framework/Headers/QMainWindow \
 		/opt/homebrew/lib/QtWidgets.framework/Headers/qmainwindow.h \
 		moc_predefs.h \
 		/opt/homebrew/share/qt/libexec/moc
 	/opt/homebrew/share/qt/libexec/moc $(DEFINES) --include /Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/build-video_player-qt-Debug/moc_predefs.h -I/opt/homebrew/share/qt/mkspecs/macx-clang -I/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/video_player -I/opt/homebrew/lib/QtWidgets.framework/Headers -I/opt/homebrew/lib/QtGui.framework/Headers -I/opt/homebrew/lib/QtCore.framework/Headers -I. -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1 -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.1.6/include -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -F/opt/homebrew/lib ../video_player/mainwindow.h -o moc_mainwindow.cpp
+
+moc_videoplayer.cpp: ../video_player/videoplayer.h \
+		/opt/homebrew/lib/QtCore.framework/Headers/QObject \
+		/opt/homebrew/lib/QtCore.framework/Headers/qobject.h \
+		moc_predefs.h \
+		/opt/homebrew/share/qt/libexec/moc
+	/opt/homebrew/share/qt/libexec/moc $(DEFINES) --include /Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/build-video_player-qt-Debug/moc_predefs.h -I/opt/homebrew/share/qt/mkspecs/macx-clang -I/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/video_player -I/opt/homebrew/lib/QtWidgets.framework/Headers -I/opt/homebrew/lib/QtGui.framework/Headers -I/opt/homebrew/lib/QtCore.framework/Headers -I. -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1 -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.1.6/include -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -F/opt/homebrew/lib ../video_player/videoplayer.h -o moc_videoplayer.cpp
+
+moc_videoslider.cpp: ../video_player/videoslider.h \
+		/opt/homebrew/lib/QtWidgets.framework/Headers/QSlider \
+		/opt/homebrew/lib/QtWidgets.framework/Headers/qslider.h \
+		moc_predefs.h \
+		/opt/homebrew/share/qt/libexec/moc
+	/opt/homebrew/share/qt/libexec/moc $(DEFINES) --include /Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/build-video_player-qt-Debug/moc_predefs.h -I/opt/homebrew/share/qt/mkspecs/macx-clang -I/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/video_player -I/opt/homebrew/lib/QtWidgets.framework/Headers -I/opt/homebrew/lib/QtGui.framework/Headers -I/opt/homebrew/lib/QtCore.framework/Headers -I. -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1 -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.1.6/include -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -F/opt/homebrew/lib ../video_player/videoslider.h -o moc_videoslider.cpp
 
 moc_videowidget.cpp: ../video_player/videowidget.h \
 		/opt/homebrew/lib/QtWidgets.framework/Headers/QWidget \
@@ -981,12 +1007,27 @@ mainwindow.o: ../video_player/mainwindow.cpp ../video_player/mainwindow.h \
 		/opt/homebrew/lib/QtWidgets.framework/Headers/QMainWindow \
 		/opt/homebrew/lib/QtWidgets.framework/Headers/qmainwindow.h \
 		ui_mainwindow.h \
+		../video_player/videoslider.h \
+		/opt/homebrew/lib/QtWidgets.framework/Headers/QSlider \
+		/opt/homebrew/lib/QtWidgets.framework/Headers/qslider.h \
 		../video_player/videowidget.h \
 		/opt/homebrew/lib/QtWidgets.framework/Headers/QWidget \
 		/opt/homebrew/lib/QtWidgets.framework/Headers/qwidget.h \
 		/opt/homebrew/lib/QtWidgets.framework/Headers/QFileDialog \
 		/opt/homebrew/lib/QtWidgets.framework/Headers/qfiledialog.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o mainwindow.o ../video_player/mainwindow.cpp
+
+videoplayer.o: ../video_player/videoplayer.cpp ../video_player/videoplayer.h \
+		/opt/homebrew/lib/QtCore.framework/Headers/QObject \
+		/opt/homebrew/lib/QtCore.framework/Headers/qobject.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o videoplayer.o ../video_player/videoplayer.cpp
+
+videoslider.o: ../video_player/videoslider.cpp ../video_player/videoslider.h \
+		/opt/homebrew/lib/QtWidgets.framework/Headers/QSlider \
+		/opt/homebrew/lib/QtWidgets.framework/Headers/qslider.h \
+		/opt/homebrew/lib/QtGui.framework/Headers/QMouseEvent \
+		/opt/homebrew/lib/QtGui.framework/Headers/qevent.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o videoslider.o ../video_player/videoslider.cpp
 
 videowidget.o: ../video_player/videowidget.cpp ../video_player/videowidget.h \
 		/opt/homebrew/lib/QtWidgets.framework/Headers/QWidget \
@@ -997,6 +1038,12 @@ videowidget.o: ../video_player/videowidget.cpp ../video_player/videowidget.h \
 
 moc_mainwindow.o: moc_mainwindow.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_mainwindow.o moc_mainwindow.cpp
+
+moc_videoplayer.o: moc_videoplayer.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_videoplayer.o moc_videoplayer.cpp
+
+moc_videoslider.o: moc_videoslider.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_videoslider.o moc_videoslider.cpp
 
 moc_videowidget.o: moc_videowidget.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_videowidget.o moc_videowidget.cpp

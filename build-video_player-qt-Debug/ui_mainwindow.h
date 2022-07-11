@@ -17,10 +17,10 @@
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenuBar>
 #include <QtWidgets/QPushButton>
-#include <QtWidgets/QSlider>
 #include <QtWidgets/QStackedWidget>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QWidget>
+#include "videoslider.h"
 #include "videowidget.h"
 
 QT_BEGIN_NAMESPACE
@@ -42,13 +42,13 @@ public:
     QPushButton *playBtn;
     QPushButton *stopBtn;
     QHBoxLayout *horizontalLayout_2;
-    QSlider *currentSlider;
+    VideoSlider *currentSlider;
     QLabel *currentLabel;
     QLabel *durationLabel;
     QLabel *label_3;
     QHBoxLayout *horizontalLayout_3;
     QPushButton *silenceBtn;
-    QSlider *volumeSlider;
+    VideoSlider *volumeSlider;
     QLabel *volumeLabel;
     QMenuBar *menubar;
     QStatusBar *statusbar;
@@ -109,7 +109,7 @@ public:
 
         horizontalLayout_2 = new QHBoxLayout();
         horizontalLayout_2->setObjectName(QString::fromUtf8("horizontalLayout_2"));
-        currentSlider = new QSlider(centralwidget);
+        currentSlider = new VideoSlider(centralwidget);
         currentSlider->setObjectName(QString::fromUtf8("currentSlider"));
         currentSlider->setMinimumSize(QSize(240, 0));
         currentSlider->setOrientation(Qt::Horizontal);
@@ -142,7 +142,7 @@ public:
 
         horizontalLayout_3->addWidget(silenceBtn);
 
-        volumeSlider = new QSlider(centralwidget);
+        volumeSlider = new VideoSlider(centralwidget);
         volumeSlider->setObjectName(QString::fromUtf8("volumeSlider"));
         volumeSlider->setMinimumSize(QSize(100, 0));
         volumeSlider->setMaximumSize(QSize(100, 16777215));

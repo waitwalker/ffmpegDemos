@@ -21,6 +21,7 @@
 #include <QtWidgets/QStackedWidget>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QWidget>
+#include "videowidget.h"
 
 QT_BEGIN_NAMESPACE
 
@@ -35,7 +36,7 @@ public:
     QPushButton *openFileBtn;
     QWidget *page_2;
     QGridLayout *gridLayout_2;
-    QWidget *videoWidget;
+    VideoWidget *videoWidget;
     QHBoxLayout *horizontalLayout_4;
     QHBoxLayout *horizontalLayout;
     QPushButton *playBtn;
@@ -78,7 +79,7 @@ public:
         page_2->setObjectName(QString::fromUtf8("page_2"));
         gridLayout_2 = new QGridLayout(page_2);
         gridLayout_2->setObjectName(QString::fromUtf8("gridLayout_2"));
-        videoWidget = new QWidget(page_2);
+        videoWidget = new VideoWidget(page_2);
         videoWidget->setObjectName(QString::fromUtf8("videoWidget"));
 
         gridLayout_2->addWidget(videoWidget, 0, 0, 1, 1);
@@ -144,12 +145,16 @@ public:
         volumeSlider = new QSlider(centralwidget);
         volumeSlider->setObjectName(QString::fromUtf8("volumeSlider"));
         volumeSlider->setMinimumSize(QSize(100, 0));
+        volumeSlider->setMaximumSize(QSize(100, 16777215));
+        volumeSlider->setMaximum(100);
         volumeSlider->setOrientation(Qt::Horizontal);
 
         horizontalLayout_3->addWidget(volumeSlider);
 
         volumeLabel = new QLabel(centralwidget);
         volumeLabel->setObjectName(QString::fromUtf8("volumeLabel"));
+        volumeLabel->setMaximumSize(QSize(30, 16777215));
+        volumeLabel->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
 
         horizontalLayout_3->addWidget(volumeLabel);
 
@@ -173,7 +178,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        playWidget->setCurrentIndex(0);
+        playWidget->setCurrentIndex(1);
 
 
         QMetaObject::connectSlotsByName(MainWindow);

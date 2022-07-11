@@ -22,8 +22,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_VideoPlayer_t {
-    const uint offsetsAndSize[6];
-    char stringdata0[26];
+    const uint offsetsAndSize[10];
+    char stringdata0[46];
 };
 #define QT_MOC_LITERAL(ofs, len) \
     uint(offsetof(qt_meta_stringdata_VideoPlayer_t, stringdata0) + ofs), len 
@@ -31,10 +31,13 @@ static const qt_meta_stringdata_VideoPlayer_t qt_meta_stringdata_VideoPlayer = {
     {
 QT_MOC_LITERAL(0, 11), // "VideoPlayer"
 QT_MOC_LITERAL(12, 12), // "stateChanged"
-QT_MOC_LITERAL(25, 0) // ""
+QT_MOC_LITERAL(25, 0), // ""
+QT_MOC_LITERAL(26, 12), // "VideoPlayer*"
+QT_MOC_LITERAL(39, 6) // "player"
 
     },
-    "VideoPlayer\0stateChanged\0"
+    "VideoPlayer\0stateChanged\0\0VideoPlayer*\0"
+    "player"
 };
 #undef QT_MOC_LITERAL
 
@@ -52,10 +55,10 @@ static const uint qt_meta_data_VideoPlayer[] = {
        1,       // signalCount
 
  // signals: name, argc, parameters, tag, flags, initial metatype offsets
-       1,    0,   20,    2, 0x06,    1 /* Public */,
+       1,    1,   20,    2, 0x06,    1 /* Public */,
 
  // signals: parameters
-    QMetaType::Void,
+    QMetaType::Void, 0x80000000 | 3,    4,
 
        0        // eod
 };
@@ -66,20 +69,30 @@ void VideoPlayer::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id,
         auto *_t = static_cast<VideoPlayer *>(_o);
         (void)_t;
         switch (_id) {
-        case 0: _t->stateChanged(); break;
+        case 0: _t->stateChanged((*reinterpret_cast< VideoPlayer*(*)>(_a[1]))); break;
         default: ;
+        }
+    } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
+        switch (_id) {
+        default: *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType(); break;
+        case 0:
+            switch (*reinterpret_cast<int*>(_a[1])) {
+            default: *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType(); break;
+            case 0:
+                *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType::fromType< VideoPlayer* >(); break;
+            }
+            break;
         }
     } else if (_c == QMetaObject::IndexOfMethod) {
         int *result = reinterpret_cast<int *>(_a[0]);
         {
-            using _t = void (VideoPlayer::*)();
+            using _t = void (VideoPlayer::*)(VideoPlayer * );
             if (*reinterpret_cast<_t *>(_a[1]) == static_cast<_t>(&VideoPlayer::stateChanged)) {
                 *result = 0;
                 return;
             }
         }
     }
-    (void)_a;
 }
 
 const QMetaObject VideoPlayer::staticMetaObject = { {
@@ -89,7 +102,7 @@ const QMetaObject VideoPlayer::staticMetaObject = { {
     qt_static_metacall,
     nullptr,
 qt_incomplete_metaTypeArray<qt_meta_stringdata_VideoPlayer_t
-, QtPrivate::TypeAndForceComplete<VideoPlayer, std::true_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>
+, QtPrivate::TypeAndForceComplete<VideoPlayer, std::true_type>, QtPrivate::TypeAndForceComplete<void, std::false_type>, QtPrivate::TypeAndForceComplete<VideoPlayer *, std::false_type>
 
 
 
@@ -122,16 +135,17 @@ int VideoPlayer::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
         _id -= 1;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
         if (_id < 1)
-            *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
+            qt_static_metacall(this, _c, _id, _a);
         _id -= 1;
     }
     return _id;
 }
 
 // SIGNAL 0
-void VideoPlayer::stateChanged()
+void VideoPlayer::stateChanged(VideoPlayer * _t1)
 {
-    QMetaObject::activate(this, &staticMetaObject, 0, nullptr);
+    void *_a[] = { nullptr, const_cast<void*>(reinterpret_cast<const void*>(std::addressof(_t1))) };
+    QMetaObject::activate(this, &staticMetaObject, 0, _a);
 }
 QT_WARNING_POP
 QT_END_MOC_NAMESPACE

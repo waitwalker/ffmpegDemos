@@ -31,10 +31,10 @@ public:
     QWidget *centralwidget;
     QGridLayout *gridLayout;
     QStackedWidget *playWidget;
-    QWidget *page;
+    QWidget *openFilePage;
     QHBoxLayout *horizontalLayout_5;
     QPushButton *openFileBtn;
-    QWidget *page_2;
+    QWidget *videoPage;
     QGridLayout *gridLayout_2;
     VideoWidget *videoWidget;
     QHBoxLayout *horizontalLayout_4;
@@ -44,8 +44,8 @@ public:
     QHBoxLayout *horizontalLayout_2;
     VideoSlider *currentSlider;
     QLabel *currentLabel;
+    QLabel *g;
     QLabel *durationLabel;
-    QLabel *label_3;
     QHBoxLayout *horizontalLayout_3;
     QPushButton *silenceBtn;
     VideoSlider *volumeSlider;
@@ -64,27 +64,27 @@ public:
         gridLayout->setObjectName(QString::fromUtf8("gridLayout"));
         playWidget = new QStackedWidget(centralwidget);
         playWidget->setObjectName(QString::fromUtf8("playWidget"));
-        page = new QWidget();
-        page->setObjectName(QString::fromUtf8("page"));
-        horizontalLayout_5 = new QHBoxLayout(page);
+        openFilePage = new QWidget();
+        openFilePage->setObjectName(QString::fromUtf8("openFilePage"));
+        horizontalLayout_5 = new QHBoxLayout(openFilePage);
         horizontalLayout_5->setObjectName(QString::fromUtf8("horizontalLayout_5"));
-        openFileBtn = new QPushButton(page);
+        openFileBtn = new QPushButton(openFilePage);
         openFileBtn->setObjectName(QString::fromUtf8("openFileBtn"));
         openFileBtn->setMaximumSize(QSize(80, 44));
 
         horizontalLayout_5->addWidget(openFileBtn);
 
-        playWidget->addWidget(page);
-        page_2 = new QWidget();
-        page_2->setObjectName(QString::fromUtf8("page_2"));
-        gridLayout_2 = new QGridLayout(page_2);
+        playWidget->addWidget(openFilePage);
+        videoPage = new QWidget();
+        videoPage->setObjectName(QString::fromUtf8("videoPage"));
+        gridLayout_2 = new QGridLayout(videoPage);
         gridLayout_2->setObjectName(QString::fromUtf8("gridLayout_2"));
-        videoWidget = new VideoWidget(page_2);
+        videoWidget = new VideoWidget(videoPage);
         videoWidget->setObjectName(QString::fromUtf8("videoWidget"));
 
         gridLayout_2->addWidget(videoWidget, 0, 0, 1, 1);
 
-        playWidget->addWidget(page_2);
+        playWidget->addWidget(videoPage);
 
         gridLayout->addWidget(playWidget, 0, 0, 1, 1);
 
@@ -122,17 +122,17 @@ public:
 
         horizontalLayout_2->addWidget(currentLabel);
 
+        g = new QLabel(centralwidget);
+        g->setObjectName(QString::fromUtf8("g"));
+        g->setAlignment(Qt::AlignCenter);
+
+        horizontalLayout_2->addWidget(g);
+
         durationLabel = new QLabel(centralwidget);
         durationLabel->setObjectName(QString::fromUtf8("durationLabel"));
         durationLabel->setAlignment(Qt::AlignCenter);
 
         horizontalLayout_2->addWidget(durationLabel);
-
-        label_3 = new QLabel(centralwidget);
-        label_3->setObjectName(QString::fromUtf8("label_3"));
-        label_3->setAlignment(Qt::AlignCenter);
-
-        horizontalLayout_2->addWidget(label_3);
 
         horizontalLayout_3 = new QHBoxLayout();
         horizontalLayout_3->setObjectName(QString::fromUtf8("horizontalLayout_3"));
@@ -147,6 +147,7 @@ public:
         volumeSlider->setMinimumSize(QSize(100, 0));
         volumeSlider->setMaximumSize(QSize(100, 16777215));
         volumeSlider->setMaximum(100);
+        volumeSlider->setValue(100);
         volumeSlider->setOrientation(Qt::Horizontal);
 
         horizontalLayout_3->addWidget(volumeSlider);
@@ -191,8 +192,8 @@ public:
         playBtn->setText(QCoreApplication::translate("MainWindow", "\346\222\255\346\224\276", nullptr));
         stopBtn->setText(QCoreApplication::translate("MainWindow", "\345\201\234\346\255\242", nullptr));
         currentLabel->setText(QCoreApplication::translate("MainWindow", "00:00:00", nullptr));
-        durationLabel->setText(QCoreApplication::translate("MainWindow", "/", nullptr));
-        label_3->setText(QCoreApplication::translate("MainWindow", "00:00:00", nullptr));
+        g->setText(QCoreApplication::translate("MainWindow", "/", nullptr));
+        durationLabel->setText(QCoreApplication::translate("MainWindow", "00:00:00", nullptr));
         silenceBtn->setText(QCoreApplication::translate("MainWindow", "\351\235\231\351\237\263", nullptr));
         volumeLabel->setText(QCoreApplication::translate("MainWindow", "100", nullptr));
     } // retranslateUi

@@ -31,17 +31,19 @@ public:
     // 获取播放状态
     State getState();
 
-
-    //void setYuv(Yuv &yuv);
+    // 设置文件
+    void setFilename(const char *filename);
 
 private:
     // 当前播放状态
     State _state = Stopped;
     // 设置状态（改变状态）
     void setState(State state);
+
+    const char *_filename;
 signals:
     // 状态改变的时候发送信号
-    void stateChanged();
+    void stateChanged(VideoPlayer *player);
 
 signals:
 

@@ -2,6 +2,12 @@
 #define VIDEOPLAYER_H
 
 #include <QObject>
+extern "C" {
+#include <libavutil/avutil.h>
+#include <libavcodec/avcodec.h>
+#include <libavformat/avformat.h>
+#include <libavutil/imgutils.h>
+}
 
 class VideoPlayer : public QObject
 {
@@ -35,12 +41,42 @@ public:
     void setFilename(const char *filename);
 
 private:
+    // 文件名称
+    const char *_filename;
     // 当前播放状态
     State _state = Stopped;
     // 设置状态（改变状态）
     void setState(State state);
 
-    const char *_filename;
+    // 读取文件数据
+    void readFile();
+
+    // 解封装上下文
+    AVFormatContext *_fmtCtx = nullptr;
+    // 音频解码上下文
+    AVCodecContext *_aDecodeCtx = nullptr;
+    // 视频解码上下文
+    AVCodecContext *_vDecodeCtx = nullptr;
+    // 音频解码器
+    AVCodec *aDecodec = nullptr;
+    // 视频解码器
+    AVCodec *vDecodec = nullptr;
+    // 音频和视频流
+    AVStream *_aStream = nullptr, *_vStream = nullptr;
+
+    // 存放解码后的数据
+    AVFrame *_aframe = nullptr, *_vframe = nullptr;
+
+    // 初始化音频信息
+    int initAudioInfo();
+    // 初始化视频信息
+    int initVideoInfo();
+    // 初始化解码器和解码上下文
+    int initDecoder(AVCodecContext **decodeCtx,
+                    AVStream **stream,
+                    AVMediaType type);
+
+
 signals:
     // 状态改变的时候发送信号
     void stateChanged(VideoPlayer *player);

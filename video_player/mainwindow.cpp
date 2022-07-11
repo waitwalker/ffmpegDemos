@@ -38,7 +38,7 @@ void MainWindow::onPlayerStateChanged(VideoPlayer *player) {
         ui->currentSlider->setEnabled(false);
         ui->volumeSlider->setEnabled(false);
         ui->durationLabel->setText("00:00:00");
-        ui->volumeSlider->setValue(ui->volumeSlider->maximum());
+        ui->currentSlider->setValue(0);
         ui->volumeLabel->setText("100");
 
         // 显示打开文件页面

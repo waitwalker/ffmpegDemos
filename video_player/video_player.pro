@@ -28,3 +28,22 @@ FORMS += \
 qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
+
+win32 {
+    FFMPEG_HOME = F:/Dev/msys64/usr/local/ffmpeg
+    SDL_HOME = F:/Dev/msys64/usr/local/sdl
+}
+
+macx {
+    FFMPEG_HOME = /usr/local/ffmpeg
+    QMAKE_INFO_PLIST = mac/Info.plist
+}
+
+INCLUDEPATH += $${FFMPEG_HOME}/include
+
+LIBS += -L $${FFMPEG_HOME}/lib \
+        -lavdevice \
+        -lswresample \
+        -lavformat \
+        -lavcodec \
+        -lavutil

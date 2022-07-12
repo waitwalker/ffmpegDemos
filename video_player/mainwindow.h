@@ -31,6 +31,19 @@ private slots:
 
     void onPlayerStateChanged(VideoPlayer *player);
 
+    void onPlayerInitFinished(VideoPlayer *player);
+
+
+
+
+
+
+
+
+
+
+
+
 private:
     Ui::MainWindow *ui;
     VideoPlayer *_player;

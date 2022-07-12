@@ -40,6 +40,9 @@ public:
     // 设置文件
     void setFilename(const char *filename);
 
+    // 获取总时长
+    int64_t getDuration();
+
 private:
     // 文件名称
     const char *_filename;
@@ -80,6 +83,27 @@ private:
 signals:
     // 状态改变的时候发送信号
     void stateChanged(VideoPlayer *player);
+    void initFinished(VideoPlayer *player);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 signals:
 

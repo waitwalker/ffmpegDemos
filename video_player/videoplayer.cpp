@@ -52,7 +52,7 @@ void VideoPlayer::play() {
     // 解码后的格式不一定是我们播放器想要的 重采样 格式转换
     // 打开子线程 读取文件 Lamba表达式
     std::thread([this](){
-        readFile();
+        this->readFile();
     }).detach();
 
     setState(VideoPlayer::Playing);
@@ -74,6 +74,11 @@ void VideoPlayer::stop() {
 
 void VideoPlayer::setFilename(const char *filename) {
     _filename = filename;
+    qDebug()<<"读取到的文件名称："<<_filename;
+}
+
+int64_t VideoPlayer::getDuration() {
+    return _fmtCtx ? _fmtCtx->duration : 0;
 }
 
 #pragma mark - 私有方法
@@ -85,6 +90,54 @@ void VideoPlayer::setState(State state) {
 
 void VideoPlayer::readFile() {
     qDebug()<<"current thread"<<QThread::currentThread();
+
+    // 返回结果
+    int ret = 0;
+
+    qDebug()<<"读取到的文件信息："<<_filename;
+
+    // 解封装上下文
+    ret = avformat_open_input(&_fmtCtx, _filename, nullptr, nullptr);
+    END(avformat_open_input);
+
+    // 检索流信息
+    ret = avformat_find_stream_info(_fmtCtx, nullptr);
+    END(avformat_find_stream_info);
+
+    // 打印流信息到控制台 调试
+    av_dump_format(_fmtCtx, 0, _filename, 0);
+
+    fflush(stderr);
+
+    // 初始化视频信息 为做音视频解码做准备
+    if (initVideoInfo() < 0) {
+        goto end;
+    }
+
+    // 初始化音频信息
+    if (initAudioInfo() < 0) {
+        goto end;
+    }
+
+    // 到这里基本初始化完成 发送一个信号
+    emit initFinished(this);
+
+    // 从输入文件中读取数据
+//    AVPacket pkt;
+//    while (av_read_frame(_fmtCtx, &pkt) == 0) {
+//        if (pkt.stream_index == _aStream->index) {
+//            // 读到数据 读取到是音频数据 下面开始解码
+
+//        } else if (pkt.stream_index == _vStream->index) {
+//            // 读取到视频数据 下面开始解码
+//        }
+
+//    }
+
+    end:
+    avcodec_free_context(&_aDecodeCtx);
+    avcodec_free_context(&_vDecodeCtx);
+    avformat_close_input(&_fmtCtx);
 }
 
 

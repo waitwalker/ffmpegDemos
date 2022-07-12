@@ -1,7 +1,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include <QFileDialog>
+#include <QStandardPaths>
 
+// #pragma mark - 槽函数
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -22,6 +24,9 @@ MainWindow::MainWindow(QWidget *parent)
     // 监听信号
     connect(_player, &VideoPlayer::stateChanged,
             this, &MainWindow::onPlayerStateChanged);
+
+    connect(_player, &VideoPlayer::initFinished,
+            this, &MainWindow::onPlayerInitFinished);
 }
 
 void MainWindow::onPlayerStateChanged(VideoPlayer *player) {
@@ -52,6 +57,11 @@ void MainWindow::onPlayerStateChanged(VideoPlayer *player) {
         // 显示播放视频页面
         ui->playWidget->setCurrentWidget(ui->videoPage);
     }
+}
+
+#pragma mark - 构造 析构函数
+void MainWindow::onPlayerInitFinished(VideoPlayer *player) {
+    qDebug()<<"总时长： "<<player->getDuration();
 }
 
 MainWindow::~MainWindow()
@@ -88,13 +98,18 @@ void MainWindow::on_silenceBtn_clicked()
 // 打开文件按钮
 void MainWindow::on_openFileBtn_clicked()
 {
-    QString filename = QFileDialog::getOpenFileName(nullptr,
-                                 "/",
-                                 "",
-                                 "");
-    qDebug()<<"文件名称："<<filename;
-    if (filename.isEmpty()) return;
-    _player->setFilename(filename.toUtf8().data());
+    QString file_full, file_name,filePath,file_path,file_suffix;
+        QFileInfo fileinfo;
+        filePath = QCoreApplication::applicationDirPath();
+        file_full = QFileDialog::getOpenFileName(nullptr, tr("打开视频文件"), QStandardPaths::standardLocations(QStandardPaths::DesktopLocation).first(), "");
+//    QString filename = QFileDialog::getOpenFileName(nullptr,
+//                                 "/",
+//                                 "",
+//                                 "");
+    qDebug()<<"文件名称："<<file_full;
+    if (file_full.isEmpty()) return;
+    qDebug()<<"C语言文件名："<<file_full.toUtf8().data();
+    _player->setFilename(file_full.toUtf8().data());
     _player->play();
 }
 

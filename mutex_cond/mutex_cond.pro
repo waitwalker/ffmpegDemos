@@ -10,16 +10,10 @@ CONFIG += c++11
 
 SOURCES += \
     main.cpp \
-    mainwindow.cpp \
-    videoplayer.cpp \
-    videoslider.cpp \
-    videowidget.cpp
+    mainwindow.cpp
 
 HEADERS += \
-    mainwindow.h \
-    videoplayer.h \
-    videoslider.h \
-    videowidget.h
+    mainwindow.h
 
 FORMS += \
     mainwindow.ui

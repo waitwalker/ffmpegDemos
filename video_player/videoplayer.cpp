@@ -11,6 +11,8 @@
     if (ret < 0) { \
         ERROR_BUF; \
         qDebug() << #func << "error" << errbuf; \
+        setState(VideoPlayer::Stopped); \
+        emit playFailed(this); \
         goto end; \
     }
 
@@ -51,10 +53,10 @@ void VideoPlayer::play() {
 
     // 解码后的格式不一定是我们播放器想要的 重采样 格式转换
     // 打开子线程 读取文件 Lamba表达式
-    std::thread([this](){
-        this->readFile();
-    }).detach();
-
+//    std::thread([this](){
+//        this->readFile();
+//    }).detach();
+    this->readFile();
     setState(VideoPlayer::Playing);
 }
 
@@ -78,6 +80,7 @@ void VideoPlayer::setFilename(const char *filename) {
 }
 
 int64_t VideoPlayer::getDuration() {
+    qDebug()<<"_fmtCtx:"<<_fmtCtx;
     return _fmtCtx ? _fmtCtx->duration : 0;
 }
 
@@ -97,7 +100,9 @@ void VideoPlayer::readFile() {
     qDebug()<<"读取到的文件信息："<<_filename;
 
     // 解封装上下文
-    ret = avformat_open_input(&_fmtCtx, _filename, nullptr, nullptr);
+    ret = avformat_open_input(&_fmtCtx, "/Users/walkerwait/Desktop/1_cut.mp4", nullptr, nullptr);
+    qDebug()<<"当前返回值是："<<ret;
+    qDebug()<<"当前返回值是_fmtCtx："<<_fmtCtx;
     END(avformat_open_input);
 
     // 检索流信息

@@ -2,8 +2,9 @@
 #include "ui_mainwindow.h"
 #include <QFileDialog>
 #include <QStandardPaths>
+#include <QMessageBox>
 
-// #pragma mark - 槽函数
+// #pragma mark - 构造 析构函数
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -22,13 +23,27 @@ MainWindow::MainWindow(QWidget *parent)
     _player = new VideoPlayer();
 
     // 监听信号
+    // 播放状态改变
     connect(_player, &VideoPlayer::stateChanged,
             this, &MainWindow::onPlayerStateChanged);
 
+    // 初始化完成
     connect(_player, &VideoPlayer::initFinished,
             this, &MainWindow::onPlayerInitFinished);
+
+    // 播放器失败
+    connect(_player, &VideoPlayer::playFailed,
+            this, &MainWindow::onPlayerPlayFailed);
 }
 
+
+MainWindow::~MainWindow()
+{
+    delete ui;
+    delete _player;
+}
+
+#pragma mark - 槽函数
 void MainWindow::onPlayerStateChanged(VideoPlayer *player) {
     VideoPlayer::State state = player->getState();
     if (state == VideoPlayer::Playing) {
@@ -59,14 +74,18 @@ void MainWindow::onPlayerStateChanged(VideoPlayer *player) {
     }
 }
 
-#pragma mark - 构造 析构函数
 void MainWindow::onPlayerInitFinished(VideoPlayer *player) {
     qDebug()<<"总时长： "<<player->getDuration();
+
+    // 设置slider范围
+    int64_t microsSeconds= player->getDuration();
+    ui->currentSlider->setRange(0, microsSeconds);
+    // 设置时长
+    ui->currentLabel->setText(getDurationText(microsSeconds));
 }
 
-MainWindow::~MainWindow()
-{
-    delete ui;
+void MainWindow::onPlayerPlayFailed(VideoPlayer *player) {
+    QMessageBox::critical(nullptr, "提示","错误了");
 }
 
 // 播放暂停按钮
@@ -125,5 +144,21 @@ void MainWindow::on_volumeSlider_valueChanged(int value)
 {
     qDebug()<<"音量"<<value;
     ui->volumeLabel->setText(QString("%1").arg(value));
+}
+
+#pragma mark - 私有方法
+QString MainWindow::getDurationText(int value) {
+    int64_t seconds = value / 1000000;
+    int h = seconds / 3600;
+    int m = (seconds % 3600) / 60;
+    int s = seconds % 60;
+
+    qDebug()<<h<<m<<s;
+
+    QString hStr = QString("0%1").arg(h).right(2);
+    QString mStr = QString("0%1").arg(m).right(2);
+    QString sStr = QString("0%1").arg(s).right(2);
+    QString str = QString("%1:%2:%3").arg(hStr).arg(mStr).arg(sStr);
+    return str;
 }
 

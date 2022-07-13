@@ -30,8 +30,8 @@ private slots:
     void on_volumeSlider_valueChanged(int value);
 
     void onPlayerStateChanged(VideoPlayer *player);
-
     void onPlayerInitFinished(VideoPlayer *player);
+    void onPlayerPlayFailed(VideoPlayer *player);
 
 
 
@@ -47,5 +47,6 @@ private slots:
 private:
     Ui::MainWindow *ui;
     VideoPlayer *_player;
+    QString getDurationText(int value);
 };
 #endif // MAINWINDOW_H

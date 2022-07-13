@@ -12,7 +12,8 @@ MainWindow::MainWindow(QWidget *parent)
     _mutex = SDL_CreateMutex();
 
     // 创建条件变量
-    _cond = SDL_CreateCond();
+    _cond1 = SDL_CreateCond();
+    _cond2 = SDL_CreateCond();
 
     // 创建链表
     _list = new std::list<QString>();
@@ -21,7 +22,6 @@ MainWindow::MainWindow(QWidget *parent)
     consume("消费者1");
     consume("消费者2");
     consume("消费者3");
-    consume("消费者4");
 
     // 创建生产者
     produce("生产者1");
@@ -33,7 +33,8 @@ MainWindow::~MainWindow()
 {
     delete ui;
     delete _list;
-    SDL_DestroyCond(_cond);
+    SDL_DestroyCond(_cond1);
+    SDL_DestroyCond(_cond2);
     SDL_DestroyMutex(_mutex);
 }
 
@@ -59,14 +60,14 @@ void MainWindow::consume(QString name) {
             }
 
             // 唤醒生产者：消费者消费完了 唤醒生产者
-
+            SDL_CondSignal(_cond2);
             // 链表是空的， 进入等待
             // 1.释放互斥锁
             // 2.等待条件
             // 3.等到了条件_cond，加锁，执行上面代码
-            qDebug()<<name<<"消费者进入等待";
+            qDebug()<<name<<"消费者进入等待...";
             // 等待生产者来唤醒消费者
-            SDL_CondWait(_cond, _mutex);
+            SDL_CondWait(_cond1, _mutex);
         }
 
         SDL_UnlockMutex(_mutex);
@@ -82,9 +83,9 @@ void MainWindow::produce(QString name) {
             _list->push_back(QString("%1").arg(++_index));
             _list->push_back(QString("%1").arg(++_index));
             // 唤醒消费者：等待_cond的线程
-            SDL_CondSignal(_cond);
+            SDL_CondSignal(_cond1);
             // 等待消费者来唤醒生产者
-            SDL_CondWait(_cond, _mutex);
+            SDL_CondWait(_cond2, _mutex);
         }
         SDL_UnlockMutex(_mutex);
     }).detach();

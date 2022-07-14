@@ -13,6 +13,8 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     videoplayer.cpp \
+    videoplayer_audio.cpp \
+    videoplayer_video.cpp \
     videoslider.cpp \
     videowidget.cpp
 

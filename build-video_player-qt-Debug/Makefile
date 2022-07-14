@@ -56,6 +56,8 @@ SOURCES       = ../video_player/condmutex.cpp \
 		../video_player/main.cpp \
 		../video_player/mainwindow.cpp \
 		../video_player/videoplayer.cpp \
+		../video_player/videoplayer_audio.cpp \
+		../video_player/videoplayer_video.cpp \
 		../video_player/videoslider.cpp \
 		../video_player/videowidget.cpp moc_condmutex.cpp \
 		moc_mainwindow.cpp \
@@ -66,6 +68,8 @@ OBJECTS       = condmutex.o \
 		main.o \
 		mainwindow.o \
 		videoplayer.o \
+		videoplayer_audio.o \
+		videoplayer_video.o \
 		videoslider.o \
 		videowidget.o \
 		moc_condmutex.o \
@@ -336,6 +340,8 @@ DIST          = /opt/homebrew/share/qt/mkspecs/features/spec_pre.prf \
 		../video_player/main.cpp \
 		../video_player/mainwindow.cpp \
 		../video_player/videoplayer.cpp \
+		../video_player/videoplayer_audio.cpp \
+		../video_player/videoplayer_video.cpp \
 		../video_player/videoslider.cpp \
 		../video_player/videowidget.cpp
 QMAKE_TARGET  = video_player
@@ -897,7 +903,7 @@ video_player.app/Contents/Resources/empty.lproj:
 video_player.app/Contents/Info.plist: 
 	@test -d video_player.app/Contents || mkdir -p video_player.app/Contents
 	@$(DEL_FILE) video_player.app/Contents/Info.plist
-	@sed -e "s,@SHORT_VERSION@,1.0,g" -e "s,\$${QMAKE_SHORT_VERSION},1.0,g" -e "s,@FULL_VERSION@,1.0.0,g" -e "s,\$${QMAKE_FULL_VERSION},1.0.0,g" -e "s,@TYPEINFO@,????,g" -e "s,\$${QMAKE_PKGINFO_TYPEINFO},????,g" -e "s,@BUNDLEIDENTIFIER@,xi.video-player,g" -e "s,\$${PRODUCT_BUNDLE_IDENTIFIER},xi.video-player,g" -e "s,\$${MACOSX_DEPLOYMENT_TARGET},12,g" -e "s,\$${IPHONEOS_DEPLOYMENT_TARGET},,g" -e "s,\$${TVOS_DEPLOYMENT_TARGET},,g" -e "s,\$${WATCHOS_DEPLOYMENT_TARGET},,g" -e "s,\$${IOS_LAUNCH_SCREEN},LaunchScreen,g" -e "s,@ICON@,,g" -e "s,\$${ASSETCATALOG_COMPILER_APPICON_NAME},,g" -e "s,@EXECUTABLE@,video_player,g" -e "s,@LIBRARY@,video_player,g" -e "s,\$${EXECUTABLE_NAME},video_player,g" -e "s,@TYPEINFO@,????,g" -e "s,\$${QMAKE_PKGINFO_TYPEINFO},????,g" ../video_player/mac/Info.plist >video_player.app/Contents/Info.plist
+	@sed -e "s,@SHORT_VERSION@,1.0,g" -e "s,\$${QMAKE_SHORT_VERSION},1.0,g" -e "s,@FULL_VERSION@,1.0.0,g" -e "s,\$${QMAKE_FULL_VERSION},1.0.0,g" -e "s,@TYPEINFO@,????,g" -e "s,\$${QMAKE_PKGINFO_TYPEINFO},????,g" -e "s,@BUNDLEIDENTIFIER@,can.waitwalker.video-player,g" -e "s,\$${PRODUCT_BUNDLE_IDENTIFIER},can.waitwalker.video-player,g" -e "s,\$${MACOSX_DEPLOYMENT_TARGET},12,g" -e "s,\$${IPHONEOS_DEPLOYMENT_TARGET},,g" -e "s,\$${TVOS_DEPLOYMENT_TARGET},,g" -e "s,\$${WATCHOS_DEPLOYMENT_TARGET},,g" -e "s,\$${IOS_LAUNCH_SCREEN},LaunchScreen,g" -e "s,@ICON@,,g" -e "s,\$${ASSETCATALOG_COMPILER_APPICON_NAME},,g" -e "s,@EXECUTABLE@,video_player,g" -e "s,@LIBRARY@,video_player,g" -e "s,\$${EXECUTABLE_NAME},video_player,g" -e "s,@TYPEINFO@,????,g" -e "s,\$${QMAKE_PKGINFO_TYPEINFO},????,g" ../video_player/mac/Info.plist >video_player.app/Contents/Info.plist
 
 all: Makefile \
 		video_player.app/Contents/PkgInfo \
@@ -912,7 +918,7 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents /opt/homebrew/share/qt/mkspecs/features/data/dummy.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../video_player/condmutex.h ../video_player/mainwindow.h ../video_player/videoplayer.h ../video_player/videoslider.h ../video_player/videowidget.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../video_player/condmutex.cpp ../video_player/main.cpp ../video_player/mainwindow.cpp ../video_player/videoplayer.cpp ../video_player/videoslider.cpp ../video_player/videowidget.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../video_player/condmutex.cpp ../video_player/main.cpp ../video_player/mainwindow.cpp ../video_player/videoplayer.cpp ../video_player/videoplayer_audio.cpp ../video_player/videoplayer_video.cpp ../video_player/videoslider.cpp ../video_player/videowidget.cpp $(DISTDIR)/
 	$(COPY_FILE) --parents ../video_player/mainwindow.ui $(DISTDIR)/
 
 
@@ -1013,6 +1019,56 @@ moc_mainwindow.cpp: ../video_player/mainwindow.h \
 		../video_player/videoplayer.h \
 		/opt/homebrew/lib/QtCore.framework/Headers/QObject \
 		/opt/homebrew/lib/QtCore.framework/Headers/qobject.h \
+		../video_player/condmutex.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_main.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_stdinc.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_config.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_platform.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/begin_code.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/close_code.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_assert.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_atomic.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_audio.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_error.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_endian.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_mutex.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_thread.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_rwops.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_clipboard.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_cpuinfo.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_events.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_video.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_pixels.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_rect.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_surface.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_blendmode.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_keyboard.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_keycode.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_scancode.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_mouse.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_joystick.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_gamecontroller.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_sensor.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_quit.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_gesture.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_touch.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_filesystem.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_haptic.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_hidapi.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_hints.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_loadso.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_log.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_messagebox.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_metal.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_power.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_render.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_shape.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_system.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_timer.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_version.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_locale.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_misc.h \
 		/usr/local/ffmpeg/include/libavutil/avutil.h \
 		/usr/local/ffmpeg/include/libavutil/common.h \
 		/usr/local/ffmpeg/include/libavutil/attributes.h \
@@ -1054,6 +1110,56 @@ moc_mainwindow.cpp: ../video_player/mainwindow.h \
 moc_videoplayer.cpp: ../video_player/videoplayer.h \
 		/opt/homebrew/lib/QtCore.framework/Headers/QObject \
 		/opt/homebrew/lib/QtCore.framework/Headers/qobject.h \
+		../video_player/condmutex.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_main.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_stdinc.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_config.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_platform.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/begin_code.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/close_code.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_assert.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_atomic.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_audio.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_error.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_endian.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_mutex.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_thread.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_rwops.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_clipboard.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_cpuinfo.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_events.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_video.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_pixels.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_rect.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_surface.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_blendmode.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_keyboard.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_keycode.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_scancode.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_mouse.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_joystick.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_gamecontroller.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_sensor.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_quit.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_gesture.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_touch.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_filesystem.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_haptic.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_hidapi.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_hints.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_loadso.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_log.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_messagebox.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_metal.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_power.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_render.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_shape.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_system.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_timer.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_version.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_locale.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_misc.h \
 		/usr/local/ffmpeg/include/libavutil/avutil.h \
 		/usr/local/ffmpeg/include/libavutil/common.h \
 		/usr/local/ffmpeg/include/libavutil/attributes.h \
@@ -1189,6 +1295,56 @@ main.o: ../video_player/main.cpp ../video_player/mainwindow.h \
 		../video_player/videoplayer.h \
 		/opt/homebrew/lib/QtCore.framework/Headers/QObject \
 		/opt/homebrew/lib/QtCore.framework/Headers/qobject.h \
+		../video_player/condmutex.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_main.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_stdinc.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_config.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_platform.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/begin_code.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/close_code.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_assert.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_atomic.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_audio.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_error.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_endian.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_mutex.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_thread.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_rwops.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_clipboard.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_cpuinfo.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_events.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_video.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_pixels.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_rect.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_surface.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_blendmode.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_keyboard.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_keycode.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_scancode.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_mouse.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_joystick.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_gamecontroller.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_sensor.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_quit.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_gesture.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_touch.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_filesystem.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_haptic.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_hidapi.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_hints.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_loadso.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_log.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_messagebox.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_metal.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_power.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_render.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_shape.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_system.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_timer.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_version.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_locale.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_misc.h \
 		/usr/local/ffmpeg/include/libavutil/avutil.h \
 		/usr/local/ffmpeg/include/libavutil/common.h \
 		/usr/local/ffmpeg/include/libavutil/attributes.h \
@@ -1233,6 +1389,56 @@ mainwindow.o: ../video_player/mainwindow.cpp ../video_player/mainwindow.h \
 		../video_player/videoplayer.h \
 		/opt/homebrew/lib/QtCore.framework/Headers/QObject \
 		/opt/homebrew/lib/QtCore.framework/Headers/qobject.h \
+		../video_player/condmutex.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_main.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_stdinc.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_config.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_platform.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/begin_code.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/close_code.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_assert.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_atomic.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_audio.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_error.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_endian.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_mutex.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_thread.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_rwops.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_clipboard.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_cpuinfo.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_events.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_video.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_pixels.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_rect.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_surface.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_blendmode.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_keyboard.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_keycode.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_scancode.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_mouse.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_joystick.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_gamecontroller.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_sensor.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_quit.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_gesture.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_touch.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_filesystem.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_haptic.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_hidapi.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_hints.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_loadso.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_log.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_messagebox.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_metal.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_power.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_render.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_shape.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_system.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_timer.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_version.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_locale.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_misc.h \
 		/usr/local/ffmpeg/include/libavutil/avutil.h \
 		/usr/local/ffmpeg/include/libavutil/common.h \
 		/usr/local/ffmpeg/include/libavutil/attributes.h \
@@ -1285,6 +1491,56 @@ mainwindow.o: ../video_player/mainwindow.cpp ../video_player/mainwindow.h \
 videoplayer.o: ../video_player/videoplayer.cpp ../video_player/videoplayer.h \
 		/opt/homebrew/lib/QtCore.framework/Headers/QObject \
 		/opt/homebrew/lib/QtCore.framework/Headers/qobject.h \
+		../video_player/condmutex.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_main.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_stdinc.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_config.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_platform.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/begin_code.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/close_code.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_assert.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_atomic.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_audio.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_error.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_endian.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_mutex.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_thread.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_rwops.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_clipboard.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_cpuinfo.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_events.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_video.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_pixels.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_rect.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_surface.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_blendmode.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_keyboard.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_keycode.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_scancode.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_mouse.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_joystick.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_gamecontroller.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_sensor.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_quit.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_gesture.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_touch.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_filesystem.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_haptic.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_hidapi.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_hints.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_loadso.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_log.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_messagebox.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_metal.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_power.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_render.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_shape.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_system.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_timer.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_version.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_locale.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_misc.h \
 		/usr/local/ffmpeg/include/libavutil/avutil.h \
 		/usr/local/ffmpeg/include/libavutil/common.h \
 		/usr/local/ffmpeg/include/libavutil/attributes.h \
@@ -1324,6 +1580,188 @@ videoplayer.o: ../video_player/videoplayer.cpp ../video_player/videoplayer.h \
 		/opt/homebrew/lib/QtCore.framework/Headers/QThread \
 		/opt/homebrew/lib/QtCore.framework/Headers/qthread.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o videoplayer.o ../video_player/videoplayer.cpp
+
+videoplayer_audio.o: ../video_player/videoplayer_audio.cpp ../video_player/videoplayer.h \
+		/opt/homebrew/lib/QtCore.framework/Headers/QObject \
+		/opt/homebrew/lib/QtCore.framework/Headers/qobject.h \
+		../video_player/condmutex.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_main.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_stdinc.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_config.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_platform.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/begin_code.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/close_code.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_assert.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_atomic.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_audio.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_error.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_endian.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_mutex.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_thread.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_rwops.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_clipboard.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_cpuinfo.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_events.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_video.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_pixels.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_rect.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_surface.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_blendmode.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_keyboard.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_keycode.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_scancode.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_mouse.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_joystick.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_gamecontroller.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_sensor.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_quit.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_gesture.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_touch.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_filesystem.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_haptic.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_hidapi.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_hints.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_loadso.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_log.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_messagebox.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_metal.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_power.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_render.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_shape.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_system.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_timer.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_version.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_locale.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_misc.h \
+		/usr/local/ffmpeg/include/libavutil/avutil.h \
+		/usr/local/ffmpeg/include/libavutil/common.h \
+		/usr/local/ffmpeg/include/libavutil/attributes.h \
+		/usr/local/ffmpeg/include/libavutil/macros.h \
+		/usr/local/ffmpeg/include/libavutil/avconfig.h \
+		/usr/local/ffmpeg/include/libavutil/mem.h \
+		/usr/local/ffmpeg/include/libavutil/version.h \
+		/usr/local/ffmpeg/include/libavutil/error.h \
+		/usr/local/ffmpeg/include/libavutil/rational.h \
+		/usr/local/ffmpeg/include/libavutil/mathematics.h \
+		/usr/local/ffmpeg/include/libavutil/intfloat.h \
+		/usr/local/ffmpeg/include/libavutil/log.h \
+		/usr/local/ffmpeg/include/libavutil/pixfmt.h \
+		/usr/local/ffmpeg/include/libavcodec/avcodec.h \
+		/usr/local/ffmpeg/include/libavutil/samplefmt.h \
+		/usr/local/ffmpeg/include/libavutil/buffer.h \
+		/usr/local/ffmpeg/include/libavutil/dict.h \
+		/usr/local/ffmpeg/include/libavutil/frame.h \
+		/usr/local/ffmpeg/include/libavutil/channel_layout.h \
+		/usr/local/ffmpeg/include/libavcodec/codec.h \
+		/usr/local/ffmpeg/include/libavutil/hwcontext.h \
+		/usr/local/ffmpeg/include/libavcodec/codec_id.h \
+		/usr/local/ffmpeg/include/libavcodec/version_major.h \
+		/usr/local/ffmpeg/include/libavcodec/codec_desc.h \
+		/usr/local/ffmpeg/include/libavcodec/codec_par.h \
+		/usr/local/ffmpeg/include/libavcodec/defs.h \
+		/usr/local/ffmpeg/include/libavcodec/packet.h \
+		/usr/local/ffmpeg/include/libavcodec/version.h \
+		/usr/local/ffmpeg/include/libavformat/avformat.h \
+		/usr/local/ffmpeg/include/libavformat/avio.h \
+		/usr/local/ffmpeg/include/libavformat/version_major.h \
+		/usr/local/ffmpeg/include/libavformat/version.h \
+		/usr/local/ffmpeg/include/libavutil/imgutils.h \
+		/usr/local/ffmpeg/include/libavutil/pixdesc.h \
+		/opt/homebrew/lib/QtCore.framework/Headers/QDebug \
+		/opt/homebrew/lib/QtCore.framework/Headers/qdebug.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o videoplayer_audio.o ../video_player/videoplayer_audio.cpp
+
+videoplayer_video.o: ../video_player/videoplayer_video.cpp ../video_player/videoplayer.h \
+		/opt/homebrew/lib/QtCore.framework/Headers/QObject \
+		/opt/homebrew/lib/QtCore.framework/Headers/qobject.h \
+		../video_player/condmutex.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_main.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_stdinc.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_config.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_platform.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/begin_code.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/close_code.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_assert.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_atomic.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_audio.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_error.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_endian.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_mutex.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_thread.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_rwops.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_clipboard.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_cpuinfo.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_events.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_video.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_pixels.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_rect.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_surface.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_blendmode.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_keyboard.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_keycode.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_scancode.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_mouse.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_joystick.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_gamecontroller.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_sensor.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_quit.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_gesture.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_touch.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_filesystem.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_haptic.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_hidapi.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_hints.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_loadso.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_log.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_messagebox.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_metal.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_power.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_render.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_shape.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_system.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_timer.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_version.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_locale.h \
+		/opt/homebrew/Cellar/sdl2/2.0.20/include/SDL2/SDL_misc.h \
+		/usr/local/ffmpeg/include/libavutil/avutil.h \
+		/usr/local/ffmpeg/include/libavutil/common.h \
+		/usr/local/ffmpeg/include/libavutil/attributes.h \
+		/usr/local/ffmpeg/include/libavutil/macros.h \
+		/usr/local/ffmpeg/include/libavutil/avconfig.h \
+		/usr/local/ffmpeg/include/libavutil/mem.h \
+		/usr/local/ffmpeg/include/libavutil/version.h \
+		/usr/local/ffmpeg/include/libavutil/error.h \
+		/usr/local/ffmpeg/include/libavutil/rational.h \
+		/usr/local/ffmpeg/include/libavutil/mathematics.h \
+		/usr/local/ffmpeg/include/libavutil/intfloat.h \
+		/usr/local/ffmpeg/include/libavutil/log.h \
+		/usr/local/ffmpeg/include/libavutil/pixfmt.h \
+		/usr/local/ffmpeg/include/libavcodec/avcodec.h \
+		/usr/local/ffmpeg/include/libavutil/samplefmt.h \
+		/usr/local/ffmpeg/include/libavutil/buffer.h \
+		/usr/local/ffmpeg/include/libavutil/dict.h \
+		/usr/local/ffmpeg/include/libavutil/frame.h \
+		/usr/local/ffmpeg/include/libavutil/channel_layout.h \
+		/usr/local/ffmpeg/include/libavcodec/codec.h \
+		/usr/local/ffmpeg/include/libavutil/hwcontext.h \
+		/usr/local/ffmpeg/include/libavcodec/codec_id.h \
+		/usr/local/ffmpeg/include/libavcodec/version_major.h \
+		/usr/local/ffmpeg/include/libavcodec/codec_desc.h \
+		/usr/local/ffmpeg/include/libavcodec/codec_par.h \
+		/usr/local/ffmpeg/include/libavcodec/defs.h \
+		/usr/local/ffmpeg/include/libavcodec/packet.h \
+		/usr/local/ffmpeg/include/libavcodec/version.h \
+		/usr/local/ffmpeg/include/libavformat/avformat.h \
+		/usr/local/ffmpeg/include/libavformat/avio.h \
+		/usr/local/ffmpeg/include/libavformat/version_major.h \
+		/usr/local/ffmpeg/include/libavformat/version.h \
+		/usr/local/ffmpeg/include/libavutil/imgutils.h \
+		/usr/local/ffmpeg/include/libavutil/pixdesc.h \
+		/opt/homebrew/lib/QtCore.framework/Headers/QDebug \
+		/opt/homebrew/lib/QtCore.framework/Headers/qdebug.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o videoplayer_video.o ../video_player/videoplayer_video.cpp
 
 videoslider.o: ../video_player/videoslider.cpp ../video_player/videoslider.h \
 		/opt/homebrew/lib/QtWidgets.framework/Headers/QSlider \

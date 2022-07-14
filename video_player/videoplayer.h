@@ -11,6 +11,26 @@ extern "C" {
 #include <libavutil/imgutils.h>
 }
 
+#define ERROR_BUF \
+    char errbuf[1024]; \
+    av_strerror(ret, errbuf, sizeof (errbuf));
+
+#define END(func) \
+    if (ret < 0) { \
+        ERROR_BUF; \
+        qDebug() << #func << "error" << errbuf; \
+        setState(VideoPlayer::Stopped); \
+        emit playFailed(this); \
+        goto end; \
+    }
+
+#define RET(func) \
+    if (ret < 0) { \
+        ERROR_BUF; \
+        qDebug() << #func << "error" << errbuf; \
+        return ret; \
+    }
+
 class VideoPlayer : public QObject
 {
     Q_OBJECT
@@ -82,6 +102,17 @@ private:
     CondMutex *_vMutex = nullptr;
     // 清空视频包列表
     void clearVideoPktList();
+    // 初始化SDL
+    int initSDL();
+    // SDL 填充缓冲区的回调函数
+    static void sdlAudioCallBackFunc(void *userdata, Uint8 * stream,
+                          int len);
+    // SDL 填充缓冲区的回调函数
+    void sdlAudioCallBack(Uint8 * stream,
+                          int len);
+
+    // 音频解码
+    int decodeAudio();
 
 
     /*********** 其他公用相关 ***********/

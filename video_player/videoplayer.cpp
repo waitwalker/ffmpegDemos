@@ -3,30 +3,19 @@
 #include <QDebug>
 #include <QThread>
 
-#define ERROR_BUF \
-    char errbuf[1024]; \
-    av_strerror(ret, errbuf, sizeof (errbuf));
 
-#define END(func) \
-    if (ret < 0) { \
-        ERROR_BUF; \
-        qDebug() << #func << "error" << errbuf; \
-        setState(VideoPlayer::Stopped); \
-        emit playFailed(this); \
-        goto end; \
-    }
-
-#define RET(func) \
-    if (ret < 0) { \
-        ERROR_BUF; \
-        qDebug() << #func << "error" << errbuf; \
-        return ret; \
-    }
 
 #pragma mark - 构造 析构 方法
 VideoPlayer::VideoPlayer(QObject *parent)
     : QObject{parent}
 {
+    // 只需要初始化一次
+    if(SDL_Init(SDL_INIT_AUDIO)) {
+        qDebug()<<"初始化SDL失败SDL_Init error "<<SDL_GetError();
+        emit playFailed(this);
+        return;
+    }
+
     _aPktList = new std::list<AVPacket>();
     _vPktList = new std::list<AVPacket>();
     _aMutex = new CondMutex();
@@ -38,6 +27,8 @@ VideoPlayer::~VideoPlayer() {
     delete _vPktList;
     delete _aMutex;
     delete _vMutex;
+    // 退出SDL
+    SDL_Quit();
 }
 
 #pragma mark - 公有方法
@@ -152,25 +143,10 @@ void VideoPlayer::readFile() {
     }
 
     end:
-    avcodec_free_context(&_aDecodeCtx);
-    avcodec_free_context(&_vDecodeCtx);
-    avformat_close_input(&_fmtCtx);
-}
-
-
-// 初始化视频信息
-int VideoPlayer::initVideoInfo() {
-    int ret = initDecoder(&_vDecodeCtx, &_vStream, AVMEDIA_TYPE_VIDEO);
-    RET(initDecoder);
-    return 0;
-}
-
-// 初始化音频信息
-int VideoPlayer::initAudioInfo() {
-    // 初始化解码器
-    int ret = initDecoder(&_aDecodeCtx, &_aStream, AVMEDIA_TYPE_AUDIO);
-    RET(initDecoder);
-    return 0;
+    ;
+//    avcodec_free_context(&_aDecodeCtx);
+//    avcodec_free_context(&_vDecodeCtx);
+//    avformat_close_input(&_fmtCtx);
 }
 
 // 初始化解码器
@@ -215,37 +191,6 @@ int VideoPlayer::initDecoder(AVCodecContext **decodeCtx,
     return 0;
 }
 
-void VideoPlayer::addAduioPkt(AVPacket &pkt) {
-    _aMutex->lock();
-    _aPktList->push_back(pkt);
-    _aMutex->signal();
-    _aMutex->unlock();
-}
-
-void VideoPlayer::addVideoPkt(AVPacket &pkt) {
-    _vMutex->lock();
-    _vPktList->push_back(pkt);
-    _vMutex->signal();
-    _vMutex->unlock();
-}
-
-void VideoPlayer::clearAudioPktList() {
-    _aMutex->lock();
-    for(AVPacket &pkt : *_aPktList) {
-        av_packet_unref(&pkt);
-    }
-    _aPktList->clear();
-    _aMutex->unlock();
-}
-
-void VideoPlayer::clearVideoPktList() {
-    _vMutex->lock();
-    for(AVPacket &pkt : *_vPktList) {
-        av_packet_unref(&pkt);
-    }
-    _vPktList->clear();
-    _vMutex->unlock();
-}
 
 
 

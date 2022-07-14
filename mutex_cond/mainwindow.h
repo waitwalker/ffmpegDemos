@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <list>
 #include <SDL2/SDL.h>
+#include "condmutex.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -34,6 +35,7 @@ private:
     SDL_cond *_cond1 = nullptr;
     // 条件变量 生产者等待消费者唤醒
     SDL_cond *_cond2 = nullptr;
+    CondMutex *_condMutext = nullptr;
 
     void consume(QString name);
     void produce(QString name);

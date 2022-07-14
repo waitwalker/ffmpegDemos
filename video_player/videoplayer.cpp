@@ -27,11 +27,17 @@
 VideoPlayer::VideoPlayer(QObject *parent)
     : QObject{parent}
 {
-
+    _aPktList = new std::list<AVPacket>();
+    _vPktList = new std::list<AVPacket>();
+    _aMutex = new CondMutex();
+    _vMutex = new CondMutex();
 }
 
 VideoPlayer::~VideoPlayer() {
-
+    delete _aPktList;
+    delete _vPktList;
+    delete _aMutex;
+    delete _vMutex;
 }
 
 #pragma mark - 公有方法
@@ -128,16 +134,22 @@ void VideoPlayer::readFile() {
     emit initFinished(this);
 
     // 从输入文件中读取数据
-//    AVPacket pkt;
-//    while (av_read_frame(_fmtCtx, &pkt) == 0) {
-//        if (pkt.stream_index == _aStream->index) {
-//            // 读到数据 读取到是音频数据 下面开始解码
-
-//        } else if (pkt.stream_index == _vStream->index) {
-//            // 读取到视频数据 下面开始解码
-//        }
-
-//    }
+    while (true) {
+        AVPacket pkt;
+        ret = av_read_frame(_fmtCtx, &pkt);
+        if (ret == 0) {
+            if (pkt.stream_index == _aStream->index) {
+                // 读到数据 读取到是音频数据 下面开始解码
+                addAduioPkt(pkt);
+            } else if (pkt.stream_index == _vStream->index) {
+                // 读取到视频数据 下面开始解码
+                addVideoPkt(pkt);
+            }
+        } else {
+            // 这次读取失败，跳过去
+            continue;
+        }
+    }
 
     end:
     avcodec_free_context(&_aDecodeCtx);
@@ -203,6 +215,37 @@ int VideoPlayer::initDecoder(AVCodecContext **decodeCtx,
     return 0;
 }
 
+void VideoPlayer::addAduioPkt(AVPacket &pkt) {
+    _aMutex->lock();
+    _aPktList->push_back(pkt);
+    _aMutex->signal();
+    _aMutex->unlock();
+}
+
+void VideoPlayer::addVideoPkt(AVPacket &pkt) {
+    _vMutex->lock();
+    _vPktList->push_back(pkt);
+    _vMutex->signal();
+    _vMutex->unlock();
+}
+
+void VideoPlayer::clearAudioPktList() {
+    _aMutex->lock();
+    for(AVPacket &pkt : *_aPktList) {
+        av_packet_unref(&pkt);
+    }
+    _aPktList->clear();
+    _aMutex->unlock();
+}
+
+void VideoPlayer::clearVideoPktList() {
+    _vMutex->lock();
+    for(AVPacket &pkt : *_vPktList) {
+        av_packet_unref(&pkt);
+    }
+    _vPktList->clear();
+    _vMutex->unlock();
+}
 
 
 

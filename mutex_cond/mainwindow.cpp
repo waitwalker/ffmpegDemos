@@ -7,7 +7,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-
+    _condMutext = new CondMutex();
     // 创建互斥锁
     _mutex = SDL_CreateMutex();
 
@@ -33,6 +33,7 @@ MainWindow::~MainWindow()
 {
     delete ui;
     delete _list;
+    delete _condMutext;
     SDL_DestroyCond(_cond1);
     SDL_DestroyCond(_cond2);
     SDL_DestroyMutex(_mutex);
@@ -56,7 +57,7 @@ void MainWindow::consume(QString name) {
                 // 删除头部
                 _list->pop_front();
                 // 消费完一个 睡眠500ms
-                std::this_thread::sleep_for(std::chrono::milliseconds(1500));
+                std::this_thread::sleep_for(std::chrono::milliseconds(1000));
             }
 
             // 唤醒生产者：消费者消费完了 唤醒生产者

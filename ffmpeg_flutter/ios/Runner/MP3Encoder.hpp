@@ -9,6 +9,7 @@
 #define MP3Encoder_hpp
 
 #include <stdio.h>
+#pragma mark - MP3编码类
 class MP3Encoder {
 public:
     MP3Encoder();

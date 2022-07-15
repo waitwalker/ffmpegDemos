@@ -1,0 +1,45 @@
+{
+  "stringTable": {
+    "0": "/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/android/app/.cxx/cmake/debug/x86",
+    "1": "--target=i686-none-linux-android19 --sysroot=/Users/walkerwait/Library/Android/sdk/ndk/25.0.8775105/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -Dsample_EXPORTS -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -mstackrealign -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -std=c++14 -frtti -fexceptions -fno-limit-debug-info -fPIC"
+  },
+  "buildFiles": [
+    "/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/android/app/CMakeLists.txt",
+    "/Users/walkerwait/Library/Android/sdk/ndk/25.0.8775105/build/cmake/android.toolchain.cmake",
+    "/Users/walkerwait/Library/Android/sdk/ndk/25.0.8775105/build/cmake/android-legacy.toolchain.cmake",
+    "/Users/walkerwait/Library/Android/sdk/ndk/25.0.8775105/build/cmake/platforms.cmake",
+    "/Users/walkerwait/Library/Android/sdk/ndk/25.0.8775105/build/cmake/compiler_id.cmake"
+  ],
+  "cleanCommands": [
+    "/Users/walkerwait/Library/Android/sdk/cmake/3.18.1/bin/ninja -C \"/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/android/app/.cxx/cmake/debug/x86\" clean"
+  ],
+  "buildTargetsCommand": "/Users/walkerwait/Library/Android/sdk/cmake/3.18.1/bin/ninja  -C \"/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/android/app/.cxx/cmake/debug/x86\" {LIST_OF_TARGETS_TO_BUILD}",
+  "libraries": {
+    "sample-Debug-x86": {
+      "buildCommand": "/Users/walkerwait/Library/Android/sdk/cmake/3.18.1/bin/ninja -C \"/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/android/app/.cxx/cmake/debug/x86\" sample",
+      "buildType": "debug",
+      "toolchain": "502840012",
+      "abi": "x86",
+      "artifactName": "sample",
+      "files": [
+        {
+          "src": "/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/android/app/src/main/cpp/samplelib.cpp",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
+        }
+      ],
+      "headers": [],
+      "output": "/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/build/app/intermediates/cmake/debug/obj/x86/libsample.so",
+      "runtimeFiles": []
+    }
+  },
+  "toolchains": {
+    "502840012": {
+      "cppCompilerExecutable": "/Users/walkerwait/Library/Android/sdk/ndk/25.0.8775105/toolchains/llvm/prebuilt/darwin-x86_64/bin/clang++"
+    }
+  },
+  "cFileExtensions": [],
+  "cppFileExtensions": [
+    "cpp"
+  ]
+}

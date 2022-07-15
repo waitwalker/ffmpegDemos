@@ -1,0 +1,11 @@
+{
+  "ndk": "/Users/walkerwait/Library/Android/sdk/ndk/25.0.8775105",
+  "revision": {
+    "mMajor": 25,
+    "mMinor": 0,
+    "mMicro": 8775105,
+    "mPreview": 0,
+    "mPrecision": "MICRO",
+    "mPreviewSeparator": " "
+  }
+}

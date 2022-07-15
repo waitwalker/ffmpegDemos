@@ -1,0 +1,22 @@
+{
+  "buildFiles": [
+    "/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/android/app/CMakeLists.txt",
+    "/Users/walkerwait/Library/Android/sdk/ndk/25.0.8775105/build/cmake/android.toolchain.cmake",
+    "/Users/walkerwait/Library/Android/sdk/ndk/25.0.8775105/build/cmake/android-legacy.toolchain.cmake",
+    "/Users/walkerwait/Library/Android/sdk/ndk/25.0.8775105/build/cmake/platforms.cmake",
+    "/Users/walkerwait/Library/Android/sdk/ndk/25.0.8775105/build/cmake/compiler_id.cmake"
+  ],
+  "cleanCommands": [
+    "/Users/walkerwait/Library/Android/sdk/cmake/3.18.1/bin/ninja -C \"/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/android/app/.cxx/cmake/debug/arm64-v8a\" clean"
+  ],
+  "buildTargetsCommand": "/Users/walkerwait/Library/Android/sdk/cmake/3.18.1/bin/ninja  -C \"/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/android/app/.cxx/cmake/debug/arm64-v8a\" {LIST_OF_TARGETS_TO_BUILD}",
+  "libraries": {
+    "sample-Debug-arm64-v8a": {
+      "artifactName": "sample",
+      "buildCommand": "/Users/walkerwait/Library/Android/sdk/cmake/3.18.1/bin/ninja -C \"/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/android/app/.cxx/cmake/debug/arm64-v8a\" sample",
+      "abi": "arm64-v8a",
+      "output": "/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/build/app/intermediates/cmake/debug/obj/arm64-v8a/libsample.so",
+      "runtimeFiles": []
+    }
+  }
+}

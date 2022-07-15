@@ -1,0 +1,3 @@
+ninja: Entering directory `/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/android/app/.cxx/cmake/debug/arm64-v8a'
+[1/2] Building CXX object CMakeFiles/sample.dir/src/main/cpp/samplelib.cpp.o
+[2/2] Linking CXX shared library /Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/build/app/intermediates/cmake/debug/obj/arm64-v8a/libsample.so

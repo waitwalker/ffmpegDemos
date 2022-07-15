@@ -1,6 +1,7 @@
 package cn.waitwalker.ffmpeg_flutter;
 
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -14,7 +15,8 @@ public class MainActivity extends FlutterActivity {
         super.onCreate(savedInstanceState);
 
         String str = JNI.stringFromJNI();
-        Log.d("1", str);
+        Log.d("xox", str);
+        Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
     }
 
     @Override

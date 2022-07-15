@@ -8,7 +8,9 @@ add_library( # 库名
              SHARED
 
              # 依赖的文件
-       src/main/cpp/samplelib.cpp)
+        src/main/cpp/samplelib.cpp
+        src/main/cpp/MP3Encoder.h
+        src/main/cpp/MP3Encoder.cpp)
 
 
 find_library( # 设置Path变量的名称

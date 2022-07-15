@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <string>
 #include <android/log.h>
+#include "MP3Encoder.h"
 #define TAG    "JNI_LOG"
 #define LOGE(...)  __android_log_print(ANDROID_LOG_ERROR,TAG ,__VA_ARGS__)
 
@@ -22,6 +23,11 @@ static const char *className = "cn/waitwalker/ffmpeg_flutter/JNI";
 //返回一个string
 jstring stringFromJNI(JNIEnv *env,jclass clz) {
     std::string hello = "Hello from C++";
+    MP3Encoder *encoder = new MP3Encoder();
+    encoder->encode();
+
+    int value = encoder->getValue();
+    LOGE("%s", "Say Hello and value"+value);
     return env->NewStringUTF(hello.c_str());
 }
 
@@ -29,6 +35,10 @@ jstring stringFromJNI(JNIEnv *env,jclass clz) {
 jstring sayHello(JNIEnv* env,jclass clz) {
     std::string hello = "Say Hello from C++";
     LOGE("Say Hello and value");
+    MP3Encoder *encoder = new MP3Encoder();
+    encoder->encode();
+    int value = encoder->getValue();
+    LOGE("%s", "Say Hello and value"+value);
     return env->NewStringUTF(hello.c_str());
 }
 

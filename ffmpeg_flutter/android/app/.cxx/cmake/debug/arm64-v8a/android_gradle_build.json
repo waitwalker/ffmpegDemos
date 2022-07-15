@@ -26,9 +26,19 @@
           "src": "/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/android/app/src/main/cpp/samplelib.cpp",
           "flagsOrdinal": 1,
           "workingDirectoryOrdinal": 0
+        },
+        {
+          "src": "/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/android/app/src/main/cpp/MP3Encoder.cpp",
+          "flagsOrdinal": 1,
+          "workingDirectoryOrdinal": 0
         }
       ],
-      "headers": [],
+      "headers": [
+        {
+          "header": "/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/android/app/src/main/cpp/MP3Encoder.h",
+          "workingDirectoryOrdinal": 0
+        }
+      ],
       "output": "/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/build/app/intermediates/cmake/debug/obj/arm64-v8a/libsample.so",
       "runtimeFiles": []
     }

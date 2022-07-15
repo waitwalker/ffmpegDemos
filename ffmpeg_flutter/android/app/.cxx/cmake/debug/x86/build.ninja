@@ -73,6 +73,13 @@ build CMakeFiles/sample.dir/src/main/cpp/samplelib.cpp.o: CXX_COMPILER__sample_D
   OBJECT_DIR = CMakeFiles/sample.dir
   OBJECT_FILE_DIR = CMakeFiles/sample.dir/src/main/cpp
 
+build CMakeFiles/sample.dir/src/main/cpp/MP3Encoder.cpp.o: CXX_COMPILER__sample_Debug ../../../../src/main/cpp/MP3Encoder.cpp || cmake_object_order_depends_target_sample
+  DEFINES = -Dsample_EXPORTS
+  DEP_FILE = CMakeFiles/sample.dir/src/main/cpp/MP3Encoder.cpp.o.d
+  FLAGS = -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -mstackrealign -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -std=c++14 -frtti -fexceptions -fno-limit-debug-info  -fPIC
+  OBJECT_DIR = CMakeFiles/sample.dir
+  OBJECT_FILE_DIR = CMakeFiles/sample.dir/src/main/cpp
+
 
 # =============================================================================
 # Link build statements for SHARED_LIBRARY target sample
@@ -81,7 +88,7 @@ build CMakeFiles/sample.dir/src/main/cpp/samplelib.cpp.o: CXX_COMPILER__sample_D
 #############################################
 # Link the shared library /Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/build/app/intermediates/cmake/debug/obj/x86/libsample.so
 
-build /Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/build/app/intermediates/cmake/debug/obj/x86/libsample.so: CXX_SHARED_LIBRARY_LINKER__sample_Debug CMakeFiles/sample.dir/src/main/cpp/samplelib.cpp.o | /Users/walkerwait/Library/Android/sdk/ndk/25.0.8775105/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/lib/i686-linux-android/19/liblog.so
+build /Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/build/app/intermediates/cmake/debug/obj/x86/libsample.so: CXX_SHARED_LIBRARY_LINKER__sample_Debug CMakeFiles/sample.dir/src/main/cpp/samplelib.cpp.o CMakeFiles/sample.dir/src/main/cpp/MP3Encoder.cpp.o | /Users/walkerwait/Library/Android/sdk/ndk/25.0.8775105/toolchains/llvm/prebuilt/darwin-x86_64/sysroot/usr/lib/i686-linux-android/19/liblog.so
   LANGUAGE_COMPILE_FLAGS = -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -mstackrealign -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security  -std=c++14 -frtti -fexceptions -fno-limit-debug-info
   LINK_FLAGS = -static-libstdc++ -Wl,--build-id=sha1 -Wl,--no-rosegment -Wl,--fatal-warnings -Wl,--gc-sections -Wl,--no-undefined -Qunused-arguments
   LINK_LIBRARIES = -landroid  -llog  -latomic -lm

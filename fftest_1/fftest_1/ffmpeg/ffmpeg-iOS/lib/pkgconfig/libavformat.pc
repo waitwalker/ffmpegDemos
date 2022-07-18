@@ -1,0 +1,14 @@
+prefix=/Users/walkerwait/Desktop/work/projects/thin/arm64
+exec_prefix=${prefix}
+libdir=/Users/walkerwait/Desktop/work/projects/thin/arm64/lib
+includedir=/Users/walkerwait/Desktop/work/projects/thin/arm64/include
+
+Name: libavformat
+Description: FFmpeg container format library
+Version: 59.29.100
+Requires: libavcodec >= 59.39.100, libswresample >= 4.8.100, libavutil >= 57.29.100
+Requires.private: 
+Conflicts:
+Libs: -L${libdir}  -lavformat -lm -lbz2 -lz -Wl,-framework,CoreFoundation -Wl,-framework,Security
+Libs.private: 
+Cflags: -I${includedir}

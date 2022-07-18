@@ -181,6 +181,7 @@
       "project": {
         "compilerSettingsCacheFolder": "/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/android/.cxx",
         "cxxFolder": "/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/android/.cxx",
+        "ideBuildTargetAbi": "arm64-v8a,armeabi-v7a,armeabi",
         "isBuildOnlyTargetAbiEnabled": true,
         "isCmakeBuildCohabitationEnabled": false,
         "isNativeCompilerSettingsCacheEnabled": false,
@@ -204,9 +205,7 @@
     "objFolder": "/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/build/app/intermediates/cmake/debug/obj",
     "variantName": "debug",
     "validAbiList": [
-      "ARMEABI_V7A",
-      "ARM64_V8A",
-      "X86"
+      "ARM64_V8A"
     ],
     "prefabDirectory": "/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/android/app/.cxx/cmake/debug/prefab",
     "prefabPackageDirectoryList": []

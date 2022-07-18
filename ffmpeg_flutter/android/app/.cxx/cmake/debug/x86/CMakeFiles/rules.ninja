@@ -42,7 +42,7 @@ rule CXX_SHARED_LIBRARY_LINKER__sample_Debug
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
-  command = /Users/walkerwait/Library/Android/sdk/cmake/3.18.1/bin/cmake --regenerate-during-build -S/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/android/app -B/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/android/app/.cxx/cmake/debug/x86
+  command = /Users/walkerwait/Library/Android/sdk/cmake/3.18.1/bin/cmake --regenerate-during-build -S/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/android/app/src/main/cpp -B/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/android/app/.cxx/cmake/debug/x86
   description = Re-running CMake...
   generator = 1
 

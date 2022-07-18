@@ -4,7 +4,7 @@
     "1": "--target=i686-none-linux-android19 --sysroot=/Users/walkerwait/Library/Android/sdk/ndk/25.0.8775105/toolchains/llvm/prebuilt/darwin-x86_64/sysroot -Dsample_EXPORTS -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -mstackrealign -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security -std=c++14 -frtti -fexceptions -fno-limit-debug-info -fPIC"
   },
   "buildFiles": [
-    "/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/android/app/CMakeLists.txt",
+    "/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/android/app/src/main/cpp/CMakeLists.txt",
     "/Users/walkerwait/Library/Android/sdk/ndk/25.0.8775105/build/cmake/android.toolchain.cmake",
     "/Users/walkerwait/Library/Android/sdk/ndk/25.0.8775105/build/cmake/android-legacy.toolchain.cmake",
     "/Users/walkerwait/Library/Android/sdk/ndk/25.0.8775105/build/cmake/platforms.cmake",

@@ -1,6 +1,6 @@
                 Executable : /Users/walkerwait/Library/Android/sdk/cmake/3.18.1/bin/cmake
 arguments : 
--H/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/android/app
+-H/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/android/app/src/main/cpp
 -DCMAKE_CXX_FLAGS=-std=c++14 -frtti -fexceptions
 -DCMAKE_FIND_ROOT_PATH=/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/android/app/.cxx/cmake/debug/prefab/arm64-v8a/prefab
 -DCMAKE_BUILD_TYPE=Debug

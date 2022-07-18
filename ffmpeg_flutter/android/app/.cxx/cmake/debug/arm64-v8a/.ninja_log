@@ -1,16 +1,4 @@
 # ninja log v5
-0	359	1657804325	CMakeFiles/sample.dir/src/main/cpp/samplelib.cpp.o	5eeb93694d29eb50
-359	448	1657804325	/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/build/app/intermediates/cmake/debug/obj/arm64-v8a/libsample.so	6883a2c8d82b7a81
-1	491	1657804535	CMakeFiles/sample.dir/src/main/cpp/samplelib.cpp.o	5eeb93694d29eb50
-491	668	1657804535	/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/build/app/intermediates/cmake/debug/obj/arm64-v8a/libsample.so	6883a2c8d82b7a81
-1	627	1657853211	CMakeFiles/sample.dir/src/main/cpp/samplelib.cpp.o	5eeb93694d29eb50
-2	291	1657853375	CMakeFiles/sample.dir/src/main/cpp/MP3Encoder.cpp.o	3754726594d40820
-1	548	1657853375	CMakeFiles/sample.dir/src/main/cpp/samplelib.cpp.o	5eeb93694d29eb50
-548	747	1657853375	/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/build/app/intermediates/cmake/debug/obj/arm64-v8a/libsample.so	b477186fbec4239c
-0	646	1657853565	CMakeFiles/sample.dir/src/main/cpp/samplelib.cpp.o	5eeb93694d29eb50
-646	854	1657853565	/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/build/app/intermediates/cmake/debug/obj/arm64-v8a/libsample.so	b477186fbec4239c
-1	318	1657854282	CMakeFiles/sample.dir/src/main/cpp/MP3Encoder.cpp.o	3754726594d40820
-0	567	1657854282	CMakeFiles/sample.dir/src/main/cpp/samplelib.cpp.o	5eeb93694d29eb50
-567	737	1657854282	/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/build/app/intermediates/cmake/debug/obj/arm64-v8a/libsample.so	b477186fbec4239c
-1	678	1657854304	CMakeFiles/sample.dir/src/main/cpp/samplelib.cpp.o	5eeb93694d29eb50
-678	873	1657854305	/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/build/app/intermediates/cmake/debug/obj/arm64-v8a/libsample.so	b477186fbec4239c
+1	85	1658113515	CMakeFiles/sample.dir/MP3Encoder.cpp.o	8d993503dd2cf532
+0	380	1658113515	CMakeFiles/sample.dir/samplelib.cpp.o	7c3b0e35e8bb1c4f
+380	475	1658113515	/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/build/app/intermediates/cmake/debug/obj/arm64-v8a/libsample.so	4a31ab0bbdb615db

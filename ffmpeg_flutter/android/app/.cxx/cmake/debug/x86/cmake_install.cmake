@@ -1,4 +1,4 @@
-# Install script for directory: /Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/android/app
+# Install script for directory: /Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/android/app/src/main/cpp
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

@@ -7,10 +7,9 @@ add_library( # 库名
              # 该库生成动态函数
              SHARED
 
-             # 依赖的文件
-        src/main/cpp/samplelib.cpp
-        src/main/cpp/MP3Encoder.h
-        src/main/cpp/MP3Encoder.cpp)
+             # 依赖的文件 不需要列举.h文件
+        samplelib.cpp
+        MP3Encoder.cpp)
 
 
 find_library( # 设置Path变量的名称

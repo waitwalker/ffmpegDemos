@@ -1,30 +1,31 @@
 ninja: Entering directory `/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/android/app/.cxx/cmake/debug/arm64-v8a'
-[1/2] Building CXX object CMakeFiles/sample.dir/src/main/cpp/samplelib.cpp.o
-../../../../src/main/cpp/samplelib.cpp:30:37: warning: adding 'int' to a string does not append to the string [-Wstring-plus-int]
+[1/3] Building CXX object CMakeFiles/sample.dir/MP3Encoder.cpp.o
+[2/3] Building CXX object CMakeFiles/sample.dir/samplelib.cpp.o
+/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/android/app/src/main/cpp/samplelib.cpp:30:37: warning: adding 'int' to a string does not append to the string [-Wstring-plus-int]
     LOGE("%s", "Say Hello and value"+value);
                ~~~~~~~~~~~~~~~~~~~~~^~~~~~
-../../../../src/main/cpp/samplelib.cpp:11:63: note: expanded from macro 'LOGE'
+/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/android/app/src/main/cpp/samplelib.cpp:11:63: note: expanded from macro 'LOGE'
 #define LOGE(...)  __android_log_print(ANDROID_LOG_ERROR,TAG ,__VA_ARGS__)
                                                               ^~~~~~~~~~~
-../../../../src/main/cpp/samplelib.cpp:30:37: note: use array indexing to silence this warning
+/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/android/app/src/main/cpp/samplelib.cpp:30:37: note: use array indexing to silence this warning
     LOGE("%s", "Say Hello and value"+value);
                                     ^
                &                    [
-../../../../src/main/cpp/samplelib.cpp:11:63: note: expanded from macro 'LOGE'
+/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/android/app/src/main/cpp/samplelib.cpp:11:63: note: expanded from macro 'LOGE'
 #define LOGE(...)  __android_log_print(ANDROID_LOG_ERROR,TAG ,__VA_ARGS__)
                                                               ^
-../../../../src/main/cpp/samplelib.cpp:41:37: warning: adding 'int' to a string does not append to the string [-Wstring-plus-int]
+/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/android/app/src/main/cpp/samplelib.cpp:41:37: warning: adding 'int' to a string does not append to the string [-Wstring-plus-int]
     LOGE("%s", "Say Hello and value"+value);
                ~~~~~~~~~~~~~~~~~~~~~^~~~~~
-../../../../src/main/cpp/samplelib.cpp:11:63: note: expanded from macro 'LOGE'
+/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/android/app/src/main/cpp/samplelib.cpp:11:63: note: expanded from macro 'LOGE'
 #define LOGE(...)  __android_log_print(ANDROID_LOG_ERROR,TAG ,__VA_ARGS__)
                                                               ^~~~~~~~~~~
-../../../../src/main/cpp/samplelib.cpp:41:37: note: use array indexing to silence this warning
+/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/android/app/src/main/cpp/samplelib.cpp:41:37: note: use array indexing to silence this warning
     LOGE("%s", "Say Hello and value"+value);
                                     ^
                &                    [
-../../../../src/main/cpp/samplelib.cpp:11:63: note: expanded from macro 'LOGE'
+/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/android/app/src/main/cpp/samplelib.cpp:11:63: note: expanded from macro 'LOGE'
 #define LOGE(...)  __android_log_print(ANDROID_LOG_ERROR,TAG ,__VA_ARGS__)
                                                               ^
 2 warnings generated.
-[2/2] Linking CXX shared library /Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/build/app/intermediates/cmake/debug/obj/arm64-v8a/libsample.so
+[3/3] Linking CXX shared library /Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/ffmpeg_flutter/build/app/intermediates/cmake/debug/obj/arm64-v8a/libsample.so

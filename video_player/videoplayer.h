@@ -9,6 +9,7 @@ extern "C" {
 #include <libavcodec/avcodec.h>
 #include <libavformat/avformat.h>
 #include <libavutil/imgutils.h>
+#include <libswresample/swresample.h>
 }
 
 #define ERROR_BUF \
@@ -30,6 +31,8 @@ extern "C" {
         qDebug() << #func << "error" << errbuf; \
         return ret; \
     }
+
+
 
 class VideoPlayer : public QObject
 {
@@ -68,22 +71,42 @@ public:
 private:
 
     /*********** 音频相关 ***********/
+    typedef struct{
+        int sampleRate;
+        AVSampleFormat sampleFmt;
+        int chLayout;
+        int chs;
+        int bytesPerSampleFrame;
+    } AudioSwrSpec;
+
     // 视频解码上下文
     AVCodecContext *_vDecodeCtx = nullptr;
     // 音频流
     AVStream *_aStream = nullptr;
     // 音频解码器
     AVCodec *aDecodec = nullptr;
-    // 存放解码后的数据
-    AVFrame *_aframe = nullptr;
     // 存放音频包的列表
     std::list<AVPacket> *_aPktList = nullptr;
-    // 添加数据包到音频列表中
-    void addAduioPkt(AVPacket &pkt);
     // 音频包列表的锁 用来加锁_aPktList
     CondMutex *_aMutex = nullptr;
+    // 音频重采样上下文
+    SwrContext *_aSwrCtx = nullptr;
+    // 音频重采样输入输出参数
+    AudioSwrSpec _aSwrInSpec;
+    AudioSwrSpec _aSwrOutSpec;
+    // 音频重采样输入输出存放解码后的数据
+    AVFrame *_aSwrInFrame = nullptr;
+    AVFrame *_aSwrOutFrame = nullptr;
+
+
+    // 添加数据包到音频列表中
+    void addAduioPkt(AVPacket &pkt);
     // 清空音频包列表
     void clearAudioPktList();
+
+    // 初始化音频重采样上下文
+    int initSwr();
+
 
     /*********** 视频相关 ***********/
     // 音频解码上下文

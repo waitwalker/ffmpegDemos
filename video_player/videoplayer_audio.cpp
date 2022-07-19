@@ -110,19 +110,28 @@ void VideoPlayer::sdlAudioCallBackFunc(void *userdata, Uint8 * stream,
 
 void VideoPlayer::sdlAudioCallBack(Uint8 *stream, int len) {
     // len ： SDL音频缓冲区剩余的大小（还未填充的大小）
+    // srcLen PCM最终填充进去的大小
     while (len > 0) {
-        int dataSize = decodeAudio();
-        qDebug()<<"每次解码的大小："<<dataSize;
-        if (dataSize <= 0) {
+        // 清零 静音处理
+        SDL_memset(stream, 0, len);
+        if (_aSwrOutIdx >= _aSwrOutSize) {
 
-        } else {
-
+            _aSwrOutSize = decodeAudio();
+            qDebug()<<"每次解码的大小："<<_aSwrOutSize;
+            if (_aSwrOutSize <= 0) {
+                memset(_aSwrOutFrame->data[0],0,_aSwrOutSize = 1024);
+            }
+            _aSwrOutIdx = 0;
         }
-//        // 将一个pkt包解析后的pcm数据填充到SDL的音频缓冲区
-//        SDL_MixAudio(stream, src, srcLen, SDL_MIX_MAXVOLUME);
-//        // 移动偏移量
-//        len -= srcLen;
-//        stream += srcLen;
+        int srcLen = _aSwrOutSize - _aSwrOutIdx;
+        srcLen = std::min(srcLen, len);
+
+        // 填充SDL缓冲区
+        SDL_MixAudio(stream, _aSwrOutFrame->data[0] + _aSwrOutIdx, srcLen, SDL_MIX_MAXVOLUME);
+        // 移动偏移量
+        len -= srcLen;
+        stream += srcLen;
+        _aSwrOutIdx += srcLen;
     }
 }
 

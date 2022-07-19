@@ -97,7 +97,9 @@ private:
     // 音频重采样输入输出存放解码后的数据
     AVFrame *_aSwrInFrame = nullptr;
     AVFrame *_aSwrOutFrame = nullptr;
-
+    int _aSwrOutIdx = 0;
+    // 重采样输出PCM的大小
+    int _aSwrOutSize = 0;
 
     // 添加数据包到音频列表中
     void addAduioPkt(AVPacket &pkt);

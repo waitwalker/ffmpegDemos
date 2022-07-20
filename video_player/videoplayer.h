@@ -54,6 +54,7 @@ public:
         Max = 100
     } Volume;
 
+
     // 构造函数
     explicit VideoPlayer(QObject *parent = nullptr);
     // 析构函数
@@ -81,10 +82,14 @@ public:
     void freeAudio();
     void freeVideo();
 
-
     // 设置音量
     void setVolume(int volume);
-
+    // 设置静音
+    void setMute(bool mute);
+    // 是否静音
+    bool isMute();
+    // 获取音量
+    int getVolume();
 private:
 
     /*********** 音频相关 ***********/
@@ -118,6 +123,9 @@ private:
     int _aSwrOutSize = 0;
     // 音量
     int _volume = Max;
+
+    // 是否静音
+    bool _mute = false;
 
     // 添加数据包到音频列表中
     void addAduioPkt(AVPacket &pkt);

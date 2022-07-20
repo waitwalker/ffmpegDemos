@@ -117,6 +117,13 @@ void MainWindow::on_stopBtn_clicked()
 // 静音按钮
 void MainWindow::on_silenceBtn_clicked()
 {
+    if (_player->isMute()) {
+        _player->setMute(false);
+        ui->silenceBtn->setText("静音");
+    } else {
+        _player->setMute(true);
+        ui->silenceBtn->setText("开音");
+    }
 
 }
 

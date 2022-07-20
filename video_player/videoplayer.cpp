@@ -90,6 +90,18 @@ void VideoPlayer::setVolume(int volume) {
     _volume = volume;
 }
 
+int VideoPlayer::getVolume() {
+    return _volume;
+}
+
+void VideoPlayer::setMute(bool mute) {
+    _mute = mute;
+}
+
+bool VideoPlayer::isMute() {
+    return _mute;
+}
+
 #pragma mark - 私有方法
 void VideoPlayer::setState(State state) {
     if (state == _state) return;

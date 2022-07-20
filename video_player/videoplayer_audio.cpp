@@ -158,7 +158,7 @@ void VideoPlayer::sdlAudioCallBack(Uint8 *stream, int len) {
         int fillLen = _aSwrOutSize - _aSwrOutIdx;
         fillLen = std::min(fillLen, len);
 
-        int volume = (_volume * 1.0 / Max) * SDL_MIX_MAXVOLUME;
+        int volume = _mute ? 0 : ((_volume * 1.0 / Max) * SDL_MIX_MAXVOLUME);
 
         // 填充SDL缓冲区 将_aSwrOutFrame->data[0] + _aSwrOutIdx位置开始的fillLen长度数据，填充到stream中去
         SDL_MixAudio(stream, _aSwrOutFrame->data[0] + _aSwrOutIdx, fillLen, volume);

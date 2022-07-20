@@ -50,10 +50,12 @@ void VideoPlayer::play() {
 
     // 解码后的格式不一定是我们播放器想要的 重采样 格式转换
     // 打开子线程 读取文件 Lamba表达式
-//    std::thread([this](){
-//        this->readFile();
-//    }).detach();
-    this->readFile();
+    if (_state == Stopped) {
+        std::thread([this](){
+            this->readFile();
+        }).detach();
+    }
+//    this->readFile();
     setState(VideoPlayer::Playing);
 }
 

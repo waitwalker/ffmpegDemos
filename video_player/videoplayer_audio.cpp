@@ -109,29 +109,38 @@ void VideoPlayer::sdlAudioCallBackFunc(void *userdata, Uint8 * stream,
 }
 
 void VideoPlayer::sdlAudioCallBack(Uint8 *stream, int len) {
+    // 清零 静音处理
+    SDL_memset(stream, 0, len);
     // len ： SDL音频缓冲区剩余的大小（还未填充的大小）
-    // srcLen PCM最终填充进去的大小
-    while (len > 0) {
-        // 清零 静音处理
-        SDL_memset(stream, 0, len);
-        if (_aSwrOutIdx >= _aSwrOutSize) {
 
+    while (len > 0) {
+        // 说明当前PCM的数据已经全部拷贝到SDL缓冲区了
+        // 需要解码下一个pkt，获取新的pcm数据
+        if (_aSwrOutIdx >= _aSwrOutSize) {
+            // 索引清零
+            _aSwrOutIdx = 0;
+            // 解码获取到的最新pcm数据大小
             _aSwrOutSize = decodeAudio();
             qDebug()<<"每次解码的大小："<<_aSwrOutSize;
+            // 没有解码出PCM数据
             if (_aSwrOutSize <= 0) {
-                memset(_aSwrOutFrame->data[0],0,_aSwrOutSize = 1024);
+                // 假定PCM数据大小
+                _aSwrOutSize = 1024;
+                // 给PCM数据填充0（静音）
+                memset(_aSwrOutFrame->data[0],0,_aSwrOutSize);
             }
-            _aSwrOutIdx = 0;
         }
-        int srcLen = _aSwrOutSize - _aSwrOutIdx;
-        srcLen = std::min(srcLen, len);
 
-        // 填充SDL缓冲区
-        SDL_MixAudio(stream, _aSwrOutFrame->data[0] + _aSwrOutIdx, srcLen, SDL_MIX_MAXVOLUME);
+        // 本次需要填充到stream中的PCM数据大小
+        int fillLen = _aSwrOutSize - _aSwrOutIdx;
+        fillLen = std::min(fillLen, len);
+
+        // 填充SDL缓冲区 将_aSwrOutFrame->data[0] + _aSwrOutIdx位置开始的fillLen长度数据，填充到stream中去
+        SDL_MixAudio(stream, _aSwrOutFrame->data[0] + _aSwrOutIdx, fillLen, SDL_MIX_MAXVOLUME);
         // 移动偏移量
-        len -= srcLen;
-        stream += srcLen;
-        _aSwrOutIdx += srcLen;
+        len -= fillLen;
+        stream += fillLen;
+        _aSwrOutIdx += fillLen;
     }
 }
 

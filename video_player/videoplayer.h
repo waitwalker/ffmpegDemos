@@ -22,7 +22,8 @@ extern "C" {
         qDebug() << #func << "error" << errbuf; \
         setState(VideoPlayer::Stopped); \
         emit playFailed(this); \
-        goto end; \
+        free(); \
+        return; \
     }
 
 #define RET(func) \
@@ -67,6 +68,11 @@ public:
 
     // 获取总时长 1s=1000毫秒=10^6微秒
     int64_t getDuration();
+
+    // 释放资源
+    void free();
+    void freeAudio();
+    void freeVideo();
 
 private:
 

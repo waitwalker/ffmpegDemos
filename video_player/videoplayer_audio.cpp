@@ -101,6 +101,28 @@ int VideoPlayer::initSDL() {
     return 0;
 }
 
+// 释放音频相关数据
+void VideoPlayer::freeAudio() {
+    _aSwrOutIdx = 0;
+    _aSwrOutSize = 0;
+
+    clearAudioPktList();
+    avcodec_free_context(&_aDecodeCtx);
+    // 释放重采样上下文
+    swr_free(&_aSwrCtx);
+    // 释放frame， stream不用释放，因为stream在frame中引用
+    av_frame_free(&_aSwrInFrame);
+    if (_aSwrOutFrame) {
+        av_freep(&_aSwrOutFrame->data[0]);
+        av_frame_free(&_aSwrOutFrame);
+    }
+
+    // 停止音频
+    SDL_PauseAudio(1);
+    // 关闭音频
+    SDL_CloseAudio();
+}
+
 // SDL 填充缓冲区的回调函数
 void VideoPlayer::sdlAudioCallBackFunc(void *userdata, Uint8 * stream,
                       int len) {
@@ -114,6 +136,7 @@ void VideoPlayer::sdlAudioCallBack(Uint8 *stream, int len) {
     // len ： SDL音频缓冲区剩余的大小（还未填充的大小）
 
     while (len > 0) {
+        if (_state == Stopped) break;
         // 说明当前PCM的数据已经全部拷贝到SDL缓冲区了
         // 需要解码下一个pkt，获取新的pcm数据
         if (_aSwrOutIdx >= _aSwrOutSize) {
@@ -150,7 +173,7 @@ int VideoPlayer::decodeAudio() {
 //        _aMutex->wait();
 //    }
 
-    if (_aPktList->empty()) {
+    if (_aPktList->empty() || _state == Stopped) {
         _aMutex->unlock();
         return 0;
     }

@@ -71,6 +71,9 @@ void VideoPlayer::stop() {
     if (_state == VideoPlayer::Stopped) return;
 
     setState(VideoPlayer::Stopped);
+
+    // 释放资源
+    free();
 }
 
 void VideoPlayer::setFilename(const char *filename) {
@@ -113,21 +116,20 @@ void VideoPlayer::readFile() {
 
     fflush(stderr);
 
-    // 初始化视频信息 为做音视频解码做准备
-    if (initVideoInfo() < 0) {
-        goto end;
-    }
-
-    // 初始化音频信息
-    if (initAudioInfo() < 0) {
-        goto end;
+    // 初始化音频信息 && 初始化视频信息
+    bool hasAudio = initAudioInfo() >= 0;
+    bool hasVideo = initVideoInfo() >= 0;
+    if (!hasAudio && !hasVideo) {
+        emit playFailed(this);
+        free();
+        return;
     }
 
     // 到这里基本初始化完成 发送一个信号
     emit initFinished(this);
 
     // 从输入文件中读取数据
-    while (true) {
+    while (_state != Stopped) {
         AVPacket pkt;
         ret = av_read_frame(_fmtCtx, &pkt);
         if (ret == 0) {
@@ -138,17 +140,16 @@ void VideoPlayer::readFile() {
                 // 读取到视频数据 下面开始解码
                 addVideoPkt(pkt);
             }
+        } else if(ret == AVERROR_EOF){
+            // 读到了文件尾部
+            break;
         } else {
             // 这次读取失败，跳过去
+            ERROR_BUF;
+            qDebug()<<"av_read_frame error"<<errbuf;
             continue;
         }
     }
-
-    end:
-    ;
-//    avcodec_free_context(&_aDecodeCtx);
-//    avcodec_free_context(&_vDecodeCtx);
-//    avformat_close_input(&_fmtCtx);
 }
 
 // 初始化解码器
@@ -191,6 +192,13 @@ int VideoPlayer::initDecoder(AVCodecContext **decodeCtx,
     ret = avcodec_open2(*decodeCtx, decoder, nullptr);
     RET(avcodec_open2);
     return 0;
+}
+
+// 释放资源
+void VideoPlayer::free() {
+    avformat_close_input(&_fmtCtx);
+    freeAudio();
+    freeVideo();
 }
 
 

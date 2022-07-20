@@ -130,6 +130,8 @@ void VideoPlayer::readFile() {
 
     // 从输入文件中读取数据
     while (_state != Stopped) {
+        // 大文件情况需要考虑
+
         AVPacket pkt;
         ret = av_read_frame(_fmtCtx, &pkt);
         if (ret == 0) {

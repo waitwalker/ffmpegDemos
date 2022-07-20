@@ -86,6 +86,10 @@ int64_t VideoPlayer::getDuration() {
     return _fmtCtx ? _fmtCtx->duration : 0;
 }
 
+void VideoPlayer::setVolume(int volume) {
+    _volume = volume;
+}
+
 #pragma mark - 私有方法
 void VideoPlayer::setState(State state) {
     if (state == _state) return;

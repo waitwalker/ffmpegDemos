@@ -47,6 +47,13 @@ public:
         Paused,
         Failed
     } State;
+
+    // 音量
+    typedef enum{
+        Min = 0,
+        Max = 100
+    } Volume;
+
     // 构造函数
     explicit VideoPlayer(QObject *parent = nullptr);
     // 析构函数
@@ -74,6 +81,10 @@ public:
     void freeAudio();
     void freeVideo();
 
+
+    // 设置音量
+    void setVolume(int volume);
+
 private:
 
     /*********** 音频相关 ***********/
@@ -84,7 +95,6 @@ private:
         int chs;
         int bytesPerSampleFrame;
     } AudioSwrSpec;
-
     // 视频解码上下文
     AVCodecContext *_vDecodeCtx = nullptr;
     // 音频流
@@ -106,6 +116,8 @@ private:
     int _aSwrOutIdx = 0;
     // 重采样输出PCM的大小
     int _aSwrOutSize = 0;
+    // 音量
+    int _volume = Max;
 
     // 添加数据包到音频列表中
     void addAduioPkt(AVPacket &pkt);
@@ -114,7 +126,6 @@ private:
 
     // 初始化音频重采样上下文
     int initSwr();
-
 
     /*********** 视频相关 ***********/
     // 音频解码上下文

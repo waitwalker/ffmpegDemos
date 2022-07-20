@@ -10,6 +10,12 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    // 设置音量滑块的范围
+    ui->volumeSlider->setRange(VideoPlayer::Volume::Min,
+                               VideoPlayer::Volume::Max);
+    ui->volumeSlider->setValue(ui->volumeSlider->maximum());
+
     ui->playWidget->setCurrentWidget(ui->openFilePage);
     ui->playBtn->setEnabled(false);
     ui->stopBtn->setEnabled(false);
@@ -144,6 +150,7 @@ void MainWindow::on_volumeSlider_valueChanged(int value)
 {
     qDebug()<<"音量"<<value;
     ui->volumeLabel->setText(QString("%1").arg(value));
+    _player->setVolume(value);
 }
 
 #pragma mark - 私有方法

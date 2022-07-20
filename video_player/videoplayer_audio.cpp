@@ -170,22 +170,22 @@ void VideoPlayer::sdlAudioCallBack(Uint8 *stream, int len) {
 }
 
 int VideoPlayer::decodeAudio() {
-    _aMutex->lock();
-//    while (_aPktList->empty()) {
-//        _aMutex->wait();
+    _aMutex.lock();
+//    while (_aPktList.empty()) {
+//        _aMutex.wait();
 //    }
 
-    if (_aPktList->empty() || _state == Stopped) {
-        _aMutex->unlock();
+    if (_aPktList.empty() || _state == Stopped) {
+        _aMutex.unlock();
         return 0;
     }
 
     // 取出头部的数据包
-    AVPacket pkt = _aPktList->front();
+    AVPacket pkt = _aPktList.front();
     // 从头部删除
-    _aPktList->pop_front();
+    _aPktList.pop_front();
     // 解锁
-    _aMutex->unlock();
+    _aMutex.unlock();
 
     // 发送数据到解码器
     int ret = avcodec_send_packet(_aDecodeCtx, &pkt);
@@ -215,19 +215,19 @@ int VideoPlayer::decodeAudio() {
 
 
 void VideoPlayer::addAduioPkt(AVPacket &pkt) {
-    _aMutex->lock();
-    _aPktList->push_back(pkt);
-    _aMutex->signal();
-    _aMutex->unlock();
+    _aMutex.lock();
+    _aPktList.push_back(pkt);
+    _aMutex.signal();
+    _aMutex.unlock();
 }
 
 void VideoPlayer::clearAudioPktList() {
-    _aMutex->lock();
-    for(AVPacket &pkt : *_aPktList) {
+    _aMutex.lock();
+    for(AVPacket &pkt : _aPktList) {
         av_packet_unref(&pkt);
     }
-    _aPktList->clear();
-    _aMutex->unlock();
+    _aPktList.clear();
+    _aMutex.unlock();
 }
 
 

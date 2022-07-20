@@ -15,18 +15,9 @@ VideoPlayer::VideoPlayer(QObject *parent)
         emit playFailed(this);
         return;
     }
-
-    _aPktList = new std::list<AVPacket>();
-    _vPktList = new std::list<AVPacket>();
-    _aMutex = new CondMutex();
-    _vMutex = new CondMutex();
 }
 
 VideoPlayer::~VideoPlayer() {
-    delete _aPktList;
-    delete _vPktList;
-    delete _aMutex;
-    delete _vMutex;
     // 退出SDL
     SDL_Quit();
 }

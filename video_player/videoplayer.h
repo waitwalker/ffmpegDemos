@@ -107,9 +107,9 @@ private:
     // 音频解码器
     AVCodec *aDecodec = nullptr;
     // 存放音频包的列表
-    std::list<AVPacket> *_aPktList = nullptr;
+    std::list<AVPacket> _aPktList;
     // 音频包列表的锁 用来加锁_aPktList
-    CondMutex *_aMutex = nullptr;
+    CondMutex _aMutex;
     // 音频重采样上下文
     SwrContext *_aSwrCtx = nullptr;
     // 音频重采样输入输出参数
@@ -145,11 +145,11 @@ private:
     // 存放解码后的数据
     AVFrame  *_vframe = nullptr;
     // 存放视频包的列表
-    std::list<AVPacket> *_vPktList = nullptr;
+    std::list<AVPacket> _vPktList;
     // 添加数据包到视频列表中
     void addVideoPkt(AVPacket &pkt);
     // 视频包列表的锁 用来加锁_vPktList
-    CondMutex *_vMutex = nullptr;
+    CondMutex _vMutex;
     // 清空视频包列表
     void clearVideoPktList();
     // 初始化SDL

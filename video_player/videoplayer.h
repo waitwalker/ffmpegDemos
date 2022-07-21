@@ -16,22 +16,17 @@ extern "C" {
     char errbuf[1024]; \
     av_strerror(ret, errbuf, sizeof (errbuf));
 
-#define END(func) \
+#define CODE(func, code) \
     if (ret < 0) { \
         ERROR_BUF; \
         qDebug() << #func << "error" << errbuf; \
-        setState(VideoPlayer::Stopped); \
-        emit playFailed(this); \
-        free(); \
-        return; \
+        code; \
     }
 
-#define RET(func) \
-    if (ret < 0) { \
-        ERROR_BUF; \
-        qDebug() << #func << "error" << errbuf; \
-        return ret; \
-    }
+#define END(func) CODE(func, fataError(); return;)
+
+#define RET(func) CODE(func, return ret;)
+#define CONTINUE(func) CODE(func, continue;)
 
 
 
@@ -72,7 +67,7 @@ public:
     State getState();
 
     // 设置文件
-    void setFilename(const char *filename);
+    void setFilename(QString &filename);
 
     // 获取总时长 1s=1000毫秒=10^6微秒
     int64_t getDuration();
@@ -135,6 +130,19 @@ private:
     // 初始化音频重采样上下文
     int initSwr();
 
+    // 初始化SDL
+    int initSDL();
+    // SDL 填充缓冲区的回调函数
+    static void sdlAudioCallBackFunc(void *userdata, Uint8 * stream,
+                          int len);
+    // SDL 填充缓冲区的回调函数
+    void sdlAudioCallBack(Uint8 * stream,
+                          int len);
+
+    // 音频解码
+    int decodeAudio();
+
+
     /*********** 视频相关 ***********/
     // 音频解码上下文
     AVCodecContext *_aDecodeCtx = nullptr;
@@ -152,24 +160,18 @@ private:
     CondMutex _vMutex;
     // 清空视频包列表
     void clearVideoPktList();
-    // 初始化SDL
-    int initSDL();
-    // SDL 填充缓冲区的回调函数
-    static void sdlAudioCallBackFunc(void *userdata, Uint8 * stream,
-                          int len);
-    // SDL 填充缓冲区的回调函数
-    void sdlAudioCallBack(Uint8 * stream,
-                          int len);
 
-    // 音频解码
-    int decodeAudio();
+    // 解码视频
+    void decodeVideo();
+
+
 
 
     /*********** 其他公用相关 ***********/
     // 解封装上下文
     AVFormatContext *_fmtCtx = nullptr;
     // 文件名称
-    const char *_filename;
+    char _filename[512];
     // 当前播放状态
     State _state = Stopped;
     // 设置状态（改变状态）
@@ -184,7 +186,8 @@ private:
     int initDecoder(AVCodecContext **decodeCtx,
                     AVStream **stream,
                     AVMediaType type);
-
+    // 发生严重错误
+    void fataError();
 
 signals:
     // 状态改变的时候发送信号

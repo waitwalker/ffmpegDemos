@@ -55,4 +55,5 @@ LIBS += -L$${FFMPEG_HOME}/lib \
         -lswresample \
         -lavformat \
         -lavcodec \
-        -lavutil
+        -lavutil \
+        -lswscale

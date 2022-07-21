@@ -180,7 +180,7 @@ int VideoPlayer::decodeAudio() {
         return 0;
     }
 
-    // 取出头部的数据包
+    // 取出头部的数据包 这里会发生拷贝构造
     AVPacket pkt = _aPktList.front();
     // 从头部删除
     _aPktList.pop_front();

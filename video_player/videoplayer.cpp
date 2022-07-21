@@ -67,8 +67,9 @@ void VideoPlayer::stop() {
     free();
 }
 
-void VideoPlayer::setFilename(const char *filename) {
-    _filename = filename;
+void VideoPlayer::setFilename(QString &filename) {
+    const char *name = filename.toUtf8().data();
+    memcpy(_filename, name, strlen(name) + 1);
     qDebug()<<"读取到的文件名称："<<_filename;
 }
 
@@ -127,8 +128,7 @@ void VideoPlayer::readFile() {
     bool hasAudio = initAudioInfo() >= 0;
     bool hasVideo = initVideoInfo() >= 0;
     if (!hasAudio && !hasVideo) {
-        emit playFailed(this);
-        free();
+        fataError();
         return;
     }
 
@@ -208,6 +208,12 @@ void VideoPlayer::free() {
     avformat_close_input(&_fmtCtx);
     freeAudio();
     freeVideo();
+}
+
+void VideoPlayer::fataError() {
+    setState(Stopped);
+    emit playFailed(this);
+    free();
 }
 
 

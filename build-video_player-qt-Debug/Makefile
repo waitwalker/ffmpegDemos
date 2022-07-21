@@ -40,7 +40,7 @@ DISTNAME      = video_player1.0.0
 DISTDIR = /Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/build-video_player-qt-Debug/.tmp/video_player1.0.0
 LINK          = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang++
 LFLAGS        = -stdlib=libc++ -headerpad_max_install_names $(EXPORT_ARCH_ARGS) -isysroot /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk -mmacosx-version-min=12 -Wl,-rpath,@executable_path/../Frameworks -Wl,-rpath,/opt/homebrew/lib
-LIBS          = $(SUBLIBS) -F/opt/homebrew/lib -L/opt/homebrew/Cellar/sdl2/2.0.20/lib -lSDL2 -L/usr/local/ffmpeg/lib -lavdevice -lswresample -lavformat -lavcodec -lavutil -framework QtWidgets -framework QtGui -framework AppKit -framework ImageIO -framework Metal -framework QtCore -framework DiskArbitration -framework IOKit -framework AGL -framework OpenGL   
+LIBS          = $(SUBLIBS) -F/opt/homebrew/lib -L/opt/homebrew/Cellar/sdl2/2.0.20/lib -lSDL2 -L/usr/local/ffmpeg/lib -lavdevice -lswresample -lavformat -lavcodec -lavutil -lswscale -framework QtWidgets -framework QtGui -framework AppKit -framework ImageIO -framework Metal -framework QtCore -framework DiskArbitration -framework IOKit -framework AGL -framework OpenGL   
 AR            = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ar cq
 RANLIB        = /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/ranlib -s
 SED           = sed
@@ -1103,6 +1103,9 @@ moc_mainwindow.cpp: ../video_player/mainwindow.h \
 		/usr/local/ffmpeg/include/libavformat/version.h \
 		/usr/local/ffmpeg/include/libavutil/imgutils.h \
 		/usr/local/ffmpeg/include/libavutil/pixdesc.h \
+		/usr/local/ffmpeg/include/libswresample/swresample.h \
+		/usr/local/ffmpeg/include/libswresample/version_major.h \
+		/usr/local/ffmpeg/include/libswresample/version.h \
 		moc_predefs.h \
 		/opt/homebrew/share/qt/libexec/moc
 	/opt/homebrew/share/qt/libexec/moc $(DEFINES) --include /Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/build-video_player-qt-Debug/moc_predefs.h -I/opt/homebrew/share/qt/mkspecs/macx-clang -I/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/video_player -I/opt/homebrew/Cellar/sdl2/2.0.20/include -I/usr/local/ffmpeg/include -I/opt/homebrew/lib/QtWidgets.framework/Headers -I/opt/homebrew/lib/QtGui.framework/Headers -I/opt/homebrew/lib/QtCore.framework/Headers -I. -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1 -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.1.6/include -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -F/opt/homebrew/lib ../video_player/mainwindow.h -o moc_mainwindow.cpp
@@ -1194,6 +1197,9 @@ moc_videoplayer.cpp: ../video_player/videoplayer.h \
 		/usr/local/ffmpeg/include/libavformat/version.h \
 		/usr/local/ffmpeg/include/libavutil/imgutils.h \
 		/usr/local/ffmpeg/include/libavutil/pixdesc.h \
+		/usr/local/ffmpeg/include/libswresample/swresample.h \
+		/usr/local/ffmpeg/include/libswresample/version_major.h \
+		/usr/local/ffmpeg/include/libswresample/version.h \
 		moc_predefs.h \
 		/opt/homebrew/share/qt/libexec/moc
 	/opt/homebrew/share/qt/libexec/moc $(DEFINES) --include /Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/build-video_player-qt-Debug/moc_predefs.h -I/opt/homebrew/share/qt/mkspecs/macx-clang -I/Users/walkerwait/Desktop/工作/Demos/ffmpegDemos/video_player -I/opt/homebrew/Cellar/sdl2/2.0.20/include -I/usr/local/ffmpeg/include -I/opt/homebrew/lib/QtWidgets.framework/Headers -I/opt/homebrew/lib/QtGui.framework/Headers -I/opt/homebrew/lib/QtCore.framework/Headers -I. -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include/c++/v1 -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/13.1.6/include -I/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX12.3.sdk/usr/include -I/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include -F/opt/homebrew/lib ../video_player/videoplayer.h -o moc_videoplayer.cpp
@@ -1379,6 +1385,9 @@ main.o: ../video_player/main.cpp ../video_player/mainwindow.h \
 		/usr/local/ffmpeg/include/libavformat/version.h \
 		/usr/local/ffmpeg/include/libavutil/imgutils.h \
 		/usr/local/ffmpeg/include/libavutil/pixdesc.h \
+		/usr/local/ffmpeg/include/libswresample/swresample.h \
+		/usr/local/ffmpeg/include/libswresample/version_major.h \
+		/usr/local/ffmpeg/include/libswresample/version.h \
 		/opt/homebrew/lib/QtWidgets.framework/Headers/QApplication \
 		/opt/homebrew/lib/QtWidgets.framework/Headers/qapplication.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o ../video_player/main.cpp
@@ -1473,6 +1482,9 @@ mainwindow.o: ../video_player/mainwindow.cpp ../video_player/mainwindow.h \
 		/usr/local/ffmpeg/include/libavformat/version.h \
 		/usr/local/ffmpeg/include/libavutil/imgutils.h \
 		/usr/local/ffmpeg/include/libavutil/pixdesc.h \
+		/usr/local/ffmpeg/include/libswresample/swresample.h \
+		/usr/local/ffmpeg/include/libswresample/version_major.h \
+		/usr/local/ffmpeg/include/libswresample/version.h \
 		ui_mainwindow.h \
 		../video_player/videoslider.h \
 		/opt/homebrew/lib/QtWidgets.framework/Headers/QSlider \
@@ -1575,6 +1587,9 @@ videoplayer.o: ../video_player/videoplayer.cpp ../video_player/videoplayer.h \
 		/usr/local/ffmpeg/include/libavformat/version.h \
 		/usr/local/ffmpeg/include/libavutil/imgutils.h \
 		/usr/local/ffmpeg/include/libavutil/pixdesc.h \
+		/usr/local/ffmpeg/include/libswresample/swresample.h \
+		/usr/local/ffmpeg/include/libswresample/version_major.h \
+		/usr/local/ffmpeg/include/libswresample/version.h \
 		/opt/homebrew/lib/QtCore.framework/Headers/QDebug \
 		/opt/homebrew/lib/QtCore.framework/Headers/qdebug.h \
 		/opt/homebrew/lib/QtCore.framework/Headers/QThread \
@@ -1668,6 +1683,9 @@ videoplayer_audio.o: ../video_player/videoplayer_audio.cpp ../video_player/video
 		/usr/local/ffmpeg/include/libavformat/version.h \
 		/usr/local/ffmpeg/include/libavutil/imgutils.h \
 		/usr/local/ffmpeg/include/libavutil/pixdesc.h \
+		/usr/local/ffmpeg/include/libswresample/swresample.h \
+		/usr/local/ffmpeg/include/libswresample/version_major.h \
+		/usr/local/ffmpeg/include/libswresample/version.h \
 		/opt/homebrew/lib/QtCore.framework/Headers/QDebug \
 		/opt/homebrew/lib/QtCore.framework/Headers/qdebug.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o videoplayer_audio.o ../video_player/videoplayer_audio.cpp
@@ -1759,6 +1777,9 @@ videoplayer_video.o: ../video_player/videoplayer_video.cpp ../video_player/video
 		/usr/local/ffmpeg/include/libavformat/version.h \
 		/usr/local/ffmpeg/include/libavutil/imgutils.h \
 		/usr/local/ffmpeg/include/libavutil/pixdesc.h \
+		/usr/local/ffmpeg/include/libswresample/swresample.h \
+		/usr/local/ffmpeg/include/libswresample/version_major.h \
+		/usr/local/ffmpeg/include/libswresample/version.h \
 		/opt/homebrew/lib/QtCore.framework/Headers/QDebug \
 		/opt/homebrew/lib/QtCore.framework/Headers/qdebug.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o videoplayer_video.o ../video_player/videoplayer_video.cpp

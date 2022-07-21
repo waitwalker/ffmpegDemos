@@ -130,18 +130,20 @@ void MainWindow::on_silenceBtn_clicked()
 // 打开文件按钮
 void MainWindow::on_openFileBtn_clicked()
 {
-    QString file_full, file_name,filePath,file_path,file_suffix;
-        QFileInfo fileinfo;
-        filePath = QCoreApplication::applicationDirPath();
-        file_full = QFileDialog::getOpenFileName(nullptr, tr("打开视频文件"), QStandardPaths::standardLocations(QStandardPaths::DesktopLocation).first(), "");
-//    QString filename = QFileDialog::getOpenFileName(nullptr,
-//                                 "/",
-//                                 "",
-//                                 "");
-    qDebug()<<"文件名称："<<file_full;
-    if (file_full.isEmpty()) return;
-    qDebug()<<"C语言文件名："<<file_full.toUtf8().data();
-    _player->setFilename(file_full.toUtf8().data());
+//    QString file_full, file_name,filePath,file_path,file_suffix;
+//        QFileInfo fileinfo;
+//        filePath = QCoreApplication::applicationDirPath();
+//        file_full = QFileDialog::getOpenFileName(nullptr, tr("打开视频文件"),
+//                                                 QStandardPaths::standardLocations(QStandardPaths::DesktopLocation).first(),
+//                                                 "");
+    QString filename = QFileDialog::getOpenFileName(nullptr,
+                                 "/",
+                                 "",
+                                 "");
+    qDebug()<<"文件名称："<<filename;
+    if (filename.isEmpty()) return;
+    qDebug()<<"C语言文件名："<<filename.toUtf8().data();
+    _player->setFilename(filename);
     _player->play();
 }
 

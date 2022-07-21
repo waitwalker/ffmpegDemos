@@ -10,6 +10,7 @@ extern "C" {
 #include <libavformat/avformat.h>
 #include <libavutil/imgutils.h>
 #include <libswresample/swresample.h>
+#include <libswscale/swscale.h>
 }
 
 #define ERROR_BUF \
@@ -144,25 +145,38 @@ private:
 
 
     /*********** 视频相关 ***********/
+    typedef struct{
+        int width;
+        int height;
+        AVPixelFormat pixfmt;
+    } VideoSwsSpec;
     // 音频解码上下文
     AVCodecContext *_aDecodeCtx = nullptr;
     // 视频流
     AVStream *_vStream = nullptr;
     // 视频解码器
     AVCodec *vDecodec = nullptr;
-    // 存放解码后的数据
-    AVFrame  *_vframe = nullptr;
+    // 视频像素格式转换输入输出存放解码后的数据
+    AVFrame *_vSwsInFrame = nullptr;
+    AVFrame *_vSwsOutFrame = nullptr;
+
     // 存放视频包的列表
     std::list<AVPacket> _vPktList;
     // 添加数据包到视频列表中
     void addVideoPkt(AVPacket &pkt);
     // 视频包列表的锁 用来加锁_vPktList
     CondMutex _vMutex;
+
+    SwsContext *_vSwsCtx = nullptr;
+
     // 清空视频包列表
     void clearVideoPktList();
 
     // 解码视频
     void decodeVideo();
+
+    // 初始化视频格式转换上下文
+    int initSws();
 
 
 

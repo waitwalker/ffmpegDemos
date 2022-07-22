@@ -11,6 +11,9 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    // 注册信号的类型，保证能发出信号
+    qRegisterMetaType<VideoPlayer::VideoSwsSpec>("VideoSwsSpec");
+
     // 设置音量滑块的范围
     ui->volumeSlider->setRange(VideoPlayer::Volume::Min,
                                VideoPlayer::Volume::Max);

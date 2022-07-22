@@ -33,7 +33,9 @@ void VideoWidget::onFrameDecoded(VideoPlayer *player,
     }
 
     if (data != nullptr) {
-
+        _image = new QImage((uchar *)data,
+                            spec.width, spec.height,
+                            QImage::Format_RGB888);
     }
     update();
 }

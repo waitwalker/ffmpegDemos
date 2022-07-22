@@ -23,14 +23,16 @@ int VideoPlayer::initVideoInfo() {
 }
 
 int VideoPlayer::initSws() {
-    // 像素格式转换输出格式
+    int inW = _vDecodeCtx->width;
+    int inH = _vDecodeCtx->height;
 
-    _vSwsOutSpec.width = _vDecodeCtx->width;
-    _vSwsOutSpec.height = _vDecodeCtx->height;
+    // 像素格式转换输出格式
+    _vSwsOutSpec.width = inW >> 4 << 4;
+    _vSwsOutSpec.height = inH >> 4 << 4;
     _vSwsOutSpec.pixfmt = AV_PIX_FMT_RGB24;
     //初始化视频格式转换上下文
-    _vSwsCtx = sws_getContext(_vDecodeCtx->width,
-                              _vDecodeCtx->height,
+    _vSwsCtx = sws_getContext(inW,
+                              inH,
                               _vDecodeCtx->pix_fmt,
                               _vSwsOutSpec.width,
                               _vSwsOutSpec.height,
@@ -83,13 +85,24 @@ void VideoPlayer::clearVideoPktList() {
 
 // 释放视频相关
 void VideoPlayer::freeVideo() {
+    clearVideoPktList();
+    avcodec_free_context(&_vDecodeCtx);
 
+    av_frame_free(&_vSwsInFrame);
+    if (_vSwsOutFrame) {
+        av_freep(&_vSwsOutFrame->data[0]);
+        av_frame_free(&_vSwsOutFrame);
+    }
+
+    sws_freeContext(_vSwsCtx);
+    _vSwsCtx = nullptr;
 }
 
 // 解码视频
 void VideoPlayer::decodeVideo() {
     // 不断的从vPktList中取出对象
     while (true) {
+        if (_state == Stopped) break;
         _vMutex.lock();
         if (_vPktList.empty()) {
             _vMutex.unlock();

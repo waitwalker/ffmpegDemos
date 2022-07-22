@@ -16,6 +16,7 @@ public:
 
 private:
     QImage *_image = nullptr;
+    QRect _rect;
     void paintEvent(QPaintEvent *event) override;
 
 signals:

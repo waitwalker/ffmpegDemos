@@ -117,6 +117,9 @@ void VideoPlayer::decodeVideo() {
             // 解码后的yuv数据
             qDebug()<<_vSwsInFrame->data;
 
+            // 假停顿
+            SDL_Delay(33);
+
             // 像素格式的转换
             // _vSwsInFrame=>_vSwsOutFrame
             sws_scale(_vSwsCtx,

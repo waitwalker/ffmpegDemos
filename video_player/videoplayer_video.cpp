@@ -23,18 +23,18 @@ int VideoPlayer::initVideoInfo() {
 }
 
 int VideoPlayer::initSws() {
+    // 像素格式转换输出格式
 
-    VideoSwsSpec vSwsOutSpec;
-    vSwsOutSpec.width = _vDecodeCtx->width;
-    vSwsOutSpec.height = _vDecodeCtx->height;
-    vSwsOutSpec.pixfmt = AV_PIX_FMT_RGB24;
+    _vSwsOutSpec.width = _vDecodeCtx->width;
+    _vSwsOutSpec.height = _vDecodeCtx->height;
+    _vSwsOutSpec.pixfmt = AV_PIX_FMT_RGB24;
     //初始化视频格式转换上下文
     _vSwsCtx = sws_getContext(_vDecodeCtx->width,
                               _vDecodeCtx->height,
                               _vDecodeCtx->pix_fmt,
-                              vSwsOutSpec.width,
-                              vSwsOutSpec.height,
-                              vSwsOutSpec.pixfmt,
+                              _vSwsOutSpec.width,
+                              _vSwsOutSpec.height,
+                              _vSwsOutSpec.pixfmt,
                               SWS_BILINEAR, nullptr, nullptr, nullptr);
 
     // 初始化输入frame
@@ -44,7 +44,7 @@ int VideoPlayer::initSws() {
         return -1;
     }
 
-    // 初始化输出frame
+    // 初始化输出frame  不用创建data[0]指向的空间，解码的时候内部会创建
     _vSwsOutFrame = av_frame_alloc();
     if (!_vSwsOutFrame) {
         qDebug()<<"av_frame_alloc out error";
@@ -52,11 +52,15 @@ int VideoPlayer::initSws() {
     }
 
     // _vSwsOutFrame的data[0]指向的内存空间
+    // 为了初始化data【0】，视频解码出来的一定是一帧数据，
+    // 意味着data【0】指向的数据能放下一帧就可以了
+    // 用以下方法创建一帧数据大小
     int ret = av_image_alloc(_vSwsOutFrame->data,
                              _vSwsOutFrame->linesize,
-                             vSwsOutSpec.width,
-                             vSwsOutSpec.height,
-                             vSwsOutSpec.pixfmt, 1);
+                             _vSwsOutSpec.width,
+                             _vSwsOutSpec.height,
+                             _vSwsOutSpec.pixfmt, 1);
+    RET(av_image_alloc);
 
     return 0;
 }
@@ -108,7 +112,7 @@ void VideoPlayer::decodeVideo() {
             ret = avcodec_receive_frame(_vDecodeCtx, _vSwsInFrame);
             if (ret == AVERROR(EAGAIN) || ret == AVERROR_EOF) {
                 break;
-            } else CONTINUE(avcodec_receive_frame);
+            } else BREAK(avcodec_receive_frame);
 
             // 解码后的yuv数据
             qDebug()<<_vSwsInFrame->data;
@@ -121,6 +125,10 @@ void VideoPlayer::decodeVideo() {
                       _vSwsOutFrame->data, _vSwsOutFrame->linesize);
             // 像素格式转换后的数据
             qDebug()<<_vSwsOutFrame->data[0];
+
+            // 发出信号
+            emit frameDecoded(this, _vSwsOutFrame->data[0],
+                    _vSwsOutSpec);
         }
 
     }

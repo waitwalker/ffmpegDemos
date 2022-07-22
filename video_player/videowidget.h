@@ -2,6 +2,7 @@
 #define VIDEOWIDGET_H
 
 #include <QWidget>
+#include "videoplayer.h"
 
 class VideoWidget : public QWidget
 {
@@ -14,8 +15,16 @@ public:
     ~VideoWidget();
 
 private:
+    QImage *_image = nullptr;
+    void paintEvent(QPaintEvent *event) override;
 
 signals:
+
+public slots:
+    void onFrameDecoded(VideoPlayer *player,
+                        uint8_t *data,
+                        VideoPlayer::VideoSwsSpec spec);
+
 
 };
 

@@ -25,9 +25,9 @@ extern "C" {
     }
 
 #define END(func) CODE(func, fataError(); return;)
-
 #define RET(func) CODE(func, return ret;)
 #define CONTINUE(func) CODE(func, continue;)
+#define BREAK(func) CODE(func, break;)
 
 
 
@@ -43,6 +43,13 @@ public:
         Paused,
         Failed
     } State;
+
+    // 视频中一帧数据格式
+    typedef struct{
+        int width;
+        int height;
+        AVPixelFormat pixfmt;
+    } VideoSwsSpec;
 
     // 音量
     typedef enum{
@@ -145,11 +152,6 @@ private:
 
 
     /*********** 视频相关 ***********/
-    typedef struct{
-        int width;
-        int height;
-        AVPixelFormat pixfmt;
-    } VideoSwsSpec;
     // 音频解码上下文
     AVCodecContext *_aDecodeCtx = nullptr;
     // 视频流
@@ -168,7 +170,8 @@ private:
     CondMutex _vMutex;
 
     SwsContext *_vSwsCtx = nullptr;
-
+    // 视频格式转换输出frame的参数
+    VideoSwsSpec _vSwsOutSpec;
     // 清空视频包列表
     void clearVideoPktList();
 
@@ -208,7 +211,8 @@ signals:
     void stateChanged(VideoPlayer *player);
     void initFinished(VideoPlayer *player);
     void playFailed(VideoPlayer *player);
-
+    void frameDecoded(VideoPlayer *player,
+                      uint8_t *data, VideoSwsSpec spec);
 
 
 

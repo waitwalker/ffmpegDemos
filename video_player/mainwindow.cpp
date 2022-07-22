@@ -40,6 +40,10 @@ MainWindow::MainWindow(QWidget *parent)
     // 播放器失败
     connect(_player, &VideoPlayer::playFailed,
             this, &MainWindow::onPlayerPlayFailed);
+
+    // 视频像素格式转换成功
+    connect(_player, &VideoPlayer::frameDecoded,
+            ui->videoWidget, &VideoWidget::onFrameDecoded);
 }
 
 
@@ -93,6 +97,7 @@ void MainWindow::onPlayerInitFinished(VideoPlayer *player) {
 void MainWindow::onPlayerPlayFailed(VideoPlayer *player) {
     QMessageBox::critical(nullptr, "提示","错误了");
 }
+
 
 // 播放暂停按钮
 void MainWindow::on_playBtn_clicked()

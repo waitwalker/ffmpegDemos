@@ -85,6 +85,7 @@ void VideoPlayer::clearVideoPktList() {
 
 // 释放视频相关
 void VideoPlayer::freeVideo() {
+    _vClock = 0.0;
     clearVideoPktList();
     avcodec_free_context(&_vDecodeCtx);
 
@@ -117,6 +118,13 @@ void VideoPlayer::decodeVideo() {
 
         // 发送压缩数据到解码器
         int ret = avcodec_send_packet(_vDecodeCtx, &pkt);
+
+        // 视频时钟
+        if (pkt.dts != AV_NOPTS_VALUE) {
+            _vClock = av_q2d(_vStream->time_base) * pkt.dts;
+            qDebug()<<"视频时钟"<<_vClock;
+        }
+
         // 释放pkt
         av_packet_unref(&pkt);
 
@@ -131,9 +139,6 @@ void VideoPlayer::decodeVideo() {
             // 解码后的yuv数据
             qDebug()<<_vSwsInFrame->data;
 
-            // 假停顿
-            SDL_Delay(33);
-
             // 像素格式的转换
             // _vSwsInFrame=>_vSwsOutFrame
             sws_scale(_vSwsCtx,
@@ -142,6 +147,10 @@ void VideoPlayer::decodeVideo() {
                       _vSwsOutFrame->data, _vSwsOutFrame->linesize);
             // 像素格式转换后的数据
             qDebug()<<_vSwsOutFrame->data[0];
+            // 当前这帧太快了 视频包过早被解码出来，需要等待对应的音频包的时钟到来
+            while (_vClock > _aClock && _state == Playing) {
+                SDL_Delay(5);
+            }
 
             // 发出信号
             emit frameDecoded(this, _vSwsOutFrame->data[0],

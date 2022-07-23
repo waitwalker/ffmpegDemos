@@ -78,7 +78,11 @@ public:
     void setFilename(QString &filename);
 
     // 获取总时长 1s=1000毫秒=10^6微秒
-    int64_t getDuration();
+    int getDuration();
+
+    // 当前播放时间 单位是秒
+    int getCurrent();
+
 
     // 释放资源
     void free();
@@ -130,6 +134,9 @@ private:
     // 是否静音
     bool _mute = false;
 
+    // 音频时钟 当前音频包对应的时间值
+    double _aClock = 0.0;
+
     // 添加数据包到音频列表中
     void addAduioPkt(AVPacket &pkt);
     // 清空音频包列表
@@ -172,6 +179,9 @@ private:
     SwsContext *_vSwsCtx = nullptr;
     // 视频格式转换输出frame的参数
     VideoSwsSpec _vSwsOutSpec;
+
+    // 视频时钟 当前视频包对应的时间值
+    double _vClock = 0.0;
     // 清空视频包列表
     void clearVideoPktList();
 
@@ -206,6 +216,8 @@ private:
     // 发生严重错误
     void fataError();
 
+
+
 signals:
     // 状态改变的时候发送信号
     void stateChanged(VideoPlayer *player);
@@ -213,6 +225,7 @@ signals:
     void playFailed(VideoPlayer *player);
     void frameDecoded(VideoPlayer *player,
                       uint8_t *data, VideoSwsSpec spec);
+    void timeChange(VideoPlayer *player);
 
 
 

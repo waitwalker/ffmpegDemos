@@ -75,9 +75,13 @@ void VideoPlayer::setFilename(QString &filename) {
     qDebug()<<"读取到的文件名称："<<_filename;
 }
 
-int64_t VideoPlayer::getDuration() {
+int VideoPlayer::getDuration() {
     qDebug()<<"_fmtCtx:"<<_fmtCtx;
-    return _fmtCtx ? _fmtCtx->duration : 0;
+    return _fmtCtx ? round(_fmtCtx->duration / 1000000.0) : 0;
+}
+
+int VideoPlayer::getCurrent() {
+    return round(_aClock);
 }
 
 void VideoPlayer::setVolume(int volume) {

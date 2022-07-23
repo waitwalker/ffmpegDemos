@@ -46,6 +46,9 @@ MainWindow::MainWindow(QWidget *parent)
     // 播放器失败
     connect(_player, &VideoPlayer::playFailed,
             this, &MainWindow::onPlayerPlayFailed);
+    // 播放器失败
+    connect(_player, &VideoPlayer::timeChange,
+            this, &MainWindow::onPlayerTimeChanged);
 
     // 视频像素格式转换成功
     connect(_player, &VideoPlayer::frameDecoded,
@@ -98,6 +101,10 @@ void MainWindow::onPlayerInitFinished(VideoPlayer *player) {
     ui->currentSlider->setRange(0, microsSeconds);
     // 设置时长
     ui->currentLabel->setText(getDurationText(microsSeconds));
+}
+
+void MainWindow::onPlayerTimeChanged(VideoPlayer *player) {
+    ui->currentSlider->setValue(player->getCurrent());
 }
 
 void MainWindow::onPlayerPlayFailed(VideoPlayer *player) {
@@ -175,7 +182,7 @@ void MainWindow::on_volumeSlider_valueChanged(int value)
 
 #pragma mark - 私有方法
 QString MainWindow::getDurationText(int value) {
-    int64_t seconds = value / 1000000;
+    int64_t seconds = value;
     int h = seconds / 3600;
     int m = (seconds % 3600) / 60;
     int s = seconds % 60;

@@ -103,6 +103,7 @@ int VideoPlayer::initSDL() {
 
 // 释放音频相关数据
 void VideoPlayer::freeAudio() {
+    _aClock = 0.0;
     _aSwrOutIdx = 0;
     _aSwrOutSize = 0;
     _aStream = nullptr;
@@ -187,6 +188,15 @@ int VideoPlayer::decodeAudio() {
     _aPktList.pop_front();
     // 解锁
     _aMutex.unlock();
+
+    // 计算第几秒开始播放
+    if (pkt.pts != AV_NOPTS_VALUE) {
+        _aClock = av_q2d(_aStream->time_base) * pkt.pts;
+        qDebug()<<"pkt.pts"<<_aClock;
+
+        // 通知外界：播放时间发生改变
+        emit timeChange(this);
+    }
 
     // 发送数据到解码器
     int ret = avcodec_send_packet(_aDecodeCtx, &pkt);

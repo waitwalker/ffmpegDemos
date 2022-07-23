@@ -147,9 +147,16 @@ void VideoPlayer::decodeVideo() {
                       _vSwsOutFrame->data, _vSwsOutFrame->linesize);
             // 像素格式转换后的数据
             qDebug()<<_vSwsOutFrame->data[0];
-            // 当前这帧太快了 视频包过早被解码出来，需要等待对应的音频包的时钟到来
-            while (_vClock > _aClock && _state == Playing) {
-                SDL_Delay(5);
+
+            // 说明有音频
+            if (_aStream != nullptr) {
+
+                // 当前这帧太快了 视频包过早被解码出来，需要等待对应的音频包的时钟到来
+                while (_vClock > _aClock && _state == Playing) {
+                    SDL_Delay(5);
+                }
+            } else {
+                // TODO 没有音频的情况
             }
 
             // 发出信号

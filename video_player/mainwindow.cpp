@@ -35,6 +35,9 @@ MainWindow::MainWindow(QWidget *parent)
     // 播放状态改变
     connect(_player, &VideoPlayer::stateChanged,
             this, &MainWindow::onPlayerStateChanged);
+    // 播放状态改变
+    connect(_player, &VideoPlayer::stateChanged,
+            ui->videoWidget, &VideoWidget::onPlayerStateChanged);
 
     // 初始化完成
     connect(_player, &VideoPlayer::initFinished,

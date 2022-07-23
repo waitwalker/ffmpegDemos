@@ -3,6 +3,8 @@
 #include <QDebug>
 #include <QThread>
 
+#define AUDIO_MAX_PKT_SIZE 1000
+#define VIDEO_MAX_PKT_SIZE 500
 
 
 #pragma mark - 构造 析构 方法
@@ -140,6 +142,12 @@ void VideoPlayer::readFile() {
         // 大文件情况需要考虑
 
         AVPacket pkt;
+        // 不能无限制的调用这个 调用一次就读一次
+        if (_vPktList.size() >= VIDEO_MAX_PKT_SIZE || _aPktList.size() >= AUDIO_MAX_PKT_SIZE) {
+            SDL_Delay(10);
+            continue;
+        }
+        qDebug()<<"当前pkt大小"<<_vPktList.size()<<_aPktList.size();
         ret = av_read_frame(_fmtCtx, &pkt);
         if (ret == 0) {
             if (pkt.stream_index == _aStream->index) {
@@ -148,6 +156,9 @@ void VideoPlayer::readFile() {
             } else if (pkt.stream_index == _vStream->index) {
                 // 读取到视频数据 下面开始解码
                 addVideoPkt(pkt);
+            } else {
+                // 如果不是音频、视频流直接释放
+                av_packet_unref(&pkt);
             }
         } else if(ret == AVERROR_EOF){
             // 读到了文件尾部

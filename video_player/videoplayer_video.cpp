@@ -96,6 +96,7 @@ void VideoPlayer::freeVideo() {
 
     sws_freeContext(_vSwsCtx);
     _vSwsCtx = nullptr;
+    _vStream = nullptr;
 }
 
 // 解码视频

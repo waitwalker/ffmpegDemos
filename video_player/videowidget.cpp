@@ -11,10 +11,7 @@ VideoWidget::VideoWidget(QWidget *parent)
 }
 
 VideoWidget::~VideoWidget() {
-    if (_image) {
-        delete _image;
-        _image = nullptr;
-    }
+    freeImage();
 }
 
 
@@ -24,15 +21,18 @@ void VideoWidget::paintEvent(QPaintEvent *event) {
     QPainter(this).drawImage(_rect, *_image);
 }
 
+void VideoWidget::onPlayerStateChanged(VideoPlayer *player) {
+    if (player->getState() != VideoPlayer::Stopped) return;
+    qDebug()<<"VideoWidget::onPlayerStateChanged(VideoPlayer *player)";
+    freeImage();
+    update();
+}
 
 void VideoWidget::onFrameDecoded(VideoPlayer *player,
                                  uint8_t *data,
                                  VideoPlayer::VideoSwsSpec spec) {
     // 释放之前的图片
-    if (_image) {
-        delete _image;
-        _image = nullptr;
-    }
+    freeImage();
 
     if (data != nullptr) {
         _image = new QImage((uchar *)data,
@@ -68,6 +68,13 @@ void VideoWidget::onFrameDecoded(VideoPlayer *player,
         qDebug() << "视频的矩形框" << dx << dy << dw << dh;
     }
     update();
+}
+
+void VideoWidget::freeImage() {
+    if (_image) {
+        delete _image;
+        _image = nullptr;
+    }
 }
 
 

@@ -18,6 +18,7 @@ private:
     QImage *_image = nullptr;
     QRect _rect;
     void paintEvent(QPaintEvent *event) override;
+    void freeImage();
 
 signals:
 
@@ -25,6 +26,7 @@ public slots:
     void onFrameDecoded(VideoPlayer *player,
                         uint8_t *data,
                         VideoPlayer::VideoSwsSpec spec);
+    void onPlayerStateChanged(VideoPlayer *player);
 
 
 };
